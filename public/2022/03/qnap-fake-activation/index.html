@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="zh-cmn">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "QutsCloud 逆向笔记 - 激活思路及路线选择",
+  
+  "image": "https://jxcn.org/img/qnap-fake-activate-cover.png",
+  
+  "datePublished": "2022-03-26T00:00:00Z",
+  "dateModified": "2022-03-26T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "chk_jxcn",
+    
+    "image": "https://jxcn.org/img/touxiang.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jxcn.org\/2022\/03\/qnap-fake-activation\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Something useless",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jxcn.org/img/touxiang.jpg"
+    }
+    
+  },
+  "description": "这篇讨论一下可以选择的激活系统的方案，以及具体的实现。不过不管哪种方案，都无法支持myQNAPcloud云服务，因为现在许可证和用户是绑定的，登录了myQNAPcloud后也找不到可用的设备，也请不要尝试登录QNAP ID。\n",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.106.0 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="chk_jxcn">
+<meta name="keywords" content="">
+<meta name="description" content="这篇讨论一下可以选择的激活系统的方案，以及具体的实现。不过不管哪种方案，都无法支持myQNAPcloud云服务，因为现在许可证和用户是绑定的，登录了myQNAPcloud后也找不到可用的设备，也请不要尝试登录QNAP ID。">
+
+
+<meta property="og:description" content="这篇讨论一下可以选择的激活系统的方案，以及具体的实现。不过不管哪种方案，都无法支持myQNAPcloud云服务，因为现在许可证和用户是绑定的，登录了myQNAPcloud后也找不到可用的设备，也请不要尝试登录QNAP ID。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QutsCloud 逆向笔记 - 激活思路及路线选择">
+<meta name="twitter:title" content="QutsCloud 逆向笔记 - 激活思路及路线选择">
+<meta property="og:url" content="https://jxcn.org/2022/03/qnap-fake-activation/">
+<meta property="twitter:url" content="https://jxcn.org/2022/03/qnap-fake-activation/">
+<meta property="og:site_name" content="Something useless">
+<meta property="og:description" content="这篇讨论一下可以选择的激活系统的方案，以及具体的实现。不过不管哪种方案，都无法支持myQNAPcloud云服务，因为现在许可证和用户是绑定的，登录了myQNAPcloud后也找不到可用的设备，也请不要尝试登录QNAP ID。">
+<meta name="twitter:description" content="这篇讨论一下可以选择的激活系统的方案，以及具体的实现。不过不管哪种方案，都无法支持myQNAPcloud云服务，因为现在许可证和用户是绑定的，登录了myQNAPcloud后也找不到可用的设备，也请不要尝试登录QNAP ID。">
+<meta property="og:locale" content="en">
+
+  
+    <meta property="article:published_time" content="2022-03-26T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2022-03-26T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="qutscloud">
+    
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/touxiang.jpg">
+  <meta property="twitter:image" content="https://jxcn.org/img/touxiang.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/qnap-fake-activate-cover.png">
+  <meta property="twitter:image" content="https://jxcn.org/img/qnap-fake-activate-cover.png">
+
+
+    <title>QutsCloud 逆向笔记 - 激活思路及路线选择</title>
+    <meta name="google-site-verification" content="Htp5AJbiILKJBCrxIA9Sc0DXJtOVf7MBAiKJEFOIB-g" />
+ <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?232f26bd65acad12b4ab831deaf4c205";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script>
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(["setCookieDomain", "*.jxcn.org"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//matomo.jxcn.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-64JLV4NLY4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-64JLV4NLY4');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1323696214681325"
+     crossorigin="anonymous"></script>
+
+    <link rel="icon" href="https://jxcn.org/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jxcn.org/2022/03/qnap-fake-activation/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jxcn.org/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jxcn.org/" aria-label="">Something useless</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jxcn.org/#about" aria-label="">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jxcn.org/#about" aria-label="">
+          <img class="sidebar-profile-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+        </a>
+        <h4 class="sidebar-profile-name">chk_jxcn</h4>
+        
+          <h5 class="sidebar-profile-bio">观方知彼去 去者不至方</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://sinablog.jxcn.org" target="_blank" rel="noopener" title="Sina blog archives">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-weibo" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Sina blog archives</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      QutsCloud 逆向笔记 - 激活思路及路线选择
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-03-26T00:00:00Z">
+        
+  
+  
+  
+  
+    03/26,2022
+  
+
+      </time>
+    
+    
+  
+  
+    <span></span>
+    
+      <a class="category-link" href="https://jxcn.org/categories/qutscloud">qutscloud</a>
+    
+  
+
+  </div>
+
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+
+
+<div style="margin: 1rem 0; padding: 0.5rem 1rem 0.5rem 0.75rem; border-inline-start: 0.25rem solid #e9ecef;; border-color: #f66; background-color: rgba(255,102,102,.1);">
+	  <strong>未经作者许可禁止转载</strong>
+	  <br>
+	  <span style="white-space:nowrap;">本文地址：</span><a href="https://jxcn.org/2022/03/qnap-fake-activation/" style="white-space:nowrap;">https://jxcn.org/2022/03/qnap-fake-activation/</a>
+  </div>
+              <p>这篇讨论一下可以选择的激活系统的方案，以及具体的实现。不过不管哪种方案，<strong>都无法支持myQNAPcloud云服务</strong>，因为现在许可证和用户是绑定的，登录了myQNAPcloud后也找不到可用的设备，也请<strong>不要尝试登录QNAP ID</strong>。</p>
+<p>tg交流群：https://t.me/qutscloud</p>
+<p>下面每一个小节都实现了一种激活的方案，也会谈到其中可能存在的问题。</p>
+<div class="alert danger no-icon ">
+  <p><p>！！！另外，再次声明！！！</p>
+<p>不要尝试登录QNAP ID！</p>
+<p>不要尝试登录QNAP ID！</p>
+<p>不要尝试登录QNAP ID！</p>
+</p>
+</div>
+<h1 id="table-of-contents"></h1>
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-方案一用脚本对qlicense_tool打patch">1. 方案一：用脚本对qlicense_tool打patch</a>
+      <ul>
+        <li><a href="#激活脚本第一版">激活脚本（第一版）</a></li>
+        <li><a href="#激活脚本第二版">激活脚本（第二版）</a></li>
+        <li><a href="#激活脚本第三版最终版">激活脚本（第三版，最终版？）</a></li>
+        <li><a href="#问题">问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-方案二注入密钥及签发许可证">2. 方案二：注入密钥及签发许可证</a>
+      <ul>
+        <li><a href="#激活脚本">激活脚本</a></li>
+        <li><a href="#问题-1">问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-方案三架设license-manager-服务器">3. 方案三：架设license manager 服务器</a></li>
+  </ul>
+</nav>
+
+
+<h1 id="1-方案一用脚本对qlicense_tool打patch">1. 方案一：用脚本对qlicense_tool打patch</h1>
+<blockquote>
+<p>首先要说的是，patch并不是常规意义上的patch，而是hook，使用脚本替换原有的命令，使得可以劫持某些输入参数的输出，同时也可以调用原来的命令。</p>
+</blockquote>
+<p>在之前的几篇，我们知道QutsCloud的许可证全部是由qlicense_tool管理，不论是web ui，还是周期性检查，还是ql_daemon，都是在调用qlicese_tool这个命令行。</p>
+<p>因此第一个尝试就是对qlicense_tool进行patch，qlicense_tool有很多参数，如下所示</p>
+<pre tabindex="0"><code># qlicense_tool
+Usage: qlicense_tool [COMMAND] [OPTIONS]...
+Generate DIF / Operate Installed License / Online, Offline License Activate|Deactivate.
+
+help               [COMMAND] If with valid COMMAND, show the help message for the command, else show this help message.
+generate_dif       [OPTIONS] Please use help generate_dif to see the complete option list
+print_dif          [OPTIONS] Please use help print_dif to see the complete option list
+print_lif          [OPTIONS] Please use help print_lif to see the complete option list
+print_luf          [OPTIONS] Please use help print_luf to see the complete option list
+installed_list     [OPTIONS] Please use help installed_list to see the complete option list
+installed_get      [OPTIONS] Please use help installed_get to see the complete option list
+installed_get_value[OPTIONS] Please use help installed_get_value to see the complete option list
+offline_activate   [OPTIONS] Please use help offline_activate to see the complete option list
+offline_deactivate [OPTIONS] Please use help offline_deactivate to see the complete option list
+online_list        [OPTIONS] Please use help online_list to see the complete option list
+online_activate    [OPTIONS] Please use help online_activate to see the complete option list
+online_deactivate  [OPTIONS] Please use help online_deactivate to see the complete option list
+online_extend      [OPTIONS] Please use help online_extend to see the complete option list
+online_upgrade     [OPTIONS] Please use help online_upgrade to see the complete option list
+online_get         [OPTIONS] Please use help online_get to see the complete option list
+extend_list        [OPTIONS] Please use help extend_list to see the complete option list
+recover            [OPTIONS] Please use help recover to see the complete option list
+check              [OPTIONS] Please use help check to see the complete option list
+migrate            [OPTIONS] Please use help migrate to see the complete option list
+get_session_id     [OPTIONS] Please use help get_session_id to see the complete option list
+get_basket         [OPTIONS] Please use help get_basket to see the complete option list
+get_product_list   [OPTIONS] Please use help get_product_list to see the complete option list
+get_product        [OPTIONS] Please use help get_product to see the complete option list
+add_product        [OPTIONS] Please use help add_product to see the complete option list
+get_payment        [OPTIONS] Please use help get_payment to see the complete option list
+activate_trial     [OPTIONS] Please use help activate_trial to see the complete option list
+register           [OPTIONS] Please use help register to see the complete option list
+unregister         [OPTIONS] Please use help unregister to see the complete option list
+mark_invalid       [OPTIONS] Please use help mark_invalid to see the complete option list
+floating_refresh   [OPTIONS] Please use help floating_refresh to see the complete option list
+floating_unregister[OPTIONS] Please use help floating_unregister to see the complete option list
+logging            [OPTIONS] Please use help logging to see the complete option list
+before_activate    [OPTIONS] Please use help before_activate to see the complete option list
+get_extendable_product [OPTIONS] Please use help get_extendable_product to see the complete option list
+</code></pre><p>目前看到系统用到的命令有</p>
+<ul>
+<li><code>generate_dif</code></li>
+<li><code>installed_list</code></li>
+<li><code>check</code></li>
+<li><code>online_get</code></li>
+<li><code>online_activate</code></li>
+<li><code>floating_refresh</code></li>
+</ul>
+<p>其中有返回值的只有<code>generate_dif</code>，<code>installed_list</code>，<code>online_get</code>，其他的命令只需要返回表示success的json就可以。</p>
+<p>需要的这三个命令中<code>generate_dif</code>系统一般不会调用，所以可以排除，下面先写一个版本试试看</p>
+<h2 id="激活脚本第一版">激活脚本（第一版）</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#579">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 劫持域名</span>
+</span></span><span style="display:flex;"><span>sed -i <span style="background-color:#fff0f0">&#34;s/^#conf-file=\/etc\/dnsmasq.more.conf.*\$/conf-file=\/etc\/dnsmasq.more.conf/&#34;</span> /etc/dnsmasq.conf
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;address=/myqnapcloud.com/127.0.0.1&#34;</span> &gt; /etc/dnsmasq.more.conf
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;address=/myqnapcloud.cn/127.0.0.1&#34;</span> &gt;&gt; /etc/dnsmasq.more.conf
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;address=/myqnapcloud.com.cn/127.0.0.1&#34;</span> &gt;&gt; /etc/dnsmasq.more.conf
+</span></span><span style="display:flex;"><span>killall dnsmasq
+</span></span><span style="display:flex;"><span>/sbin/dnsmasq
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> ! grep <span style="background-color:#fff0f0">&#34;fake_qlicense_tool&#34;</span> /usr/local/bin/qlicense_tool 2&gt;/dev/null &gt;/dev/null ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>        mv /usr/local/bin/qlicense_tool /usr/local/bin/qlicense_tool_old
+</span></span><span style="display:flex;"><span>        cat &gt;/usr/local/bin/qlicense_tool &lt;&lt;<span style="background-color:#fff0f0">&#34;eof&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#888">#!/bin/sh</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># fake_qlicense_tool</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">online_get</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">{
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;code&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;message&#34;: &#34;success&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;result&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;license_id&#34;: &#34;111111111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;license_key&#34;: &#34;XXXXX-XXXXX-XXXXX-XXXXX-XXXXX&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;license_name&#34;: &#34;QuTScloud 1 Core - 1 Month&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;status&#34;: &#34;valid&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;transferable&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;is_self_check&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;is_floating&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;is_subscription&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;is_single_device_multi_seat&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;type&#34;: &#34;device&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;product_id&#34;: 2302,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;product_name&#34;: &#34;QuTScloud 1 Core - 1 Month&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;product_type&#34;: &#34;vQTS_Cloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;app_internal_name&#34;: &#34;vqtscloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;app_display_name&#34;: &#34;QuTScloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;app_min_version&#34;: &#34;c4.4.2&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;available_seats&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;total_free_unsubscribed&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;duration&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;year&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;month&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;day&#34;: 0
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     },
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;device&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     ],
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;created_at&#34;: &#34;2020/ 1/ 1&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;expires_at&#34;: &#34;2029/ 1/ 1&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0"> }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">installed_list</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">{
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;code&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;message&#34;: &#34;success&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;result&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;id&#34;: &#34;a51345fc-e45d-4e10-b6bb-df3b647c6cd4&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;dif_id&#34;: &#34;a51345fc-e45d-4e10-b6bb-df3b647c6cd4&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;dif_signature&#34;: &#34;xxxxxxxxxxxxxxxxxxxxxx&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;license_id&#34;: &#34;1111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;mac&#34;: &#34;00:00:00:00:00:00&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;hwsn&#34;: &#34;11111111111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;suid&#34;: &#34;111111111111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;model&#34;: &#34;QuTScloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;fw_build_version&#34;: &#34;c5.0.0.1919 (20220119)&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;license_info_json_str&#34;: &#34;{ \&#34;sku\&#34;: \&#34;LS-QUTSCLOUD-1CR-1M-EI\&#34;, \&#34;valid_until\&#34;: \&#34;2029-01-01 00:00:00.000000\&#34;, \&#34;app_internal_name\&#34;: \&#34;vqtscloud\&#34;, \&#34;valid_from\&#34;: \&#34;2020-01-01 00:00:00.000000\&#34;, \&#34;product_type\&#34;: \&#34;vQTS_Cloud\&#34;, \&#34;name\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;license_name\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;feature\&#34;: null, \&#34;applied_at\&#34;: \&#34;2020-01-01 00:00:00.000000\&#34;, \&#34;categories\&#34;: [ \&#34;vQTS_Cloud\&#34; ], \&#34;owner\&#34;: [ \&#34;xxxxxxxxxxxxxxxxxxx\&#34; ], \&#34;attributes\&#34;: { \&#34;is_floating\&#34;: true, \&#34;ext_check_type\&#34;: \&#34;product.product_type\&#34;, \&#34;aw_sarp2_is_used_advanced_pricing\&#34;: \&#34;Use config\&#34;, \&#34;00cpu_limit\&#34;: \&#34;1\&#34;, \&#34;small_image_label\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;is_subscription\&#34;: true, \&#34;thumbnail_label\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;device_type\&#34;: \&#34;vqts_cld\&#34;, \&#34;purchase_before_installed\&#34;: \&#34;false\&#34;, \&#34;external_service\&#34;: false, \&#34;is_self_check\&#34;: true, \&#34;product_image_size\&#34;: \&#34;Default\&#34;, \&#34;type\&#34;: \&#34;device\&#34;, \&#34;msrp_display_actual_price_type\&#34;: \&#34;Use config\&#34;, \&#34;grace_period_days\&#34;: \&#34;21\&#34;, \&#34;gift_message_available\&#34;: \&#34;No\&#34;, \&#34;app_internal_name\&#34;: \&#34;vqtscloud\&#34;, \&#34;plan_title\&#34;: \&#34;1 Core\&#34;, \&#34;quota_device\&#34;: \&#34;1\&#34;, \&#34;expiry_warning_day\&#34;: \&#34;-1\&#34;, \&#34;upgradeable\&#34;: true, \&#34;immediate_activate\&#34;: true, \&#34;product_class\&#34;: \&#34;vQTS_Cloud\&#34;, \&#34;amrolepermissions_owner\&#34;: \&#34;0\&#34;, \&#34;duration_month\&#34;: \&#34;1\&#34;, \&#34;app_min_version\&#34;: \&#34;c4.4.2\&#34;, \&#34;license_activation_info\&#34;: \&#34;&lt;div class=\\\&#34;qSW-pd-desc\\\&#34;  id=\\\&#34;qSW-pd-detail-license\\\&#34;&gt;\\n    \\n    &lt;iframe class=\\\&#34;resize_height iframe_license_activation\\\&#34; id=\\\&#34;iframe_license_activation\\\&#34; src=\\\&#34;https:\\/\\/docs.qnap.com\\/operating-system\\/qts\\/4.5.x\\/en-us\\/GUID-C6DE86F5-38A3-496E-A872-F833E1E5280D.html\\\&#34; frameborder=\\\&#34;0\\\&#34; allowfullscreen=\\\&#34;\\\&#34; width=\\\&#34;100%\\\&#34; height=\\\&#34;100%\\\&#34; scrolling=\\\&#34;no\\\&#34;&gt;&lt;\\/iframe&gt;\\n\\n&lt;\\/div&gt;\&#34;, \&#34;variant_display_name\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;extendable\&#34;: true, \&#34;app_display_name\&#34;: \&#34;QuTScloud\&#34;, \&#34;is_perpetual\&#34;: \&#34;false\&#34;, \&#34;is_bundle\&#34;: false, \&#34;transferable\&#34;: true, \&#34;support_org\&#34;: false, \&#34;image_label\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34; }, \&#34;app_display_name\&#34;: \&#34;QuTScloud\&#34;, \&#34;channel\&#34;: null, \&#34;product_id\&#34;: \&#34;2302\&#34; }&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;status&#34;: &#34;valid&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;subscription_status&#34;: &#34;valid&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;legacy&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;apply_date&#34;: &#34;2020-01-01T00:00:00SST&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;created_at&#34;: &#34;2020-01-01T00:00:00+00:00&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;remaining_days&#34;: 24,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;api_check_date&#34;: &#34;2020-01-01T00:00:00Z&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;floating_uuid&#34;: &#34;7067ef17-1474-4042-abd3-27584e915eaa&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;floating_token&#34;: &#34;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;license_check_period&#34;: 43200,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;is_partial_deactivated&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;used_seats&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;unsubscribed_used_seats&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;unsubscribed_valid_until&#34;: &#34;&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;api_check_status&#34;: &#34;fail&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   ]
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0"> }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;floating_refresh&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;online_activate&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;check&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;floating_refresh&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;installed_list&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$installed_list</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;online_get&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$online_get</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>/usr/local/bin/qlicense_tool_old <span style="color:#963">$@</span>
+</span></span><span style="display:flex;"><span>eof
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	chmod a+x /usr/local/bin/qlicense_tool
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>  <span style="color:#888"># end of: if ! grep &#34;fake_qlicense_tool&#34;</span>
+</span></span></code></pre></div><p>其实我觉得里面很多都是不做验证的，要的其实只是license_info_json_str中的东西，所以没有必要写这么多，不过我也没功夫去缩减，差不多可以也就行了。</p>
+<p>打开网页刷新一下看看</p>
+<p><img src="https://jxcn.org/img/qnap-fake-activate-1.png" alt=""></p>
+<p>发现已经找到了许可证，再点一下安装看看呢，好像可以进入下一步了</p>
+<p><img src="https://jxcn.org/img/qnap-fake-activate-2.png" alt=""></p>
+<p><img src="https://jxcn.org/img/qnap-fake-activate-3.png" alt=""></p>
+<p>貌似一直卡在安装的地方了，一直不动，检查一下qlicense_tool，发现已经被LicenseCenter的版本覆盖了，顺手改了回去。</p>
+<p>等了一会之后，发现安装完成了，可以使用设置的用户名密码登录了，应该是更新的qlicense_tool生效了</p>
+<p>因为LicenseCenter启动的脚本会调用<code>/etc/init.d/QDevelop.sh</code>，所以我们可以把修改的操作写到这个脚本，让qlicense_tool更新后也可以被patch，这样就不用守着安装进程来patch</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">function</span> do_restart_qdevelop<span style="color:#333">()</span> <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#888"># restart qdevelop for using different site key pair</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> -f <span style="background-color:#fff0f0">&#34;/etc/init.d/QDevelop.sh&#34;</span> <span style="color:#333">]</span>; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>        /etc/init.d/QDevelop.sh restart &amp;&gt; /dev/null
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span></code></pre></div><p>更新一下刚才的脚本再试试看</p>
+<h2 id="激活脚本第二版">激活脚本（第二版）</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#579">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 劫持域名</span>
+</span></span><span style="display:flex;"><span>sed -i <span style="background-color:#fff0f0">&#34;s/^#conf-file=\/etc\/dnsmasq.more.conf.*\$/conf-file=\/etc\/dnsmasq.more.conf/&#34;</span> /etc/dnsmasq.conf
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;address=/myqnapcloud.com/127.0.0.1&#34;</span> &gt; /etc/dnsmasq.more.conf
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;address=/myqnapcloud.cn/127.0.0.1&#34;</span> &gt;&gt; /etc/dnsmasq.more.conf
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;address=/myqnapcloud.com.cn/127.0.0.1&#34;</span> &gt;&gt; /etc/dnsmasq.more.conf
+</span></span><span style="display:flex;"><span>killall dnsmasq
+</span></span><span style="display:flex;"><span>/sbin/dnsmasq
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cat &gt; /etc/init.d/QDevelop.sh &lt;&lt;<span style="background-color:#fff0f0">&#34;EOF&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> ! grep <span style="background-color:#fff0f0">&#34;fake_qlicense_tool&#34;</span> /usr/local/bin/qlicense_tool 2&gt;/dev/null &gt;/dev/null ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>        mv /usr/local/bin/qlicense_tool /usr/local/bin/qlicense_tool_old
+</span></span><span style="display:flex;"><span>        cat &gt;/usr/local/bin/qlicense_tool &lt;&lt;<span style="background-color:#fff0f0">&#34;eof&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#888">#!/bin/sh</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># fake_qlicense_tool</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">online_get</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">{
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;code&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;message&#34;: &#34;success&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;result&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;license_id&#34;: &#34;111111111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;license_key&#34;: &#34;XXXXX-XXXXX-XXXXX-XXXXX-XXXXX&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;license_name&#34;: &#34;QuTScloud 1 Core - 1 Month&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;status&#34;: &#34;valid&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;transferable&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;is_self_check&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;is_floating&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;is_subscription&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;is_single_device_multi_seat&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;type&#34;: &#34;device&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;product_id&#34;: 2302,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;product_name&#34;: &#34;QuTScloud 1 Core - 1 Month&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;product_type&#34;: &#34;vQTS_Cloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;app_internal_name&#34;: &#34;vqtscloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;app_display_name&#34;: &#34;QuTScloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;app_min_version&#34;: &#34;c4.4.2&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;available_seats&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;total_free_unsubscribed&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;duration&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;year&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;month&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;day&#34;: 0
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     },
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;device&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     ],
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;created_at&#34;: &#34;2020/ 1/ 1&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;expires_at&#34;: &#34;2029/ 1/ 1&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0"> }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">installed_list</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">{
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;code&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;message&#34;: &#34;success&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;result&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;id&#34;: &#34;a51345fc-e45d-4e10-b6bb-df3b647c6cd4&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;dif_id&#34;: &#34;a51345fc-e45d-4e10-b6bb-df3b647c6cd4&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;dif_signature&#34;: &#34;xxxxxxxxxxxxxxxxxxxxxx&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;license_id&#34;: &#34;1111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;mac&#34;: &#34;00:00:00:00:00:00&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;hwsn&#34;: &#34;11111111111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;suid&#34;: &#34;111111111111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;model&#34;: &#34;QuTScloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;fw_build_version&#34;: &#34;c5.0.0.1919 (20220119)&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;license_info_json_str&#34;: &#34;{ \&#34;sku\&#34;: \&#34;LS-QUTSCLOUD-1CR-1M-EI\&#34;, \&#34;valid_until\&#34;: \&#34;2029-01-01 00:00:00.000000\&#34;, \&#34;app_internal_name\&#34;: \&#34;vqtscloud\&#34;, \&#34;valid_from\&#34;: \&#34;2020-01-01 00:00:00.000000\&#34;, \&#34;product_type\&#34;: \&#34;vQTS_Cloud\&#34;, \&#34;name\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;license_name\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;feature\&#34;: null, \&#34;applied_at\&#34;: \&#34;2020-01-01 00:00:00.000000\&#34;, \&#34;categories\&#34;: [ \&#34;vQTS_Cloud\&#34; ], \&#34;owner\&#34;: [ \&#34;xxxxxxxxxxxxxxxxxxx\&#34; ], \&#34;attributes\&#34;: { \&#34;is_floating\&#34;: true, \&#34;ext_check_type\&#34;: \&#34;product.product_type\&#34;, \&#34;aw_sarp2_is_used_advanced_pricing\&#34;: \&#34;Use config\&#34;, \&#34;00cpu_limit\&#34;: \&#34;1\&#34;, \&#34;small_image_label\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;is_subscription\&#34;: true, \&#34;thumbnail_label\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;device_type\&#34;: \&#34;vqts_cld\&#34;, \&#34;purchase_before_installed\&#34;: \&#34;false\&#34;, \&#34;external_service\&#34;: false, \&#34;is_self_check\&#34;: true, \&#34;product_image_size\&#34;: \&#34;Default\&#34;, \&#34;type\&#34;: \&#34;device\&#34;, \&#34;msrp_display_actual_price_type\&#34;: \&#34;Use config\&#34;, \&#34;grace_period_days\&#34;: \&#34;21\&#34;, \&#34;gift_message_available\&#34;: \&#34;No\&#34;, \&#34;app_internal_name\&#34;: \&#34;vqtscloud\&#34;, \&#34;plan_title\&#34;: \&#34;1 Core\&#34;, \&#34;quota_device\&#34;: \&#34;1\&#34;, \&#34;expiry_warning_day\&#34;: \&#34;-1\&#34;, \&#34;upgradeable\&#34;: true, \&#34;immediate_activate\&#34;: true, \&#34;product_class\&#34;: \&#34;vQTS_Cloud\&#34;, \&#34;amrolepermissions_owner\&#34;: \&#34;0\&#34;, \&#34;duration_month\&#34;: \&#34;1\&#34;, \&#34;app_min_version\&#34;: \&#34;c4.4.2\&#34;, \&#34;license_activation_info\&#34;: \&#34;&lt;div class=\\\&#34;qSW-pd-desc\\\&#34;  id=\\\&#34;qSW-pd-detail-license\\\&#34;&gt;\\n    \\n    &lt;iframe class=\\\&#34;resize_height iframe_license_activation\\\&#34; id=\\\&#34;iframe_license_activation\\\&#34; src=\\\&#34;https:\\/\\/docs.qnap.com\\/operating-system\\/qts\\/4.5.x\\/en-us\\/GUID-C6DE86F5-38A3-496E-A872-F833E1E5280D.html\\\&#34; frameborder=\\\&#34;0\\\&#34; allowfullscreen=\\\&#34;\\\&#34; width=\\\&#34;100%\\\&#34; height=\\\&#34;100%\\\&#34; scrolling=\\\&#34;no\\\&#34;&gt;&lt;\\/iframe&gt;\\n\\n&lt;\\/div&gt;\&#34;, \&#34;variant_display_name\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;extendable\&#34;: true, \&#34;app_display_name\&#34;: \&#34;QuTScloud\&#34;, \&#34;is_perpetual\&#34;: \&#34;false\&#34;, \&#34;is_bundle\&#34;: false, \&#34;transferable\&#34;: true, \&#34;support_org\&#34;: false, \&#34;image_label\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34; }, \&#34;app_display_name\&#34;: \&#34;QuTScloud\&#34;, \&#34;channel\&#34;: null, \&#34;product_id\&#34;: \&#34;2302\&#34; }&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;status&#34;: &#34;valid&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;subscription_status&#34;: &#34;valid&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;legacy&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;apply_date&#34;: &#34;2020-01-01T00:00:00SST&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;created_at&#34;: &#34;2020-01-01T00:00:00+00:00&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;remaining_days&#34;: 24,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;api_check_date&#34;: &#34;2020-01-01T00:00:00Z&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;floating_uuid&#34;: &#34;7067ef17-1474-4042-abd3-27584e915eaa&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;floating_token&#34;: &#34;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;license_check_period&#34;: 43200,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;is_partial_deactivated&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;used_seats&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;unsubscribed_used_seats&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;unsubscribed_valid_until&#34;: &#34;&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;api_check_status&#34;: &#34;fail&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   ]
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0"> }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;floating_refresh&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;online_activate&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;check&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;floating_refresh&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;installed_list&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$installed_list</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;online_get&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$online_get</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>/usr/local/bin/qlicense_tool_old <span style="color:#963">$@</span>
+</span></span><span style="display:flex;"><span>eof
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	chmod a+x /usr/local/bin/qlicense_tool
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>  <span style="color:#888"># end of: if ! grep &#34;fake_qlicense_tool&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 延迟调用两次</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> !<span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;replace_ql&#34;</span> <span style="color:#333">]</span>; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#333">(</span>sleep <span style="color:#60e;font-weight:bold">1</span> <span style="color:#333">&amp;&amp;</span> sh /etc/init.d/QDevelop.sh replace_ql<span style="color:#333">)</span>&amp;
+</span></span><span style="display:flex;"><span>    <span style="color:#333">(</span>sleep <span style="color:#60e;font-weight:bold">5</span> <span style="color:#333">&amp;&amp;</span> sh /etc/init.d/QDevelop.sh replace_ql<span style="color:#333">)</span>&amp;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>EOF
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>chmod a+x /etc/init.d/QDevelop.sh
+</span></span><span style="display:flex;"><span>/etc/init.d/QDevelop.sh
+</span></span></code></pre></div><p><img src="https://jxcn.org/img/qnap-fake-activate-4.png" alt=""></p>
+<p>webui一直显示未找到许可证，看一下F12，原来是一个新的cgi会去寻找license</p>
+<pre tabindex="0"><code>Request URL: http://192.168.2.120:8080/cgi-bin/qid/qlicenseRequest.cgi?sid=7rmjqsro&amp;cmd=get_installed_license_list&amp;_dc=1648320931779
+Request Method: GET
+</code></pre><p>而且这个程序链接了<code>libqlicense.so</code>库，瞬间又啪啪啪打脸了</p>
+<pre tabindex="0"><code>[/home/httpd/cgi-bin/qid] # ldd qlicenseRequest.cgi
+        linux-vdso.so.1 (0x00007fff0cdcd000)
+        libuLinux_NAS.so.0 =&gt; /usr/lib/libuLinux_NAS.so.0 (0x00007f3011f25000)
+        libuLinux_cgi.so.0 =&gt; /usr/lib/libuLinux_cgi.so.0 (0x00007f3011d13000)
+        libuLinux_nasauth.so.1 =&gt; /usr/lib/libuLinux_nasauth.so.1 (0x00007f3011b10000)
+        libqlicense.so =&gt; /mnt/ext/opt/LicenseCenter/lib/libqlicense.so (0x00007f30118c9
+        ...
+</code></pre><p>要不把这个也打上patch，写个脚本试试看</p>
+<h2 id="激活脚本第三版最终版">激活脚本（第三版，最终版？）</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#579">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 劫持域名</span>
+</span></span><span style="display:flex;"><span>sed -i <span style="background-color:#fff0f0">&#34;s/^#conf-file=\/etc\/dnsmasq.more.conf.*\$/conf-file=\/etc\/dnsmasq.more.conf/&#34;</span> /etc/dnsmasq.conf
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;address=/myqnapcloud.com/127.0.0.1&#34;</span> &gt; /etc/dnsmasq.more.conf
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;address=/myqnapcloud.cn/127.0.0.1&#34;</span> &gt;&gt; /etc/dnsmasq.more.conf
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;address=/myqnapcloud.com.cn/127.0.0.1&#34;</span> &gt;&gt; /etc/dnsmasq.more.conf
+</span></span><span style="display:flex;"><span>killall dnsmasq
+</span></span><span style="display:flex;"><span>/sbin/dnsmasq
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cat &gt; /etc/init.d/QDevelop.sh &lt;&lt;<span style="background-color:#fff0f0">&#34;EOF&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># patch qlicenseRequest.cgi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> ! grep <span style="background-color:#fff0f0">&#34;fake_qlicense_tool&#34;</span> /home/httpd/cgi-bin/qid/qlicenseRequest.cgi 2&gt;/dev/null &gt;/dev/null ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>        mv /home/httpd/cgi-bin/qid/qlicenseRequest.cgi /home/httpd/cgi-bin/qid/qlicenseRequest.cgi.old
+</span></span><span style="display:flex;"><span>        cat &gt;/home/httpd/cgi-bin/qid/qlicenseRequest.cgi &lt;&lt;<span style="background-color:#fff0f0">&#34;eof&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#888">#!/bin/sh</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># fake_qlicense_tool</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">echo</span> <span style="color:#963">$QUERY_STRING</span> |grep get_installed_license_list 2&gt;/dev/null &gt;/dev/null ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">echo</span> -n <span style="background-color:#fff0f0">&#39;Content-type: application/json; charset=&#34;UTF-8&#34;&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">printf</span> <span style="background-color:#fff0f0">&#34;\n\n&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;code&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;message&#34;: &#34;success&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;total_count&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;result&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;id&#34;: &#34;a51345fc-e45d-4e10-b6bb-df3b647c6cd4&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;dif_id&#34;: &#34;a51345fc-e45d-4e10-b6bb-df3b647c6cd4&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;dif_signature&#34;: &#34;xxxxxxxxxxxxxxxxxxxxxx&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;license_id&#34;: &#34;1111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;status&#34;: &#34;valid&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;subscription_status&#34;: &#34;valid&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;legacy&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;apply_date&#34;: &#34;2020-01-01T00:00:00SST&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;created_at&#34;: &#34;2020-01-01T00:00:00+00:00&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;remaining_days&#34;: 100,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;api_check_date&#34;: &#34;2020-01-01T00:00:00Z&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;is_partial_deactivated&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;used_seats&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;unsubscribed_used_seats&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;unsubscribed_valid_until&#34;: &#34;&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;api_check_status&#34;: &#34;success&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;hw_info&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;mac&#34;: &#34;00:00:00:00:00:00&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;hwsn&#34;: &#34;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;suid&#34;: &#34;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;model&#34;: &#34;QuTScloud&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       },
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;license_info&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;sku&#34;: &#34;LS-QUTSCLOUD-1CR-1M-EI&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;valid_until&#34;: &#34;2029-01-01 00:00:00.000000&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;app_internal_name&#34;: &#34;vqtscloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;valid_from&#34;: &#34;2020-01-01 00:00:00.000000&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;product_type&#34;: &#34;vQTS_Cloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;name&#34;: &#34;QuTScloud 1 Core - 1 Month&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;license_name&#34;: &#34;QuTScloud 1 Core - 1 Month&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;feature&#34;: null,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;applied_at&#34;: &#34;2020-01-01 00:00:00.000000&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;categories&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;vQTS_Cloud&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         ],
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;owner&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;xxxxxxxxxxxxxxxxxxx&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         ],
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;attributes&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;is_floating&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;ext_check_type&#34;: &#34;product.product_type&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;aw_sarp2_is_used_advanced_pricing&#34;: &#34;Use config&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;cpu_limit&#34;: &#34;1&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;small_image_label&#34;: &#34;QuTScloud 1 Core - 1 Month&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;is_subscription&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;thumbnail_label&#34;: &#34;QuTScloud 1 Core - 1 Month&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;device_type&#34;: &#34;vqts_cld&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;purchase_before_installed&#34;: &#34;false&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;external_service&#34;: false,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;is_self_check&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;product_image_size&#34;: &#34;Default&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;type&#34;: &#34;device&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;msrp_display_actual_price_type&#34;: &#34;Use config&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;grace_period_days&#34;: &#34;21&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;gift_message_available&#34;: &#34;No&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;app_internal_name&#34;: &#34;vqtscloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;plan_title&#34;: &#34;1 Core&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;quota_device&#34;: &#34;1&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;expiry_warning_day&#34;: &#34;-1&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;upgradeable&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;immediate_activate&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;product_class&#34;: &#34;vQTS_Cloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;amrolepermissions_owner&#34;: &#34;0&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;duration_month&#34;: &#34;1&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;app_min_version&#34;: &#34;c4.4.2&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;license_activation_info&#34;: &#34;&lt;div class=\&#34;qSW-pd-desc\&#34;  id=\&#34;qSW-pd-detail-license\&#34;&gt;\n    \n    &lt;iframe class=\&#34;resize_height iframe_license_activation\&#34; id=\&#34;iframe_license_activation\&#34; src=\&#34;https://docs.qnap.com/operating-system/qts/4.5.x/en-us/GUID-C6DE86F5-38A3-496E-A872-F833E1E5280D.html\&#34; frameborder=\&#34;0\&#34; allowfullscreen=\&#34;\&#34; width=\&#34;100%\&#34; height=\&#34;100%\&#34; scrolling=\&#34;no\&#34;&gt;&lt;/iframe&gt;\n\n&lt;/div&gt;&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;variant_display_name&#34;: &#34;QuTScloud 1 Core - 1 Month&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;extendable&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;app_display_name&#34;: &#34;QuTScloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;is_perpetual&#34;: &#34;false&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;is_bundle&#34;: false,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;transferable&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;support_org&#34;: false,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">           &#34;image_label&#34;: &#34;QuTScloud 1 Core - 1 Month&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         },
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;app_display_name&#34;: &#34;QuTScloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;channel&#34;: null,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">         &#34;product_id&#34;: &#34;2302&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   ]
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0"> }&#39;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>/home/httpd/cgi-bin/qid/qlicenseRequest.cgi.old
+</span></span><span style="display:flex;"><span>eof
+</span></span><span style="display:flex;"><span>chmod a+x /home/httpd/cgi-bin/qid/qlicenseRequest.cgi
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span> 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># patch qlicense_tool</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> ! grep <span style="background-color:#fff0f0">&#34;fake_qlicense_tool&#34;</span> /usr/local/bin/qlicense_tool 2&gt;/dev/null &gt;/dev/null ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>        mv /usr/local/bin/qlicense_tool /usr/local/bin/qlicense_tool_old
+</span></span><span style="display:flex;"><span>        cat &gt;/usr/local/bin/qlicense_tool &lt;&lt;<span style="background-color:#fff0f0">&#34;eof&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#888">#!/bin/sh</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># fake_qlicense_tool</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">online_get</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">{
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;code&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;message&#34;: &#34;success&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;result&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;license_id&#34;: &#34;111111111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;license_key&#34;: &#34;XXXXX-XXXXX-XXXXX-XXXXX-XXXXX&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;license_name&#34;: &#34;QuTScloud 1 Core - 1 Month&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;status&#34;: &#34;valid&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;transferable&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;is_self_check&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;is_floating&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;is_subscription&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;is_single_device_multi_seat&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;type&#34;: &#34;device&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;product_id&#34;: 2302,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;product_name&#34;: &#34;QuTScloud 1 Core - 1 Month&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;product_type&#34;: &#34;vQTS_Cloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;app_internal_name&#34;: &#34;vqtscloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;app_display_name&#34;: &#34;QuTScloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;app_min_version&#34;: &#34;c4.4.2&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;available_seats&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;total_free_unsubscribed&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;duration&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;year&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;month&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;day&#34;: 0
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     },
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;device&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     ],
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;created_at&#34;: &#34;2020/ 1/ 1&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     &#34;expires_at&#34;: &#34;2029/ 1/ 1&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0"> }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">installed_list</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">{
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;code&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;message&#34;: &#34;success&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   &#34;result&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;id&#34;: &#34;a51345fc-e45d-4e10-b6bb-df3b647c6cd4&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;dif_id&#34;: &#34;a51345fc-e45d-4e10-b6bb-df3b647c6cd4&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;dif_signature&#34;: &#34;xxxxxxxxxxxxxxxxxxxxxx&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;license_id&#34;: &#34;1111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;mac&#34;: &#34;00:00:00:00:00:00&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;hwsn&#34;: &#34;11111111111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;suid&#34;: &#34;111111111111111111111111111&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;model&#34;: &#34;QuTScloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;fw_build_version&#34;: &#34;c5.0.0.1919 (20220119)&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;license_info_json_str&#34;: &#34;{ \&#34;sku\&#34;: \&#34;LS-QUTSCLOUD-1CR-1M-EI\&#34;, \&#34;valid_until\&#34;: \&#34;2029-01-01 00:00:00.000000\&#34;, \&#34;app_internal_name\&#34;: \&#34;vqtscloud\&#34;, \&#34;valid_from\&#34;: \&#34;2020-01-01 00:00:00.000000\&#34;, \&#34;product_type\&#34;: \&#34;vQTS_Cloud\&#34;, \&#34;name\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;license_name\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;feature\&#34;: null, \&#34;applied_at\&#34;: \&#34;2020-01-01 00:00:00.000000\&#34;, \&#34;categories\&#34;: [ \&#34;vQTS_Cloud\&#34; ], \&#34;owner\&#34;: [ \&#34;xxxxxxxxxxxxxxxxxxx\&#34; ], \&#34;attributes\&#34;: { \&#34;is_floating\&#34;: true, \&#34;ext_check_type\&#34;: \&#34;product.product_type\&#34;, \&#34;aw_sarp2_is_used_advanced_pricing\&#34;: \&#34;Use config\&#34;, \&#34;00cpu_limit\&#34;: \&#34;1\&#34;, \&#34;small_image_label\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;is_subscription\&#34;: true, \&#34;thumbnail_label\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;device_type\&#34;: \&#34;vqts_cld\&#34;, \&#34;purchase_before_installed\&#34;: \&#34;false\&#34;, \&#34;external_service\&#34;: false, \&#34;is_self_check\&#34;: true, \&#34;product_image_size\&#34;: \&#34;Default\&#34;, \&#34;type\&#34;: \&#34;device\&#34;, \&#34;msrp_display_actual_price_type\&#34;: \&#34;Use config\&#34;, \&#34;grace_period_days\&#34;: \&#34;21\&#34;, \&#34;gift_message_available\&#34;: \&#34;No\&#34;, \&#34;app_internal_name\&#34;: \&#34;vqtscloud\&#34;, \&#34;plan_title\&#34;: \&#34;1 Core\&#34;, \&#34;quota_device\&#34;: \&#34;1\&#34;, \&#34;expiry_warning_day\&#34;: \&#34;-1\&#34;, \&#34;upgradeable\&#34;: true, \&#34;immediate_activate\&#34;: true, \&#34;product_class\&#34;: \&#34;vQTS_Cloud\&#34;, \&#34;amrolepermissions_owner\&#34;: \&#34;0\&#34;, \&#34;duration_month\&#34;: \&#34;1\&#34;, \&#34;app_min_version\&#34;: \&#34;c4.4.2\&#34;, \&#34;license_activation_info\&#34;: \&#34;&lt;div class=\\\&#34;qSW-pd-desc\\\&#34;  id=\\\&#34;qSW-pd-detail-license\\\&#34;&gt;\\n    \\n    &lt;iframe class=\\\&#34;resize_height iframe_license_activation\\\&#34; id=\\\&#34;iframe_license_activation\\\&#34; src=\\\&#34;https:\\/\\/docs.qnap.com\\/operating-system\\/qts\\/4.5.x\\/en-us\\/GUID-C6DE86F5-38A3-496E-A872-F833E1E5280D.html\\\&#34; frameborder=\\\&#34;0\\\&#34; allowfullscreen=\\\&#34;\\\&#34; width=\\\&#34;100%\\\&#34; height=\\\&#34;100%\\\&#34; scrolling=\\\&#34;no\\\&#34;&gt;&lt;\\/iframe&gt;\\n\\n&lt;\\/div&gt;\&#34;, \&#34;variant_display_name\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;extendable\&#34;: true, \&#34;app_display_name\&#34;: \&#34;QuTScloud\&#34;, \&#34;is_perpetual\&#34;: \&#34;false\&#34;, \&#34;is_bundle\&#34;: false, \&#34;transferable\&#34;: true, \&#34;support_org\&#34;: false, \&#34;image_label\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34; }, \&#34;app_display_name\&#34;: \&#34;QuTScloud\&#34;, \&#34;channel\&#34;: null, \&#34;product_id\&#34;: \&#34;2302\&#34; }&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;status&#34;: &#34;valid&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;subscription_status&#34;: &#34;valid&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;legacy&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;apply_date&#34;: &#34;2020-01-01T00:00:00SST&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;created_at&#34;: &#34;2020-01-01T00:00:00+00:00&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;remaining_days&#34;: 24,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;api_check_date&#34;: &#34;2020-01-01T00:00:00Z&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;floating_uuid&#34;: &#34;7067ef17-1474-4042-abd3-27584e915eaa&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;floating_token&#34;: &#34;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;license_check_period&#34;: 43200,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;is_partial_deactivated&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;used_seats&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;unsubscribed_used_seats&#34;: 0,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;unsubscribed_valid_until&#34;: &#34;&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       &#34;api_check_status&#34;: &#34;fail&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">     }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">   ]
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0"> }
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;floating_refresh&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;online_activate&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;check&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;floating_refresh&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;installed_list&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$installed_list</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;online_get&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$online_get</span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>/usr/local/bin/qlicense_tool_old <span style="color:#963">$@</span>
+</span></span><span style="display:flex;"><span>eof
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	chmod a+x /usr/local/bin/qlicense_tool
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>  <span style="color:#888"># end of: if ! grep &#34;fake_qlicense_tool&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 延迟调用两次</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> !<span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;replace_ql&#34;</span> <span style="color:#333">]</span>; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#333">(</span>sleep <span style="color:#60e;font-weight:bold">1</span> <span style="color:#333">&amp;&amp;</span> sh /etc/init.d/QDevelop.sh replace_ql<span style="color:#333">)</span>&amp;
+</span></span><span style="display:flex;"><span>    <span style="color:#333">(</span>sleep <span style="color:#60e;font-weight:bold">5</span> <span style="color:#333">&amp;&amp;</span> sh /etc/init.d/QDevelop.sh replace_ql<span style="color:#333">)</span>&amp;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>EOF
+</span></span><span style="display:flex;"><span>chmod a+x /etc/init.d/QDevelop.sh
+</span></span><span style="display:flex;"><span>/etc/init.d/QDevelop.sh
+</span></span></code></pre></div><p>这下，看起来似乎是真的正常了，而且弹出窗口要建立存储池</p>
+<p><img src="https://jxcn.org/img/qnap-fake-activate-5.png" alt=""></p>
+<p>新增一个静态卷后，等大概五分钟，文件系统也都创建好了，至于为什么这么慢，好像是因为要等待mdadm以及drdb初始化啥的，后台一直在刷新状态等待</p>
+<p><img src="https://jxcn.org/img/qnap-fake-activate-6.png" alt=""></p>
+<h2 id="问题">问题</h2>
+<ul>
+<li>还有<code>storage_util</code>尚未处理，qlicense在许可证发生变化的时候会调用此命令来修改系统支持的功能，不过目前看好像并不影响实际使用，应该只有证书失效的时候才会调用，后面再看看</li>
+<li>patch系统文件之后，可能会提示系统被篡改，这是因为安装LicenseCenter的时候添加了一些文件的签名到系统数据库中，可以在脚本中删除这些sqlite中的数据项，这个同样没什么影响，系统只是会隔一段时间提醒你要重启，关掉不管也不会发生什么事情，总共就5个文件被签名了，不过我们修改的文件并不在这些路径上，所以应该没关系吧？</li>
+</ul>
+<p><img src="https://jxcn.org/img/qnap-fake-activate-7.png" alt=""></p>
+<h1 id="2-方案二注入密钥及签发许可证">2. 方案二：注入密钥及签发许可证</h1>
+<p>在上一篇中，我们已经可以自己随意给系统签发许可证了，所以，在这个方案里，只需要为自己签发一个许可证就可以了。</p>
+<p>需要注意的是，因为在脱离服务器连接后，无法对许可证进行floating refresh，因此还是需要对qlicense_tool打patch，让它执行floating refresh的时候返回成功。</p>
+<p>这里实现的脚本还是用到了<code>/etc/init.d/QDevelop.sh</code>来替换系统密钥，为了方便起见，这里使用提前生成好的证书，方便自己手动再签发许可证。</p>
+<h2 id="激活脚本">激活脚本</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#579">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span><span style="color:#888"># 劫持域名</span>
+</span></span><span style="display:flex;"><span>sed -i <span style="background-color:#fff0f0">&#34;s/^#conf-file=\/etc\/dnsmasq.more.conf.*\$/conf-file=\/etc\/dnsmasq.more.conf/&#34;</span> /etc/dnsmasq.conf
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;address=/myqnapcloud.com/127.0.0.1&#34;</span> &gt; /etc/dnsmasq.more.conf
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;address=/myqnapcloud.cn/127.0.0.1&#34;</span> &gt;&gt; /etc/dnsmasq.more.conf
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;address=/myqnapcloud.com.cn/127.0.0.1&#34;</span> &gt;&gt; /etc/dnsmasq.more.conf
+</span></span><span style="display:flex;"><span>killall dnsmasq
+</span></span><span style="display:flex;"><span>/sbin/dnsmasq
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">exec</span> 2&gt;/dev/null
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 1. 替换密钥</span>
+</span></span><span style="display:flex;"><span><span style="color:#888">#openssl ecparam  -name secp384r1 -genkey -out key.pem</span>
+</span></span><span style="display:flex;"><span><span style="color:#888">#openssl ec -in key.pem -pubout -out public.pem</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;===&gt;replace init script&#34;</span>
+</span></span><span style="display:flex;"><span>cat &gt; /etc/init.d/QDevelop.sh &lt;&lt;<span style="background-color:#fff0f0">&#34;EOF&#34;</span>
+</span></span><span style="display:flex;"><span>cat &gt; /etc/config/qlicense/qlicense_private_key.pem<span style="background-color:#fff0f0">&lt;&lt;eof
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">-----BEGIN EC PARAMETERS-----
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">BgUrgQQAIg==
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">-----END EC PARAMETERS-----
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">-----BEGIN EC PRIVATE KEY-----
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">MIGkAgEBBDCwGh6rxUT1P7mxIyJV49gN4v3wA0IVx88m5qJA/IoBC2Sdvze9haRf
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">J3sqj7jans6gBwYFK4EEACKhZANiAAQOzny0UleWCmZPYNFZ5nSdSy1mZwmG2YHm
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">8Y+2376R0Q9VyjzU9NHxE8QpBA4EP9MwqYi/kekqO0ry6ht4hREHZNmYl7IXcQIQ
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">49OlNuIHpz5YpiEktw+o+q2lU8HU0fQ=
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">-----END EC PRIVATE KEY-----
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">eof</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cat &gt; /etc/config/qlicense/qlicense_public_key.pem<span style="background-color:#fff0f0">&lt;&lt;eof
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">-----BEGIN PUBLIC KEY-----
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEDs58tFJXlgpmT2DRWeZ0nUstZmcJhtmB
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">5vGPtt++kdEPVco81PTR8RPEKQQOBD/TMKmIv5HpKjtK8uobeIURB2TZmJeyF3EC
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">EOPTpTbiB6c+WKYhJLcPqPqtpVPB1NH0
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">-----END PUBLIC KEY-----
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">eof</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> ! grep <span style="background-color:#fff0f0">&#34;fake_qlicense_tool&#34;</span> /usr/local/bin/qlicense_tool 2&gt;/dev/null &gt;/dev/null ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>        mv /usr/local/bin/qlicense_tool /usr/local/bin/qlicense_tool_old
+</span></span><span style="display:flex;"><span>        cat &gt;/usr/local/bin/qlicense_tool &lt;&lt;<span style="background-color:#fff0f0">&#34;eof&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#888">#!/bin/sh</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># fake_qlicense_tool</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;floating_refresh&#34;</span> -o <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;local_check&#34;</span> <span style="color:#333">]</span> ; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#39;{&#34;code&#34;: 0, &#34;message&#34;: &#34;success&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#007020">exit</span> <span style="color:#60e;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>/usr/local/bin/qlicense_tool_old <span style="color:#963">$@</span>
+</span></span><span style="display:flex;"><span>eof
+</span></span><span style="display:flex;"><span>chmod a+x /usr/local/bin/qlicense_tool
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> !<span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;replace_ql&#34;</span> <span style="color:#333">]</span>;<span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#888"># run me again after 1s to overwrite qlicense_tool</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#333">(</span>sleep <span style="color:#60e;font-weight:bold">1</span> <span style="color:#333">&amp;&amp;</span> sh /etc/init.d/QDevelop.sh replace_ql<span style="color:#333">)</span>&amp;
+</span></span><span style="display:flex;"><span>	<span style="color:#333">(</span>sleep <span style="color:#60e;font-weight:bold">5</span> <span style="color:#333">&amp;&amp;</span> sh /etc/init.d/QDevelop.sh replace_ql<span style="color:#333">)</span>&amp;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>EOF
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>chmod a+x /etc/init.d/QDevelop.sh
+</span></span><span style="display:flex;"><span>/etc/init.d/QDevelop.sh
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 2. 生成dif并读取</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;===&gt;generate dif&#34;</span>
+</span></span><span style="display:flex;"><span>mkdir /mnt/.fake_active
+</span></span><span style="display:flex;"><span><span style="color:#007020">cd</span> /mnt/.fake_active
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rm -rf *.lif *.dif dif.* lif.*
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>qlicense_tool generate_dif &gt; dif.info
+</span></span><span style="display:flex;"><span><span style="color:#963">dif_path</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>jq -r .result dif.info<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">dif_data</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>jq -r .data <span style="color:#963">$dif_path</span><span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span><span style="color:#963">dif_nonce</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>jq -r .nonce <span style="color:#963">$dif_path</span><span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span><span style="color:#963">dif_sign</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>jq -r .signature <span style="color:#963">$dif_path</span><span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> -n <span style="background-color:#fff0f0">&#34;</span><span style="color:#963">$dif_data</span><span style="background-color:#fff0f0">&#34;</span> | openssl enc -base64 -d -A | openssl enc -d -aes-256-cbc -md md5 -k <span style="color:#963">$dif_nonce</span> -salt -out dif.json
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">dif_id</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>jq -r .id dif.json<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span><span style="color:#963">hw_info</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>jq -r .hw_info dif.json<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 3. 生成lif</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;===&gt;generate lif&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">license_id</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>uuidgen -t | tr -d <span style="background-color:#fff0f0">&#34;-&#34;</span> | head -c 24<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>cat &gt; lif.json<span style="background-color:#fff0f0">&lt;&lt;eof
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">{
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    &#34;created_at&#34;: &#34;$(date -d &#34;1 hour&#34; +&#34;%Y-%m-%dT%H:%M:%S%z&#34;)&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    &#34;dif_id&#34;: &#34;$dif_id&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    &#34;dif_signature&#34;: &#34;$dif_sign&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    &#34;license_id&#34;: &#34;$license_id&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    &#34;license_info&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;sku&#34;: &#34;LS-QUTSCLOUD-NO-LIMIT&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;valid_until&#34;: &#34;None&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;app_internal_name&#34;: &#34;vqtscloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;valid_from&#34;: &#34;2020-01-02 03:04:05.000000&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;product_type&#34;: &#34;vQTS_Cloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;name&#34;: &#34;QuTScloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;license_name&#34;: &#34;QuTScloud No Limit&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;feature&#34;: null,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;applied_at&#34;: &#34;2020-01-02 03:04:05.000000&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;categories&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;vQTS_Cloud&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        ],
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;owner&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">			&#34;000000000000000000000000&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        ],
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;attributes&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;is_floating&#34;: false,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;ext_check_type&#34;: &#34;product.product_type&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;aw_sarp2_is_used_advanced_pricing&#34;: &#34;Use config&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;cpu_limit&#34;: &#34;100&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;small_image_label&#34;: &#34;QuTScloud No Limit&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;is_subscription&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;thumbnail_label&#34;: &#34;QuTScloud No Limit&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;device_type&#34;: &#34;vqts_cld&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;purchase_before_installed&#34;: &#34;false&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;external_service&#34;: false,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;is_self_check&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;product_image_size&#34;: &#34;Default&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;type&#34;: &#34;device&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;msrp_display_actual_price_type&#34;: &#34;Use config&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;grace_period_days&#34;: &#34;21&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;gift_message_available&#34;: &#34;No&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;app_internal_name&#34;: &#34;vqtscloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;plan_title&#34;: &#34;No Limit&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;quota_device&#34;: &#34;1&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;expiry_warning_day&#34;: &#34;-1&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;upgradeable&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;immediate_activate&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;product_class&#34;: &#34;vQTS_Cloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;amrolepermissions_owner&#34;: &#34;0&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;duration_month&#34;: &#34;1&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;app_min_version&#34;: &#34;c4.4.2&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;license_activation_info&#34;: &#34;&lt;div class=\&#34;qSW-pd-desc\&#34;  id=\&#34;qSW-pd-detail-license\&#34;&gt;\n    \n    &lt;iframe class=\&#34;resize_height iframe_license_activation\&#34; id=\&#34;iframe_license_activation\&#34; src=\&#34;https://docs.qnap.com/operating-system/qts/4.5.x/en-us/GUID-C6DE86F5-38A3-496E-A872-F833E1E5280D.html\&#34; frameborder=\&#34;0\&#34; allowfullscreen=\&#34;\&#34; width=\&#34;100%\&#34; height=\&#34;100%\&#34; scrolling=\&#34;no\&#34;&gt;&lt;/iframe&gt;\n\n&lt;/div&gt;&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;variant_display_name&#34;: &#34;QuTScloud No Limit&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;extendable&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;app_display_name&#34;: &#34;QuTScloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;is_perpetual&#34;: &#34;false&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;is_bundle&#34;: false,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;transferable&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;support_org&#34;: false,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">            &#34;image_label&#34;: &#34;QuTScloud No Limit&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        },
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;app_display_name&#34;: &#34;QuTScloud&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;channel&#34;: null,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        &#34;product_id&#34;: &#34;2302&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    },
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    &#34;id&#34;: &#34;$lif_id&#34;,
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    &#34;hw_info&#34;: $hw_info
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">}
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">eof</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">uuid</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>uuidgen<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>openssl enc -e -aes-256-cbc -md md5  -in lif.json -k <span style="color:#963">$uuid</span> -salt -out lif.data
+</span></span><span style="display:flex;"><span>openssl dgst -sha256 -sign /etc/config/qlicense/qlicense_private_key.pem lif.data &gt; lif.sign
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">lif_data</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>openssl enc -base64 -e -in lif.data -A<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span><span style="color:#963">lif_sign</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>openssl enc -base64 -e -in lif.sign -A<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cat &gt;<span style="color:#963">$license_id</span>.lif<span style="background-color:#fff0f0">&lt;&lt;eof
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">{
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    &#34;nonce&#34;: &#34;$uuid&#34;, 
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    &#34;data&#34;: &#34;$lif_data&#34;, 
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    &#34;signature&#34;: &#34;$lif_sign&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">}
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">eof</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 4.注册lif</span>
+</span></span><span style="display:flex;"><span>qlicense offline_activate -p <span style="background-color:#fff0f0">`</span><span style="color:#007020">pwd</span><span style="background-color:#fff0f0">`</span>/<span style="color:#963">$license_id</span>.lif
+</span></span></code></pre></div><h2 id="问题-1">问题</h2>
+<p>这个方案存在的问题是</p>
+<ul>
+<li>仍然需要给qlicense_tool打patch以支持floating_refresh</li>
+<li>由于屏蔽了myQNAPcloud的域名，导致product_list也无法获取，虽然这个感觉没啥用，不过没有下载的话，app center里面需要购买许可证的app不会显示需要购买许可证，看起来和正版的系统不一样心里总有点不平衡</li>
+<li>不知道太久不做floating_refresh系统是否会报错，或者需要离线更新证书，目前没有看到有这种情况，系统文件也似乎没有处理floating过期的逻辑，不过cgi我大部分没有逆向，讲不定cgi里面有</li>
+</ul>
+<h1 id="3-方案三架设license-manager-服务器">3. 方案三：架设license manager 服务器</h1>
+<p>请参考这篇==&gt; <a href="https://jxcn.org/2022/03/qnap-simple-install/">【番外】史上最简单安装QutsCloud的办法 </a></p>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-official-upgrade/" data-tooltip="QutsCloud 逆向笔记 - 无侵入式补丁及支持官方升级的可能性" aria-label=": QutsCloud 逆向笔记 - 无侵入式补丁及支持官方升级的可能性">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-license/" data-tooltip="QutsCloud 逆向笔记 - qlicense设备标识文件及许可证文件" aria-label=": QutsCloud 逆向笔记 - qlicense设备标识文件及许可证文件">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/03/qnap-fake-activation/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/03/qnap-fake-activation/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/03/qnap-fake-activation/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jxcn.org\/2022\/03\/qnap-fake-activation\/';
+        
+          this.page.identifier = '\/2022\/03\/qnap-fake-activation\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'something-useless';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 author: chk-jxcn <br> Powered by HUGO & hugo-tranquilpeak-theme | <script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1281008874&web_id=1281008874"></script>. 
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-official-upgrade/" data-tooltip="QutsCloud 逆向笔记 - 无侵入式补丁及支持官方升级的可能性" aria-label=": QutsCloud 逆向笔记 - 无侵入式补丁及支持官方升级的可能性">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-license/" data-tooltip="QutsCloud 逆向笔记 - qlicense设备标识文件及许可证文件" aria-label=": QutsCloud 逆向笔记 - qlicense设备标识文件及许可证文件">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/03/qnap-fake-activation/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/03/qnap-fake-activation/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/03/qnap-fake-activation/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-fake-activation%2F" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-fake-activation%2F" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-fake-activation%2F" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+    
+    <h4 id="about-card-name">chk_jxcn</h4>
+    
+      <div id="about-card-bio">观方知彼去 去者不至方</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        无业
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        ***
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jxcn.org/img/sidebar_bg.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jxcn.org/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

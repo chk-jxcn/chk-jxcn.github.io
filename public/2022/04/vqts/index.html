@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="zh-cmn">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【补发】黑QNAP之vqts破解，支持从官方升级",
+  
+  "datePublished": "2022-04-13T00:00:00Z",
+  "dateModified": "2022-04-13T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "chk_jxcn",
+    
+    "image": "https://jxcn.org/img/touxiang.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jxcn.org\/2022\/04\/vqts\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Something useless",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jxcn.org/img/touxiang.jpg"
+    }
+    
+  },
+  "description": "这篇之前被新浪加密了，导出的工具不能登录博客导出不了，所以在这里补上\n原作时间：2020-02-16\n",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.106.0 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="chk_jxcn">
+<meta name="keywords" content="">
+<meta name="description" content="这篇之前被新浪加密了，导出的工具不能登录博客导出不了，所以在这里补上
+原作时间：2020-02-16">
+
+
+<meta property="og:description" content="这篇之前被新浪加密了，导出的工具不能登录博客导出不了，所以在这里补上
+原作时间：2020-02-16">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【补发】黑QNAP之vqts破解，支持从官方升级">
+<meta name="twitter:title" content="【补发】黑QNAP之vqts破解，支持从官方升级">
+<meta property="og:url" content="https://jxcn.org/2022/04/vqts/">
+<meta property="twitter:url" content="https://jxcn.org/2022/04/vqts/">
+<meta property="og:site_name" content="Something useless">
+<meta property="og:description" content="这篇之前被新浪加密了，导出的工具不能登录博客导出不了，所以在这里补上
+原作时间：2020-02-16">
+<meta name="twitter:description" content="这篇之前被新浪加密了，导出的工具不能登录博客导出不了，所以在这里补上
+原作时间：2020-02-16">
+<meta property="og:locale" content="en">
+
+  
+    <meta property="article:published_time" content="2022-04-13T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2022-04-13T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="vQTS">
+    
+      <meta property="article:section" content="QutsCloud">
+    
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/touxiang.jpg">
+  <meta property="twitter:image" content="https://jxcn.org/img/touxiang.jpg">
+
+
+
+
+
+
+    <title>【补发】黑QNAP之vqts破解，支持从官方升级</title>
+    <meta name="google-site-verification" content="Htp5AJbiILKJBCrxIA9Sc0DXJtOVf7MBAiKJEFOIB-g" />
+ <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?232f26bd65acad12b4ab831deaf4c205";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script>
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(["setCookieDomain", "*.jxcn.org"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//matomo.jxcn.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-64JLV4NLY4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-64JLV4NLY4');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1323696214681325"
+     crossorigin="anonymous"></script>
+
+    <link rel="icon" href="https://jxcn.org/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jxcn.org/2022/04/vqts/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jxcn.org/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jxcn.org/" aria-label="">Something useless</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jxcn.org/#about" aria-label="">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jxcn.org/#about" aria-label="">
+          <img class="sidebar-profile-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+        </a>
+        <h4 class="sidebar-profile-name">chk_jxcn</h4>
+        
+          <h5 class="sidebar-profile-bio">观方知彼去 去者不至方</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://sinablog.jxcn.org" target="_blank" rel="noopener" title="Sina blog archives">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-weibo" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Sina blog archives</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      【补发】黑QNAP之vqts破解，支持从官方升级
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-04-13T00:00:00Z">
+        
+  
+  
+  
+  
+    04/13,2022
+  
+
+      </time>
+    
+    
+  
+  
+    <span></span>
+    
+      <a class="category-link" href="https://jxcn.org/categories/vqts">vQTS</a>, 
+    
+      <a class="category-link" href="https://jxcn.org/categories/qutscloud">QutsCloud</a>
+    
+  
+
+  </div>
+
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+
+
+<div style="margin: 1rem 0; padding: 0.5rem 1rem 0.5rem 0.75rem; border-inline-start: 0.25rem solid #e9ecef;; border-color: #f66; background-color: rgba(255,102,102,.1);">
+	  <strong>未经作者许可禁止转载</strong>
+	  <br>
+	  <span style="white-space:nowrap;">本文地址：</span><a href="https://jxcn.org/2022/04/vqts/" style="white-space:nowrap;">https://jxcn.org/2022/04/vqts/</a>
+  </div>
+              <p>这篇之前被新浪加密了，导出的工具不能登录博客导出不了，所以在这里补上</p>
+<p>原作时间：2020-02-16</p>
+<h1 id="table-of-contents"></h1>
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#0-要求">0. 要求</a></li>
+    <li><a href="#1-镜像">1. 镜像</a></li>
+    <li><a href="#2-修改设置">2. 修改设置</a>
+      <ul>
+        <li><a href="#1-修改grub引导参数">1. 修改grub引导参数：</a></li>
+        <li><a href="#2-序列号">2. 序列号</a></li>
+        <li><a href="#3-启动脚本">3. 启动脚本</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-升级测试">3. 升级测试</a></li>
+    <li><a href="#4-最后">4. 最后</a></li>
+  </ul>
+</nav>
+
+
+<p>已经两年过去，官网的镜像现在无法下载了</p>
+<p>我之前做了patch好的镜像在百度云盘上，点<a href="#4-最后">这里</a>去下载</p>
+<h1 id="0-要求">0. 要求</h1>
+<p>只支持有vdx设备的虚拟机，即virtio-blk设备，kvm或者bhyve均可，virtualbox不支持</p>
+<p>已经测试的平台，freebsd 12.0 + bhyve, proxmox(lastest version)+kvm</p>
+<h1 id="1-镜像">1. 镜像</h1>
+<p>首先，下载vqts镜像，下载后需要使用qemu-img解密</p>
+<p><del>下载地址为https://download.qnap.com/Storage/Full_VirtualQTS/vQTSRelease3.2.xml</del>（已失效）</p>
+<p>解密密码为：<code>jo!xu06@wj/#Rico</code></p>
+<h1 id="2-修改设置">2. 修改设置</h1>
+<h2 id="1-修改grub引导参数">1. 修改grub引导参数：</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#963">rdinit</span><span style="color:#333">=</span>/bin/bash <span style="color:#963">path</span><span style="color:#333">=</span>/bin:/sbin -c -- export<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span><span style="color:#963">PATH</span><span style="color:#333">=</span>/bin:/sbin<span style="color:#666;background-color:#fff0f0;font-weight:bold">\;</span>mount<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span>-t<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span>devtmpfs<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span>devtmpfs<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span>/dev<span style="color:#666;background-color:#fff0f0;font-weight:bold">\;</span>cd<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span>/lib/modules/KVM<span style="color:#666;background-color:#fff0f0;font-weight:bold">\;</span>insmod<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span>virtio_blk.ko<span style="color:#666;background-color:#fff0f0;font-weight:bold">\;</span>sleep<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span>5<span style="color:#666;background-color:#fff0f0;font-weight:bold">\;</span>mount<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span>/dev/vda1<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span>/mnt<span style="color:#666;background-color:#fff0f0;font-weight:bold">\;</span>cp<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span>/mnt/start.sh<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span>/start.sh<span style="color:#666;background-color:#fff0f0;font-weight:bold">\;</span>source<span style="color:#666;background-color:#fff0f0;font-weight:bold">\$\{</span>IFS<span style="color:#666;background-color:#fff0f0;font-weight:bold">\}</span>/start.sh<span style="color:#666;background-color:#fff0f0;font-weight:bold">\;</span>
+</span></span></code></pre></div><h2 id="2-序列号">2. 序列号</h2>
+<p>放置文件SN于boot分区，内容为你自己定义的序列号</p>
+<p>类似于Q177I15622，不带回车，10位ASCII</p>
+<h2 id="3-启动脚本">3. 启动脚本</h2>
+<p>以下脚本放置于boot分区，命名为start.sh，启动后该脚本会自动把SN计算得到的MD5写入硬盘偏移，并且替换系统的dmidecode</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#579">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span>
+</span></span><span style="display:flex;"><span>exec_init<span style="color:#333">()</span> <span style="color:#333">{</span>
+</span></span><span style="display:flex;"><span>        umount /mnt
+</span></span><span style="display:flex;"><span>        umount /dev
+</span></span><span style="display:flex;"><span>        umount /sys
+</span></span><span style="display:flex;"><span>        umount /proc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">cd</span> /
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;Last chance to check root, Press Enter to break in to bash in [10]s&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">read</span> -t <span style="color:#60e;font-weight:bold">10</span> <span style="color:#333">&amp;&amp;</span> /bin/bash
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">exec</span> /init
+</span></span><span style="display:flex;"><span><span style="color:#333">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">PATH</span><span style="color:#333">=</span>/bin:/sbin
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> -e /sbin/dmidecode.orig <span style="color:#333">]</span>;<span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;patched vQTS&#34;</span>
+</span></span><span style="display:flex;"><span>        exec_init
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># Get SN</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">SN</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span>cat /mnt/SN<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#963">MD5</span><span style="color:#333">=</span><span style="background-color:#fff0f0">`</span><span style="color:#007020">echo</span> <span style="background-color:#fff0f0">&#34;[v.1]
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">host_model = TVS-1277
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">host_fw_model = TS-X77
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">host_fw_build_day = 20171117
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">host_fw_build_ver = 4.3.3
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">host_fw_build_num = 20171117
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">host_mac_addr = 02:42:16:A7:05:04
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">vqts_sn = </span><span style="background-color:#eee">${</span><span style="color:#963">SN</span><span style="background-color:#eee">}</span><span style="background-color:#fff0f0">-00
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">vqts_uuid = B19A0031924C084684F95ADF83AB412F&#34;</span> | busybox md5sum | cut -c11-18<span style="background-color:#fff0f0">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># write md5 to disk</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> -n -e <span style="background-color:#fff0f0">&#34;B19A0031924C084684F95ADF83AB412F,</span><span style="color:#963">$MD5</span><span style="background-color:#fff0f0">\0&#34;</span> | dd <span style="color:#963">of</span><span style="color:#333">=</span>/dev/vda6 <span style="color:#963">seek</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">7864576</span> <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># Patch dmidecode</span>
+</span></span><span style="display:flex;"><span>cp /sbin/dmidecode /sbin/dmidecode.orig
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cat &gt;&gt; /sbin/dmidecode&lt;&lt;<span style="background-color:#fff0f0">&#34;eof&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#888">#!/bin/sh</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#333">[</span> <span style="color:#963">$#</span> <span style="color:#333">==</span> <span style="color:#60e;font-weight:bold">0</span> <span style="color:#333">]</span>; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#007020">echo</span> -n <span style="background-color:#fff0f0">&#34;Getting SMBIOS data from sysfs.
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">SMBIOS 2.8 present.
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">15 structures occupying 641 bytes.
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Table at 0xBFFFFD70.
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x0000, DMI type 0, 24 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">BIOS Information
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Vendor: QNAP
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Version: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Release Date: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Address: 0xE8000
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Runtime Size: 96 kB
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       ROM Size: 64 kB
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Characteristics:
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">              BIOS characteristics not supported
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">              Targeted content distribution is supported
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">              System is a virtual machine
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       BIOS Revision: 0.0
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x0100, DMI type 1, 27 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">System Information
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Manufacturer: OpenStack Foundation
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Product Name: OpenStack Nova
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Version: 14.0.1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Serial Number: 48230110-dd08-4e91-b7b6-885728b98295
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       UUID: dbe0e595-81ee-47e0-bbdb-2f9517d08dd4
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Wake-up Type: Power Switch
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       SKU Number: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Family: Virtual Machine
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x0200, DMI type 2, 15 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Base Board Information
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Manufacturer: TS-X77
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Product Name: TVS-1277
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Version: 20171117-4.3.3-20171117
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Serial Number: SERIALNUMBER
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Asset Tag: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Features:
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">              Board is a hosting board
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Location In Chassis: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Chassis Handle: 0x0300
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Type: Motherboard
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Contained Object Handles: 0
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x0300, DMI type 3, 21 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Chassis Information
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Manufacturer: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Type: Other
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Lock: Not Present
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Version: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Serial Number: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Asset Tag: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Boot-up State: Safe
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Power Supply State: Safe
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Thermal State: Safe
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Security Status: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       OEM Information: 0x00000000
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Height: Unspecified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Number Of Power Cords: Unspecified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Contained Elements: 0
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x0400, DMI type 4, 42 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Processor Information
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Socket Designation: (null) 0
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Type: Central Processor
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Family: Other
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Manufacturer: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       ID: A1 06 02 00 FF FB 8B 0F
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Version: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Voltage: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       External Clock: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Max Speed: 2000 MHz
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Current Speed: 2000 MHz
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Status: Populated, Enabled
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Upgrade: Other
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       L1 Cache Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       L2 Cache Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       L3 Cache Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Serial Number: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Asset Tag: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Part Number: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Core Count: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Core Enabled: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Thread Count: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Characteristics: None
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x0401, DMI type 4, 42 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Processor Information
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Socket Designation: (null) 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Type: Central Processor
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Family: Other
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Manufacturer: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       ID: A1 06 02 00 FF FB 8B 0F
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Version: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Voltage: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       External Clock: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Max Speed: 2000 MHz
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Current Speed: 2000 MHz
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Status: Populated, Enabled
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Upgrade: Other
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       L1 Cache Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       L2 Cache Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       L3 Cache Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Serial Number: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Asset Tag: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Part Number: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Core Count: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Core Enabled: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Thread Count: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Characteristics: None
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x0402, DMI type 4, 42 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Processor Information
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Socket Designation: (null) 2
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Type: Central Processor
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Family: Other
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Manufacturer: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       ID: A1 06 02 00 FF FB 8B 0F
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Version: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Voltage: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       External Clock: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Max Speed: 2000 MHz
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Current Speed: 2000 MHz
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Status: Populated, Enabled
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Upgrade: Other
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       L1 Cache Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       L2 Cache Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       L3 Cache Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Serial Number: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Asset Tag: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Part Number: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Core Count: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Core Enabled: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Thread Count: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Characteristics: None
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x0403, DMI type 4, 42 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Processor Information
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Socket Designation: (null) 3
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Type: Central Processor
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Family: Other
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Manufacturer: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       ID: A1 06 02 00 FF FB 8B 0F
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Version: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Voltage: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       External Clock: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Max Speed: 2000 MHz
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Current Speed: 2000 MHz
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Status: Populated, Enabled
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Upgrade: Other
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       L1 Cache Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       L2 Cache Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       L3 Cache Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Serial Number: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Asset Tag: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Part Number: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Core Count: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Core Enabled: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Thread Count: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Characteristics: None
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x1000, DMI type 16, 23 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Physical Memory Array
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Location: Other
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Use: System Memory
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Error Correction Type: Multi-bit ECC
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Maximum Capacity: 8 GB
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Error Information Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Number Of Devices: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x1100, DMI type 17, 40 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Memory Device
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Array Handle: 0x1000
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Error Information Handle: Not Provided
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Total Width: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Data Width: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Size: 8192 MB
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Form Factor: DIMM
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Set: None
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Locator: (null) 0
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Bank Locator: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Type: RAM
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Type Detail: Other
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Speed: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Manufacturer: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Serial Number: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Asset Tag: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Part Number: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Rank: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Configured Clock Speed: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Minimum Voltage: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Maximum Voltage: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Configured Voltage: Unknown
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x1300, DMI type 19, 31 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Memory Array Mapped Address
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Starting Address: 0x00000000000
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Ending Address: 0x000BFFFFFFF
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Range Size: 3 GB
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Physical Array Handle: 0x1000
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Partition Width: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x1301, DMI type 19, 31 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Memory Array Mapped Address
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Starting Address: 0x00100000000
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Ending Address: 0x0023FFFFFFF
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Range Size: 5 GB
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Physical Array Handle: 0x1000
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Partition Width: 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x2000, DMI type 32, 11 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">System Boot Information
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Status: No errors detected
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x8000, DMI type 128, 27 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">OEM-specific Type
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">       Header and Data:
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">              80 1B 00 80 02 42 16 A7 05 04 B1 9A 00 31 92 4C
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">              08 46 84 F9 5A DF 83 AB 41 2F 00
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x7F00, DMI type 127, 4 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">End Of Table
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">elif</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;x</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;x-t&#34;</span> -a <span style="background-color:#fff0f0">&#34;x</span><span style="color:#963">$2</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;x2&#34;</span> <span style="color:#333">]</span>; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> -n <span style="background-color:#fff0f0">&#34;# dmidecode 3.1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Getting SMBIOS data from sysfs.
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">SMBIOS 2.8 present.
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x0200, DMI type 2, 15 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Base Board Information
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        Manufacturer: TS-X77
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        Product Name: TVS-1277
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        Version: 20171117-4.3.3-20171117
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        Serial Number: SERIALNUMBER
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        Asset Tag: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        Features:
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">                Board is a hosting board
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        Location In Chassis: Not Specified
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        Chassis Handle: 0x0300
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        Type: Motherboard
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        Contained Object Handles: 0
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">elif</span> <span style="color:#333">[</span> <span style="background-color:#fff0f0">&#34;x</span><span style="color:#963">$1</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;x-t&#34;</span> -a <span style="background-color:#fff0f0">&#34;x</span><span style="color:#963">$2</span><span style="background-color:#fff0f0">&#34;</span> <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;x128&#34;</span> <span style="color:#333">]</span>; <span style="color:#080;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">echo</span> -n <span style="background-color:#fff0f0">&#34;# dmidecode 3.1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Getting SMBIOS data from sysfs.
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">SMBIOS 2.8 present.
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">Handle 0x8000, DMI type 128, 27 bytes
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">OEM-specific Type
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        Header and Data:
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">                80 1B 00 80 02 42 16 A7 05 04 B1 9A 00 31 92 4C
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">                08 46 84 F9 5A DF 83 AB 41 2F 00
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">else</span>
+</span></span><span style="display:flex;"><span>        /sbin/dmidecode.orig <span style="color:#963">$@</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>eof
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># replace SERIALNUMBER with SN</span>
+</span></span><span style="display:flex;"><span>sed -i <span style="background-color:#fff0f0">&#34;s/SERIALNUMBER/</span><span style="color:#963">$SN</span><span style="background-color:#fff0f0">/&#34;</span> /sbin/dmidecode
+</span></span><span style="display:flex;"><span>chmod a+x /sbin/dmidecode
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>exec_init
+</span></span></code></pre></div><h1 id="3-升级测试">3. 升级测试</h1>
+<p><img src="https://jxcn.org/img/vqts-1.png" alt=""></p>
+<p><img src="https://jxcn.org/img/vqts-2.png" alt=""></p>
+<h1 id="4-最后">4. 最后</h1>
+<p><strong>数据无价，风险自担</strong></p>
+<p>如果还是不行的话，请下载镜像自己查看，新浪的排版不可靠，镜像中对dmidecode的patch不一定有用。</p>
+<p>请自行检查dmidecode的输出，在最后一次进入bash的时候。</p>
+<p>注意type2 以及最后一个OEM-specific Type</p>
+<p>链接：<a href="https://pan.baidu.com/s/1iIxaaMf_krjG9bk8zuMrMA">https://pan.baidu.com/s/1iIxaaMf_krjG9bk8zuMrMA</a></p>
+<p>提取码：6hqx</p>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/04/vdsm-kvm/" data-tooltip="Virtual DSM 逆向笔记 (在kvm中运行VDSM)" aria-label=": Virtual DSM 逆向笔记 (在kvm中运行VDSM)">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/04/vdsm-intro/" data-tooltip="Virtual DSM 逆向笔记" aria-label=": Virtual DSM 逆向笔记">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/04/vqts/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/04/vqts/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/04/vqts/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jxcn.org\/2022\/04\/vqts\/';
+        
+          this.page.identifier = '\/2022\/04\/vqts\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'something-useless';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 author: chk-jxcn <br> Powered by HUGO & hugo-tranquilpeak-theme | <script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1281008874&web_id=1281008874"></script>. 
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/04/vdsm-kvm/" data-tooltip="Virtual DSM 逆向笔记 (在kvm中运行VDSM)" aria-label=": Virtual DSM 逆向笔记 (在kvm中运行VDSM)">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/04/vdsm-intro/" data-tooltip="Virtual DSM 逆向笔记" aria-label=": Virtual DSM 逆向笔记">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/04/vqts/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/04/vqts/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/04/vqts/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjxcn.org%2F2022%2F04%2Fvqts%2F" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjxcn.org%2F2022%2F04%2Fvqts%2F" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjxcn.org%2F2022%2F04%2Fvqts%2F" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+    
+    <h4 id="about-card-name">chk_jxcn</h4>
+    
+      <div id="about-card-bio">观方知彼去 去者不至方</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        无业
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        ***
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jxcn.org/img/sidebar_bg.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jxcn.org/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

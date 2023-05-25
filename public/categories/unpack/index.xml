@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>unpack on Something useless</title>
+    <link>https://jxcn.org/categories/unpack/</link>
+    <description>Recent content in unpack on Something useless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cmn</language>
+    <lastBuildDate>Sun, 19 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://jxcn.org/categories/unpack/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>YT88脱壳笔记</title>
+      <link>https://jxcn.org/2022/06/yt88-unpack/</link>
+      <pubDate>Sun, 19 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/06/yt88-unpack/</guid>
+      <description>&lt;p&gt;朋友有个程序必须用加密狗才能运行，让我试着看看能不能复制加密狗或者脱狗运行，于是有了这篇&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>scheme on Something useless</title>
+    <link>https://jxcn.org/categories/scheme/</link>
+    <description>Recent content in scheme on Something useless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cmn</language>
+    <lastBuildDate>Wed, 23 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://jxcn.org/categories/scheme/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HtDP1e 部分习题解</title>
+      <link>https://jxcn.org/2022/11/htdp/</link>
+      <pubDate>Wed, 23 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/11/htdp/</guid>
+      <description>&lt;p&gt;看了几天SICP没看明白，于是决定先看看HtDP，感觉scheme的入门书籍还挺有意思的&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

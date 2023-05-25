@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-cmn">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "在lvgl中显示中文",
+  
+  "datePublished": "2023-05-09T00:00:00Z",
+  "dateModified": "2023-05-09T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "chk_jxcn",
+    
+    "image": "https://jxcn.org/img/touxiang.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jxcn.org\/2023\/05\/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Something useless",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jxcn.org/img/touxiang.jpg"
+    }
+    
+  },
+  "description": "lvgl有很多种方法显示中文，但是esp32的内存太小，有一些方法就显得不太现实。 下面都是基于micropython的测试，lvgl 9.0，不过其他的版本应该差不太多\n",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.106.0 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="chk_jxcn">
+<meta name="keywords" content="">
+<meta name="description" content="lvgl有很多种方法显示中文，但是esp32的内存太小，有一些方法就显得不太现实。
+下面都是基于micropython的测试，lvgl 9.0，不过其他的版本应该差不太多">
+
+
+<meta property="og:description" content="lvgl有很多种方法显示中文，但是esp32的内存太小，有一些方法就显得不太现实。
+下面都是基于micropython的测试，lvgl 9.0，不过其他的版本应该差不太多">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在lvgl中显示中文">
+<meta name="twitter:title" content="在lvgl中显示中文">
+<meta property="og:url" content="https://jxcn.org/2023/05/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87/">
+<meta property="twitter:url" content="https://jxcn.org/2023/05/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87/">
+<meta property="og:site_name" content="Something useless">
+<meta property="og:description" content="lvgl有很多种方法显示中文，但是esp32的内存太小，有一些方法就显得不太现实。
+下面都是基于micropython的测试，lvgl 9.0，不过其他的版本应该差不太多">
+<meta name="twitter:description" content="lvgl有很多种方法显示中文，但是esp32的内存太小，有一些方法就显得不太现实。
+下面都是基于micropython的测试，lvgl 9.0，不过其他的版本应该差不太多">
+<meta property="og:locale" content="en">
+
+  
+    <meta property="article:published_time" content="2023-05-09T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2023-05-09T00:00:00">
+  
+  
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/touxiang.jpg">
+  <meta property="twitter:image" content="https://jxcn.org/img/touxiang.jpg">
+
+
+
+
+
+
+    <title>在lvgl中显示中文</title>
+    <meta name="google-site-verification" content="Htp5AJbiILKJBCrxIA9Sc0DXJtOVf7MBAiKJEFOIB-g" />
+ <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?232f26bd65acad12b4ab831deaf4c205";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script>
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(["setCookieDomain", "*.jxcn.org"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//matomo.jxcn.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-64JLV4NLY4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-64JLV4NLY4');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1323696214681325"
+     crossorigin="anonymous"></script>
+
+    <link rel="icon" href="https://jxcn.org/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jxcn.org/2023/05/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jxcn.org/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jxcn.org/" aria-label="">Something useless</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jxcn.org/#about" aria-label="">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jxcn.org/#about" aria-label="">
+          <img class="sidebar-profile-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+        </a>
+        <h4 class="sidebar-profile-name">chk_jxcn</h4>
+        
+          <h5 class="sidebar-profile-bio">观方知彼去 去者不至方</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://sinablog.jxcn.org" target="_blank" rel="noopener" title="Sina blog archives">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-weibo" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Sina blog archives</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      在lvgl中显示中文
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2023-05-09T00:00:00Z">
+        
+  
+  
+  
+  
+    05/09,2023
+  
+
+      </time>
+    
+    
+  </div>
+
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+
+		    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1323696214681325"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="fluid"
+     data-ad-layout-key="-fb+5w+4e-db+86"
+     data-ad-client="ca-pub-1323696214681325"
+     data-ad-slot="9192895900"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<div style="margin: 1rem 0; padding: 0.5rem 1rem 0.5rem 0.75rem; border-inline-start: 0.25rem solid #e9ecef;; border-color: #f66; background-color: rgba(255,102,102,.1);">
+	  <strong>未经作者许可禁止转载</strong>
+	  <br>
+	  <span style="white-space:nowrap;">本文地址：</span><a href="https://jxcn.org/2023/05/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87/" style="white-space:nowrap;">https://jxcn.org/2023/05/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87/</a>
+  </div>
+              <p>lvgl有很多种方法显示中文，但是esp32的内存太小，有一些方法就显得不太现实。
+下面都是基于micropython的测试，lvgl 9.0，不过其他的版本应该差不太多</p>
+<h1 id="lvgl显示中文的方法">lvgl显示中文的方法</h1>
+<h2 id="嵌入字体">嵌入字体</h2>
+<p>把字形对应的bitmap放在C源文件的数组中，内置的字体基本上是这种形式，lvgl还提供了一个在线转换工具。</p>
+<p>以前我在u8g2上面试过类似的东西https://zhuanlan.zhihu.com/p/60200639 ，不过u8g2就完全只是点阵字体，字体里面完全不包含点阵之外的信息，lvgl添加了一些字体信息在源文件里面</p>
+<h2 id="运行时加载">运行时加载</h2>
+<p>这里又分好几种：</p>
+<ol>
+<li>
+<p>加载lvgl自己的字体，https://github.com/lvgl/lv_font_conv/blob/master/doc/font_spec.md，这是一个lvgl自己搞的font格式，有一些限制，比如数量，和颜色深度，但是基本上8bit的深度肉眼也看不太出来了。</p>
+<ul>
+<li>好处：渲染速度非常快；比较方便，官方自带工具支持</li>
+<li>缺点：非常占内存，需要把所有的位图加载到内存中；文件体积过大；字体高度固定</li>
+</ul>
+</li>
+<li>
+<p>加载freetype字体，可以用freetype或者tiny_ttf，lv_micropython默认就开启了tiny_ttf的支持，所以我这里只试了tiny_ttf，要在esp32上用freetype应该也不容易，要移植。</p>
+<ul>
+<li>好处：占用空间很小，不管是存储还是内存，tiny_ttf有一个可以编译期设定的LRU缓存，默认是4096byte，不过我增加大小尝试后感觉对性能没改善；字体大小随意设置，因为是运行时从矢量字体渲染出来的</li>
+<li>缺点：渲染特别特别慢，如果是动画，简直惨不忍睹，一秒一帧都难</li>
+</ul>
+</li>
+<li>
+<p>使用imgfont，这个我没有试，参考官方文档https://docs.lvgl.io/master/others/imgfont.html</p>
+</li>
+</ol>
+<h1 id="micropython例子">micropython例子</h1>
+<p>因为micropython本身已经占了很多空间，所以内嵌加不了多少字体，但是micropython使用运行时加载字体很方便，用下面这个例子来测试一下</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">import</span> <span style="color:#0e84b5;font-weight:bold">lvgl</span> <span style="color:#080;font-weight:bold">as</span> <span style="color:#0e84b5;font-weight:bold">lv</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">import</span> <span style="color:#0e84b5;font-weight:bold">time</span>
+</span></span><span style="display:flex;"><span>lv<span style="color:#333">.</span>init()
+</span></span><span style="display:flex;"><span>scr <span style="color:#333">=</span> lv<span style="color:#333">.</span>obj()
+</span></span><span style="display:flex;"><span>lv<span style="color:#333">.</span>scr_load(scr)
+</span></span><span style="display:flex;"><span>time<span style="color:#333">.</span>sleep(<span style="color:#00d;font-weight:bold">1</span>)
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">from</span> <span style="color:#0e84b5;font-weight:bold">lv_utils</span> <span style="color:#080;font-weight:bold">import</span> event_loop
+</span></span><span style="display:flex;"><span>event_loop <span style="color:#333">=</span> event_loop(freq<span style="color:#333">=</span><span style="color:#00d;font-weight:bold">20</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># ...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">import</span> <span style="color:#0e84b5;font-weight:bold">fs_driver</span>
+</span></span><span style="display:flex;"><span>fs_drv <span style="color:#333">=</span> lv<span style="color:#333">.</span>fs_drv_t()
+</span></span><span style="display:flex;"><span>fs_driver<span style="color:#333">.</span>fs_register(fs_drv, <span style="background-color:#fff0f0">&#39;S&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#888"># font_Number = lv.font_load(&#34;S:font.bin&#34;) # 加载bin字体</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># font_Number = lv.tiny_ttf_create_file(&#34;S:font.ttf&#34;, 30) # 加载freetype字体</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>btn <span style="color:#333">=</span> lv<span style="color:#333">.</span>btn(scr)
+</span></span><span style="display:flex;"><span>btn<span style="color:#333">.</span>align(lv<span style="color:#333">.</span>ALIGN<span style="color:#333">.</span>CENTER, <span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">0</span>)
+</span></span><span style="display:flex;"><span>label <span style="color:#333">=</span> lv<span style="color:#333">.</span>label(btn)
+</span></span><span style="display:flex;"><span>label<span style="color:#333">.</span>set_text(<span style="background-color:#fff0f0">&#34;荆轲刺秦王，两条毛腿肩上扛&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#888">#label.set_align( lv.ALIGN.CENTER)</span>
+</span></span><span style="display:flex;"><span>label<span style="color:#333">.</span>set_style_text_color( lv<span style="color:#333">.</span>color_hex( <span style="color:#058;font-weight:bold">0xFFFFFF</span> ), lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN <span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span><span style="display:flex;"><span>label<span style="color:#333">.</span>set_style_text_opa( <span style="color:#00d;font-weight:bold">255</span>, lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN<span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span><span style="display:flex;"><span>label<span style="color:#333">.</span>set_style_text_font( font_Number, lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN <span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span></code></pre></div><p>需要注意的是，lvgl的bin字体不能太大，否则加载会失败，我最大只加载到40k左右，尽量还是小一点，因为有时没有检测错误的机会就直接reset了。</p>
+<p>freetype就没有限制了，随便多大都可以，因为只有渲染的时候才会去读，所以特别特别慢，缓存可能设置大一点会有用，毕竟不用重新生成bitmap了。</p>
+<h1 id="效果">效果</h1>
+<p>其实看起来差不多，起码肉眼看不出区别，不过RGB666有个问题，因为缓冲区只有20线，所以只要字体高度超过20，那么就会有撕裂感，RGB565就不会，因为高度有48线。</p>
+<p><img src="https://jxcn.org/E:/blog/blog/static/img/fontbin.png" alt=""></p>
+<p><img src="https://jxcn.org/E:/blog/blog/static/img/fontttf.png" alt=""></p>
+
+	     
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1323696214681325"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="fluid"
+     data-ad-layout-key="-fb+5w+4e-db+86"
+     data-ad-client="ca-pub-1323696214681325"
+     data-ad-slot="9192895900"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2023/05/lv-micropython-ili9488/" data-tooltip="为桌面信息牌编译lvgl&#43;micropython固件" aria-label=": 为桌面信息牌编译lvgl&#43;micropython固件">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2023/05/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2023/05/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2023/05/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jxcn.org\/2023\/05\/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87\/';
+        
+          this.page.identifier = '\/2023\/05\/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'something-useless';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 author: chk-jxcn <br> Powered by HUGO & hugo-tranquilpeak-theme | <script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1281008874&web_id=1281008874"></script>. 
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2023/05/lv-micropython-ili9488/" data-tooltip="为桌面信息牌编译lvgl&#43;micropython固件" aria-label=": 为桌面信息牌编译lvgl&#43;micropython固件">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2023/05/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2023/05/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2023/05/%E5%9C%A8lvgl%E4%B8%AD%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjxcn.org%2F2023%2F05%2F%25E5%259C%25A8lvgl%25E4%25B8%25AD%25E6%2598%25BE%25E7%25A4%25BA%25E4%25B8%25AD%25E6%2596%2587%2F" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjxcn.org%2F2023%2F05%2F%25E5%259C%25A8lvgl%25E4%25B8%25AD%25E6%2598%25BE%25E7%25A4%25BA%25E4%25B8%25AD%25E6%2596%2587%2F" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjxcn.org%2F2023%2F05%2F%25E5%259C%25A8lvgl%25E4%25B8%25AD%25E6%2598%25BE%25E7%25A4%25BA%25E4%25B8%25AD%25E6%2596%2587%2F" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+    
+    <h4 id="about-card-name">chk_jxcn</h4>
+    
+      <div id="about-card-bio">观方知彼去 去者不至方</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        无业
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        ***
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jxcn.org/img/sidebar_bg.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jxcn.org/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

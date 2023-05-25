@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Something useless</title>
+    <link>https://jxcn.org/</link>
+    <description>Recent content on Something useless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cmn</language>
+    <lastBuildDate>Sat, 13 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://jxcn.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用lvgl&#43;micropython开发一个无线电脑性能监控小面板</title>
+      <link>https://jxcn.org/2023/05/lvgl-pcmonitor/</link>
+      <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2023/05/lvgl-pcmonitor/</guid>
+      <description>&lt;p&gt;在可视化布局工具的帮助下，开发一个界面真的很简单。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>在lvgl中显示中文</title>
+      <link>https://jxcn.org/2023/05/lvgl-cjk/</link>
+      <pubDate>Tue, 09 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2023/05/lvgl-cjk/</guid>
+      <description>&lt;p&gt;lvgl有很多种方法显示中文，但是esp32的内存太小，有一些方法就显得不太现实。
+下面都是基于micropython的测试，lvgl 9.0，不过其他的版本应该差不太多&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>为桌面信息牌编译lvgl&#43;micropython固件</title>
+      <link>https://jxcn.org/2023/05/lv-micropython-ili9488/</link>
+      <pubDate>Sun, 07 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2023/05/lv-micropython-ili9488/</guid>
+      <description>&lt;p&gt;为xu大@xutoubee开源的桌面信息牌编译micropython固件，这样就可以自己随便愉快玩耍了。&lt;/p&gt;
+&lt;p&gt;大概有100K的heap可用，可能代码稍微多一点就要用mpy-cross了&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>ili9488在8位并口下RGB565及RGB666模式对比</title>
+      <link>https://jxcn.org/2023/05/rgb565-rgb666/</link>
+      <pubDate>Sat, 06 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2023/05/rgb565-rgb666/</guid>
+      <description>&lt;p&gt;最近买了好几个xu大开源的桌面信息牌，但是固件没有开源。&lt;/p&gt;
+&lt;p&gt;我按照样例测试一下这块屏幕在RGB565和RGB666的表现&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>HtDP1e 部分习题解</title>
+      <link>https://jxcn.org/2022/11/htdp/</link>
+      <pubDate>Wed, 23 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/11/htdp/</guid>
+      <description>&lt;p&gt;看了几天SICP没看明白，于是决定先看看HtDP，感觉scheme的入门书籍还挺有意思的&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>YT88脱壳笔记</title>
+      <link>https://jxcn.org/2022/06/yt88-unpack/</link>
+      <pubDate>Sun, 19 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/06/yt88-unpack/</guid>
+      <description>&lt;p&gt;朋友有个程序必须用加密狗才能运行，让我试着看看能不能复制加密狗或者脱狗运行，于是有了这篇&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【番外】比《史上最简单安装QutsCloud的办法》还简单的办法</title>
+      <link>https://jxcn.org/2022/04/qnap-more-simple-install/</link>
+      <pubDate>Tue, 26 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/04/qnap-more-simple-install/</guid>
+      <description>&lt;p&gt;今天看到QutsCloud推送了新的版本，好奇之下看了一下更新历史&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【完结】Virtual DSM 逆向笔记 (基于libvirt的安装及升级)</title>
+      <link>https://jxcn.org/2022/04/vdsm-first-try/</link>
+      <pubDate>Mon, 25 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/04/vdsm-first-try/</guid>
+      <description>&lt;p&gt;花了一点时间写了一个模拟串口通信的程序，看起来和在DSM上面运行的一样，升级也没有问题，不过没有登录群晖账号，程序预留了设置所有通信参数的设定参数，若是有想试试洗白的朋友可以自己试试&lt;/p&gt;
+&lt;div class=&#34;alert danger no-icon &#34;&gt;
+  &lt;p&gt;&lt;p&gt;！！！本页内发布的任何工具及脚本仅供个人学习及研究之用！！！&lt;/p&gt;
+&lt;p&gt;！！！请在下载后24小时内删除！！！&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>Virtual DSM 逆向笔记 (重打包rd.gz)</title>
+      <link>https://jxcn.org/2022/04/vdsm-rd/</link>
+      <pubDate>Mon, 18 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/04/vdsm-rd/</guid>
+      <description>&lt;p&gt;重新打包rd.gz后，可能会发现内核无法解压rd.gz，这是因为格式有点不一样&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Virtual DSM 逆向笔记 (在kvm中运行VDSM)</title>
+      <link>https://jxcn.org/2022/04/vdsm-kvm/</link>
+      <pubDate>Sat, 16 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/04/vdsm-kvm/</guid>
+      <description>&lt;p&gt;DSM中使用qemu来运行VDSM，那么不考虑串口通信，能直接在kvm中启动VDSM吗？&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【补发】黑QNAP之vqts破解，支持从官方升级</title>
+      <link>https://jxcn.org/2022/04/vqts/</link>
+      <pubDate>Wed, 13 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/04/vqts/</guid>
+      <description>&lt;p&gt;这篇之前被新浪加密了，导出的工具不能登录博客导出不了，所以在这里补上&lt;/p&gt;
+&lt;p&gt;原作时间：2020-02-16&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Virtual DSM 逆向笔记</title>
+      <link>https://jxcn.org/2022/04/vdsm-intro/</link>
+      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/04/vdsm-intro/</guid>
+      <description>&lt;p&gt;弄完了QutsCloud，继续研究一下virtual DSM，这个其实两年前也看了一下，vdsm主要靠串口与主机通讯来验证license，发送network信息，硬盘扩容插拔事件等等。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>如何在QutsCloud上安装virtualization station之套娃指南</title>
+      <link>https://jxcn.org/2022/04/qnap-qkvm/</link>
+      <pubDate>Mon, 04 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/04/qnap-qkvm/</guid>
+      <description>&lt;p&gt;现在大部分虚拟化平台都支持nested虚拟化，也就是在虚拟机中再开虚拟机，esxi也是支持的，那么可以在Qutscloud上安装虚拟机管理程序virtualization station吗。&lt;/p&gt;
+&lt;p&gt;答案是可以！&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【番外】史上最简单安装QutsCloud的办法</title>
+      <link>https://jxcn.org/2022/03/qnap-simple-install/</link>
+      <pubDate>Wed, 30 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/03/qnap-simple-install/</guid>
+      <description>&lt;p&gt;最后更新日期：2023年04月06日 00点39分&lt;/p&gt;
+&lt;p&gt;经过一个晚上的思想斗争，还是决定写这一篇，当然声明还是要来一个的&lt;/p&gt;
+&lt;div class=&#34;alert danger no-icon &#34;&gt;
+  &lt;p&gt;&lt;p&gt;！！！本页内发布的任何工具及脚本仅供个人学习及研究之用！！！&lt;/p&gt;
+&lt;p&gt;！！！请在下载后24小时内删除！！！&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>QutsCloud 逆向笔记 - qutscloud的安全性解读</title>
+      <link>https://jxcn.org/2022/03/qnap-security/</link>
+      <pubDate>Tue, 29 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/03/qnap-security/</guid>
+      <description>&lt;p&gt;最后更新日期：2022年4月2日 18点33分&lt;/p&gt;
+&lt;p&gt;作为本系列的最后一篇文章，其实也是想随意讲讲QutsCloud这个产品，说说我心里对它的真实评价，无论褒贬，不仅限于安全性。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>QutsCloud 逆向笔记 - 能否在硬件平台安装qutscloud</title>
+      <link>https://jxcn.org/2022/03/qnap-hardware/</link>
+      <pubDate>Mon, 28 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/03/qnap-hardware/</guid>
+      <description>&lt;p&gt;鉴于QutsCloud相比QTS的巨大优势（硬盘自动识别，无需修改model.conf，安装后不拒绝启动，可以ssh进去打patch），虽然缺少了&lt;del&gt;QVS虚拟机&lt;/del&gt;以及硬件转码之类的功能，还是值得尝试一下安装在裸机上面&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>QutsCloud 逆向笔记 - 无侵入式补丁及支持官方升级的可能性</title>
+      <link>https://jxcn.org/2022/03/qnap-official-upgrade/</link>
+      <pubDate>Sun, 27 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/03/qnap-official-upgrade/</guid>
+      <description>&lt;p&gt;通常在完成补丁后，这个补丁就可以插入到initrd，并且重新签名，这样就可以通过签名校验。但是升级之后，initrd会被覆盖，所以，升级后如果不重新生成initrd的话，补丁就会失效。&lt;/p&gt;
+&lt;p&gt;本篇的目的是尝试加载多个initrd来实现支持官方升级，就像老骥伏枥的牛年大礼包一样。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>QutsCloud 逆向笔记 - 激活思路及路线选择</title>
+      <link>https://jxcn.org/2022/03/qnap-fake-activation/</link>
+      <pubDate>Sat, 26 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/03/qnap-fake-activation/</guid>
+      <description>&lt;p&gt;这篇讨论一下可以选择的激活系统的方案，以及具体的实现。不过不管哪种方案，&lt;strong&gt;都无法支持myQNAPcloud云服务&lt;/strong&gt;，因为现在许可证和用户是绑定的，登录了myQNAPcloud后也找不到可用的设备，也请&lt;strong&gt;不要尝试登录QNAP ID&lt;/strong&gt;。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>QutsCloud 逆向笔记 - qlicense设备标识文件及许可证文件</title>
+      <link>https://jxcn.org/2022/03/qnap-license/</link>
+      <pubDate>Fri, 25 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/03/qnap-license/</guid>
+      <description>&lt;p&gt;QutsCloud以及app center都是一套license系统，所以知道了怎么生成license之后理论上app center 里面需要购买的app也可以激活。&lt;/p&gt;
+&lt;p&gt;本篇介绍QNAP的license结构，如何解密license，以及如何生成一个系统可以接受的license。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>QutsCloud 逆向笔记 - 安装包文件签名校验</title>
+      <link>https://jxcn.org/2022/03/qnap-sign-check/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/03/qnap-sign-check/</guid>
+      <description>&lt;p&gt;本篇介绍QNAP如何对安装包以及QPKG的签名进行校验，以及怎样跳过签名检查，顺带也分析一下QPKG的格式以及如何对固件及QPKG重新打包及签名。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>QutsCloud 逆向笔记 - 启动顺序及切入点</title>
+      <link>https://jxcn.org/2022/03/qnap-start-point/</link>
+      <pubDate>Wed, 23 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/03/qnap-start-point/</guid>
+      <description>&lt;p&gt;本篇简要介绍qutscloud的启动过程，以及找到逆向的第一个线头，虽然很久以前就知道qnap怎么做的，不过第一次逆向的时候我确实也是这样找到线索的。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>QutsCloud 逆向笔记 - 安装</title>
+      <link>https://jxcn.org/2022/03/qnap-install/</link>
+      <pubDate>Sun, 20 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/03/qnap-install/</guid>
+      <description>&lt;p&gt;QNAP官方有安装qutscloud的文件以及手册，虽然已经很详细了，但是我还是简单介绍一下怎么安装原版系统。本人使用esxi 6.7u2作为宿主机系统，使用同版本esxi的朋友可以作为参考。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>QutsCloud 逆向笔记</title>
+      <link>https://jxcn.org/2022/03/qnap-intro/</link>
+      <pubDate>Tue, 15 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/03/qnap-intro/</guid>
+      <description>&lt;p&gt;这才三月份，深圳的天气就这么热，看瞅着往三十度飙，再加上疫情导致的封闭管理，闲来无事坐在家里顺手把前年没整完的qutscloud继续整整。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【老骥伏枥牛年大礼包】实现原理</title>
+      <link>https://jxcn.org/2022/03/laojifuli-yuanli/</link>
+      <pubDate>Thu, 10 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/03/laojifuli-yuanli/</guid>
+      <description>&lt;p&gt;之前我实现QTS支持官方的升级的时候老骥伏枥还没有推出支持官方升级的补丁包，后来老骥伏枥推出了牛年大礼包支持系统升级，我很好奇他是怎么实现的，但是nasyun论坛上的文章要10阅读权限才能看，可我连账号都没有，直到最近偶然看到别人分享的系统镜像，这才解除困惑。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

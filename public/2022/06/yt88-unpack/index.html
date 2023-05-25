@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-cmn">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "YT88脱壳笔记",
+  
+  "datePublished": "2022-06-19T00:00:00Z",
+  "dateModified": "2022-06-19T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "chk_jxcn",
+    
+    "image": "https://jxcn.org/img/touxiang.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jxcn.org\/2022\/06\/yt88-unpack\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Something useless",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jxcn.org/img/touxiang.jpg"
+    }
+    
+  },
+  "description": "朋友有个程序必须用加密狗才能运行，让我试着看看能不能复制加密狗或者脱狗运行，于是有了这篇\n",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.106.0 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="chk_jxcn">
+<meta name="keywords" content="">
+<meta name="description" content="朋友有个程序必须用加密狗才能运行，让我试着看看能不能复制加密狗或者脱狗运行，于是有了这篇">
+
+
+<meta property="og:description" content="朋友有个程序必须用加密狗才能运行，让我试着看看能不能复制加密狗或者脱狗运行，于是有了这篇">
+<meta property="og:type" content="article">
+<meta property="og:title" content="YT88脱壳笔记">
+<meta name="twitter:title" content="YT88脱壳笔记">
+<meta property="og:url" content="https://jxcn.org/2022/06/yt88-unpack/">
+<meta property="twitter:url" content="https://jxcn.org/2022/06/yt88-unpack/">
+<meta property="og:site_name" content="Something useless">
+<meta property="og:description" content="朋友有个程序必须用加密狗才能运行，让我试着看看能不能复制加密狗或者脱狗运行，于是有了这篇">
+<meta name="twitter:description" content="朋友有个程序必须用加密狗才能运行，让我试着看看能不能复制加密狗或者脱狗运行，于是有了这篇">
+<meta property="og:locale" content="en">
+
+  
+    <meta property="article:published_time" content="2022-06-19T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2022-06-19T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="debug">
+    
+      <meta property="article:section" content="unpack">
+    
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/touxiang.jpg">
+  <meta property="twitter:image" content="https://jxcn.org/img/touxiang.jpg">
+
+
+
+
+
+
+    <title>YT88脱壳笔记</title>
+    <meta name="google-site-verification" content="Htp5AJbiILKJBCrxIA9Sc0DXJtOVf7MBAiKJEFOIB-g" />
+ <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?232f26bd65acad12b4ab831deaf4c205";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script>
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(["setCookieDomain", "*.jxcn.org"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//matomo.jxcn.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-64JLV4NLY4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-64JLV4NLY4');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1323696214681325"
+     crossorigin="anonymous"></script>
+
+    <link rel="icon" href="https://jxcn.org/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jxcn.org/2022/06/yt88-unpack/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jxcn.org/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jxcn.org/" aria-label="">Something useless</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jxcn.org/#about" aria-label="">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jxcn.org/#about" aria-label="">
+          <img class="sidebar-profile-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+        </a>
+        <h4 class="sidebar-profile-name">chk_jxcn</h4>
+        
+          <h5 class="sidebar-profile-bio">观方知彼去 去者不至方</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://sinablog.jxcn.org" target="_blank" rel="noopener" title="Sina blog archives">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-weibo" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Sina blog archives</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      YT88脱壳笔记
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-06-19T00:00:00Z">
+        
+  
+  
+  
+  
+    06/19,2022
+  
+
+      </time>
+    
+    
+  
+  
+    <span></span>
+    
+      <a class="category-link" href="https://jxcn.org/categories/debug">debug</a>, 
+    
+      <a class="category-link" href="https://jxcn.org/categories/unpack">unpack</a>
+    
+  
+
+  </div>
+
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+
+
+<div style="margin: 1rem 0; padding: 0.5rem 1rem 0.5rem 0.75rem; border-inline-start: 0.25rem solid #e9ecef;; border-color: #f66; background-color: rgba(255,102,102,.1);">
+	  <strong>未经作者许可禁止转载</strong>
+	  <br>
+	  <span style="white-space:nowrap;">本文地址：</span><a href="https://jxcn.org/2022/06/yt88-unpack/" style="white-space:nowrap;">https://jxcn.org/2022/06/yt88-unpack/</a>
+  </div>
+              <p>朋友有个程序必须用加密狗才能运行，让我试着看看能不能复制加密狗或者脱狗运行，于是有了这篇</p>
+<h1 id="1-加密狗的原理">1. 加密狗的原理</h1>
+<p>因为手里有狗，所以先检查一下狗的VID，发现是YT88，东莞一个叫做域天的厂家做的，去网上找了一下它的工具，然后用usb trace跟踪。发现它有四种加密方法</p>
+<p>a) 普通算法，读写存储器使用的读密码，同时也可以用来加密一个整数</p>
+<p>b) 增强算法一，密钥存储在程序中，计算一个随机负载的加密值，与加密狗的计算结果对比</p>
+<p>c) 增强算法二，程序中只存储应答表，随机选出里面的负载和对应的应答值，与加密狗的计算结果对比</p>
+<p>d) 国密sm，这个加密狗硬件版本太低，没实现非对称算法</p>
+<p>a) 的读密钥直接可以从usb trace中读出，是以明文发送的，b) 及c) 使用的是通用的算法TEA，它的模板中有给出算法的实现：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#339;font-weight:bold">void</span> SoftKey<span style="color:#333">::</span> EncBySoft(   BYTE  <span style="color:#333">*</span>   aData,  BYTE   <span style="color:#333">*</span>   aKey   )
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">const</span>   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   cnDelta   <span style="color:#333">=</span>   <span style="color:#058;font-weight:bold">0x9E3779B9</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">register</span>   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   y   <span style="color:#333">=</span>   (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aData   )[<span style="color:#00d;font-weight:bold">0</span>],   z   <span style="color:#333">=</span>   (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aData   )[<span style="color:#00d;font-weight:bold">1</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">register</span>   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   sum   <span style="color:#333">=</span>   <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   a   <span style="color:#333">=</span>   (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aKey   )[<span style="color:#00d;font-weight:bold">0</span>],   b   <span style="color:#333">=</span>   (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aKey   )[<span style="color:#00d;font-weight:bold">1</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   c   <span style="color:#333">=</span>   (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aKey   )[<span style="color:#00d;font-weight:bold">2</span>],   d   <span style="color:#333">=</span>   (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aKey   )[<span style="color:#00d;font-weight:bold">3</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#339;font-weight:bold">int</span>   n   <span style="color:#333">=</span>   <span style="color:#00d;font-weight:bold">32</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">while</span>   (   n<span style="color:#333">--</span>   <span style="color:#333">&gt;</span>   <span style="color:#00d;font-weight:bold">0</span>   )
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        sum   <span style="color:#333">+=</span>   cnDelta;
+</span></span><span style="display:flex;"><span>        y   <span style="color:#333">+=</span>   ((   z   <span style="color:#333">&lt;&lt;</span>   <span style="color:#00d;font-weight:bold">4</span>   )   <span style="color:#333">+</span>   a )  <span style="color:#333">^</span>   (z   <span style="color:#333">+</span>   sum )  <span style="color:#333">^</span>  ( (   z   <span style="color:#333">&gt;&gt;</span>   <span style="color:#00d;font-weight:bold">5</span>   )   <span style="color:#333">+</span>   b);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        z   <span style="color:#333">+=</span>   ((   y   <span style="color:#333">&lt;&lt;</span>   <span style="color:#00d;font-weight:bold">4</span>   )   <span style="color:#333">+</span>   c )  <span style="color:#333">^</span>   (y   <span style="color:#333">+</span>   sum )  <span style="color:#333">^</span>  ( (   y   <span style="color:#333">&gt;&gt;</span>   <span style="color:#00d;font-weight:bold">5</span>   )   <span style="color:#333">+</span>   d);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aData   )[<span style="color:#00d;font-weight:bold">0</span>]   <span style="color:#333">=</span>   y;
+</span></span><span style="display:flex;"><span>    (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aData   )[<span style="color:#00d;font-weight:bold">1</span>]   <span style="color:#333">=</span>   z;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#339;font-weight:bold">void</span> SoftKey<span style="color:#333">::</span> DecBySoft(    BYTE  <span style="color:#333">*</span>   aData,   BYTE   <span style="color:#333">*</span>   aKey   )
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">const</span>   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   cnDelta   <span style="color:#333">=</span>   <span style="color:#058;font-weight:bold">0x9E3779B9</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">register</span>   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   y   <span style="color:#333">=</span>   (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aData   )[<span style="color:#00d;font-weight:bold">0</span>],   z   <span style="color:#333">=</span>   (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aData   )[<span style="color:#00d;font-weight:bold">1</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">register</span>   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   sum   <span style="color:#333">=</span>   <span style="color:#058;font-weight:bold">0xC6EF3720</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   a   <span style="color:#333">=</span>   (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aKey   )[<span style="color:#00d;font-weight:bold">0</span>],   b   <span style="color:#333">=</span>   (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aKey   )[<span style="color:#00d;font-weight:bold">1</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   c   <span style="color:#333">=</span>   (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aKey   )[<span style="color:#00d;font-weight:bold">2</span>],   d   <span style="color:#333">=</span>   (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aKey   )[<span style="color:#00d;font-weight:bold">3</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#339;font-weight:bold">int</span>   n   <span style="color:#333">=</span>   <span style="color:#00d;font-weight:bold">32</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">while</span>   (   n<span style="color:#333">--</span>   <span style="color:#333">&gt;</span>   <span style="color:#00d;font-weight:bold">0</span>   )
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        z   <span style="color:#333">-=</span>  ( (   y   <span style="color:#333">&lt;&lt;</span>   <span style="color:#00d;font-weight:bold">4</span>   )   <span style="color:#333">+</span>   c )  <span style="color:#333">^</span>  ( y   <span style="color:#333">+</span>   sum  ) <span style="color:#333">^</span> (  (   y   <span style="color:#333">&gt;&gt;</span>   <span style="color:#00d;font-weight:bold">5</span>   )   <span style="color:#333">+</span>   d);
+</span></span><span style="display:flex;"><span>        y   <span style="color:#333">-=</span>  ( (   z   <span style="color:#333">&lt;&lt;</span>   <span style="color:#00d;font-weight:bold">4</span>   )   <span style="color:#333">+</span>   a )  <span style="color:#333">^</span>  ( z   <span style="color:#333">+</span>   sum  ) <span style="color:#333">^</span> (  (   z   <span style="color:#333">&gt;&gt;</span>   <span style="color:#00d;font-weight:bold">5</span>   )   <span style="color:#333">+</span>   b);
+</span></span><span style="display:flex;"><span>        sum   <span style="color:#333">-=</span>   cnDelta;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aData   )[<span style="color:#00d;font-weight:bold">0</span>]   <span style="color:#333">=</span>   y;
+</span></span><span style="display:flex;"><span>    (   (   <span style="color:#339;font-weight:bold">unsigned</span>   <span style="color:#339;font-weight:bold">long</span>   <span style="color:#333">*</span>   )aData   )[<span style="color:#00d;font-weight:bold">1</span>]   <span style="color:#333">=</span>   z;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="2-破解思路">2. 破解思路</h1>
+<p>a) 如果没有使用增强算法二，那么可以提取出程序中的密钥1以及读密钥，然后复制加密狗</p>
+<p>b) 如果使用算法二，则可以1. 穷举来找出密钥，2. 使用其他的值替换增强算法二中的应答表，3. 造一个假狗，对请求回应应答表中的值（加密狗是一个USB HID设备，树莓派就可以模拟），4. 为已有的狗建立一个远程服务器，则可以利用它来解密其他机器上的程序（同样需要一个虚拟驱动或者模拟的硬件）</p>
+<p>c) 脱壳</p>
+<p>看了一下，这个程序使用了加密算法二，所以a) 就可以淘汰了，b) 中，感觉只有3有可操作性，因为4也要弄个假狗来通信，那么其实没必要用远程服务器了，毕竟应答表是固定的，穷举有难度，对程序做patch肯定也是需要修改验证的。</p>
+<p>另外，如果使用国密sm算法，假狗应该也不行了（对随机数据签名，不再是固定应答），只有4才有可能实现（不过如果对狗ID校验的话也会失败，不过ID似乎不会参与国密sm的运算，所以可以用模拟的回答）。</p>
+<h1 id="3-尝试脱壳">3. 尝试脱壳</h1>
+<p>这里其实也不是尝试，已经试了很多次，而且看了看雪的脱壳教程，以及几个大佬对yt88脱壳的帖子</p>
+<p>脱壳教程： <a href="https://bbs.pediy.com/thread-20366.htm">https://bbs.pediy.com/thread-20366.htm</a></p>
+<p>YT88脱壳大佬：</p>
+<p>OEP dump重入 <a href="https://bbs.pediy.com/thread-258258.htm">https://bbs.pediy.com/thread-258258.htm</a></p>
+<p>PE dump修复 <a href="https://bbs.pediy.com/thread-214287.htm">https://bbs.pediy.com/thread-214287.htm</a></p>
+<p>这两个大佬脱壳的思路是不一样的，第一个大佬在进OEP之前将程序分配的可执行段存储为PE sector，这样下次启动即可直接恢复到OEP中执行。第二个大佬则用了更复杂的方法，他将程序解密的可执行段dump出来后进行修复，但是比较困难，不过他的视频很详细，有点意思。</p>
+<p>我用类似第一个大佬的方法做的（ollydbg+ollydumpex）：</p>
+<ol>
+<li>
+<p>因为程序有int3的反调试，所以需要勾选让程序自己处理异常</p>
+</li>
+<li>
+<p>F9运行后会中断在反调试的int3后，这时对virtualfree下断点</p>
+</li>
+<li>
+<p>shift+F9，忽略异常继续执行（seh会处理int3）</p>
+</li>
+<li>
+<p>多次F9后检查返回点的代码（同时可以看到usb trace中有通信），在这里就jmp到OEP</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80000</span>    <span style="color:#00d;font-weight:bold">6</span><span style="color:#036;font-weight:bold">A</span> <span style="color:#00d;font-weight:bold">00</span>           <span style="color:#036;font-weight:bold">push</span>    <span style="color:#00d;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80002</span>    <span style="color:#00d;font-weight:bold">68</span> <span style="color:#00d;font-weight:bold">00204500</span>     <span style="color:#036;font-weight:bold">push</span>    <span style="color:#00d;font-weight:bold">452000</span>      (<span style="color:#f00;background-color:#faa">解密后的程序的大小</span><span style="color:#00d;font-weight:bold">452000</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80007</span>    <span style="color:#00d;font-weight:bold">68</span> <span style="color:#00d;font-weight:bold">0000</span><span style="color:#036;font-weight:bold">B403</span>     <span style="color:#036;font-weight:bold">push</span>    <span style="color:#00d;font-weight:bold">3</span><span style="color:#036;font-weight:bold">B40000</span>     (<span style="color:#f00;background-color:#faa">解密后的程序的基址</span><span style="color:#00d;font-weight:bold">3</span><span style="color:#036;font-weight:bold">B40000</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E8000C</span>    <span style="color:#00d;font-weight:bold">68</span> <span style="color:#00d;font-weight:bold">00004000</span>     <span style="color:#036;font-weight:bold">push</span>    <span style="color:#00d;font-weight:bold">400000</span>      (<span style="color:#f00;background-color:#faa">加载地址</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80011</span>    <span style="color:#00d;font-weight:bold">68</span> <span style="color:#036;font-weight:bold">FFFFFFFF</span>     <span style="color:#036;font-weight:bold">push</span>    -<span style="color:#00d;font-weight:bold">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80016</span>    <span style="color:#036;font-weight:bold">FF15</span> <span style="color:#00d;font-weight:bold">38</span><span style="color:#036;font-weight:bold">DD5200</span>   <span style="color:#036;font-weight:bold">call</span>    <span style="color:#036;font-weight:bold">dword</span> <span style="color:#036;font-weight:bold">ptr</span> [<span style="color:#00d;font-weight:bold">52</span><span style="color:#036;font-weight:bold">DD38</span>] 
+</span></span><span style="display:flex;"><span><span style="color:#00d;font-weight:bold">02</span><span style="color:#036;font-weight:bold">E8001C</span>    <span style="color:#00d;font-weight:bold">68</span> <span style="color:#00d;font-weight:bold">00800000</span>     <span style="color:#036;font-weight:bold">push</span>    <span style="color:#00d;font-weight:bold">8000</span>
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80021</span>    <span style="color:#00d;font-weight:bold">6</span><span style="color:#036;font-weight:bold">A</span> <span style="color:#00d;font-weight:bold">00</span>           <span style="color:#036;font-weight:bold">push</span>    <span style="color:#00d;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80023</span>    <span style="color:#00d;font-weight:bold">68</span> <span style="color:#00d;font-weight:bold">0000</span><span style="color:#036;font-weight:bold">B403</span>     <span style="color:#036;font-weight:bold">push</span>    <span style="color:#00d;font-weight:bold">3</span><span style="color:#036;font-weight:bold">B40000</span>      (<span style="color:#f00;background-color:#faa">释放前</span><span style="color:#00d;font-weight:bold">8</span><span style="color:#036;font-weight:bold">K</span><span style="color:#f00;background-color:#faa">，似乎没什么意义，应该是已经将解密后的</span><span style="color:#036;font-weight:bold">.text复制到现在的加载地址上了</span><span style="color:#f00;background-color:#faa">，因此释放掉内存</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80028</span>    <span style="color:#036;font-weight:bold">FF15</span> <span style="color:#00d;font-weight:bold">34</span><span style="color:#036;font-weight:bold">D71900</span>   <span style="color:#036;font-weight:bold">call</span>    <span style="color:#036;font-weight:bold">dword</span> <span style="color:#036;font-weight:bold">ptr</span> [<span style="color:#00d;font-weight:bold">19</span><span style="color:#036;font-weight:bold">D734</span>]               <span style="color:#888">; KERNEL32.VirtualFree
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E8002E</span>    <span style="color:#00d;font-weight:bold">8</span><span style="color:#036;font-weight:bold">BE5</span>            <span style="color:#036;font-weight:bold">mov</span>     <span style="color:#036;font-weight:bold">esp</span>, <span style="color:#036;font-weight:bold">ebp</span>
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80030</span>    <span style="color:#00d;font-weight:bold">5</span><span style="color:#036;font-weight:bold">D</span>              <span style="color:#036;font-weight:bold">pop</span>     <span style="color:#036;font-weight:bold">ebp</span>
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80031</span>    <span style="color:#00d;font-weight:bold">8</span><span style="color:#036;font-weight:bold">BE5</span>            <span style="color:#036;font-weight:bold">mov</span>     <span style="color:#036;font-weight:bold">esp</span>, <span style="color:#036;font-weight:bold">ebp</span>
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80033</span>    <span style="color:#00d;font-weight:bold">5</span><span style="color:#036;font-weight:bold">D</span>              <span style="color:#036;font-weight:bold">pop</span>     <span style="color:#036;font-weight:bold">ebp</span>
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80034</span>  - <span style="color:#036;font-weight:bold">E9</span> <span style="color:#036;font-weight:bold">F6CC58FD</span>     <span style="color:#036;font-weight:bold">jmp</span>     <span style="color:#036;font-weight:bold">gamecons.0040CD2F</span> (<span style="color:#036;font-weight:bold">OEP</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">02</span><span style="color:#06b;font-weight:bold">E80039</span>    <span style="color:#00d;font-weight:bold">0000</span>            <span style="color:#036;font-weight:bold">add</span>     <span style="color:#036;font-weight:bold">byte</span> <span style="color:#036;font-weight:bold">ptr</span> [<span style="color:#036;font-weight:bold">eax</span>], <span style="color:#036;font-weight:bold">al</span>
+</span></span></code></pre></div></li>
+<li>
+<p>此时直接dump内存中的.text，.rsrc以及3B40000对应的段以及.rsrc，同时修改3B40000加载地址为3B40000，选择重建PE转储即可。</p>
+</li>
+<li>
+<p>如果程序本身没有校验的话，现在应该已经可以运行了。</p>
+</li>
+</ol>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/11/htdp/" data-tooltip="HtDP1e 部分习题解" aria-label=": HtDP1e 部分习题解">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/04/qnap-more-simple-install/" data-tooltip="【番外】比《史上最简单安装QutsCloud的办法》还简单的办法" aria-label=": 【番外】比《史上最简单安装QutsCloud的办法》还简单的办法">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/06/yt88-unpack/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/06/yt88-unpack/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/06/yt88-unpack/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jxcn.org\/2022\/06\/yt88-unpack\/';
+        
+          this.page.identifier = '\/2022\/06\/yt88-unpack\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'something-useless';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 author: chk-jxcn <br> Powered by HUGO & hugo-tranquilpeak-theme | <script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1281008874&web_id=1281008874"></script>. 
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/11/htdp/" data-tooltip="HtDP1e 部分习题解" aria-label=": HtDP1e 部分习题解">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/04/qnap-more-simple-install/" data-tooltip="【番外】比《史上最简单安装QutsCloud的办法》还简单的办法" aria-label=": 【番外】比《史上最简单安装QutsCloud的办法》还简单的办法">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/06/yt88-unpack/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/06/yt88-unpack/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/06/yt88-unpack/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjxcn.org%2F2022%2F06%2Fyt88-unpack%2F" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjxcn.org%2F2022%2F06%2Fyt88-unpack%2F" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjxcn.org%2F2022%2F06%2Fyt88-unpack%2F" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+    
+    <h4 id="about-card-name">chk_jxcn</h4>
+    
+      <div id="about-card-bio">观方知彼去 去者不至方</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        无业
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        ***
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jxcn.org/img/sidebar_bg.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jxcn.org/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

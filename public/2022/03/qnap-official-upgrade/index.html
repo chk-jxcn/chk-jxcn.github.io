@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-cmn">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "QutsCloud 逆向笔记 - 无侵入式补丁及支持官方升级的可能性",
+  
+  "image": "https://jxcn.org/img/qnap-official-upgrade-cover.png",
+  
+  "datePublished": "2022-03-27T00:00:00Z",
+  "dateModified": "2022-03-27T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "chk_jxcn",
+    
+    "image": "https://jxcn.org/img/touxiang.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jxcn.org\/2022\/03\/qnap-official-upgrade\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Something useless",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jxcn.org/img/touxiang.jpg"
+    }
+    
+  },
+  "description": "通常在完成补丁后，这个补丁就可以插入到initrd，并且重新签名，这样就可以通过签名校验。但是升级之后，initrd会被覆盖，所以，升级后如果不重新生成initrd的话，补丁就会失效。\n本篇的目的是尝试加载多个initrd来实现支持官方升级，就像老骥伏枥的牛年大礼包一样。\n",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.106.0 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="chk_jxcn">
+<meta name="keywords" content="">
+<meta name="description" content="通常在完成补丁后，这个补丁就可以插入到initrd，并且重新签名，这样就可以通过签名校验。但是升级之后，initrd会被覆盖，所以，升级后如果不重新生成initrd的话，补丁就会失效。
+本篇的目的是尝试加载多个initrd来实现支持官方升级，就像老骥伏枥的牛年大礼包一样。">
+
+
+<meta property="og:description" content="通常在完成补丁后，这个补丁就可以插入到initrd，并且重新签名，这样就可以通过签名校验。但是升级之后，initrd会被覆盖，所以，升级后如果不重新生成initrd的话，补丁就会失效。
+本篇的目的是尝试加载多个initrd来实现支持官方升级，就像老骥伏枥的牛年大礼包一样。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QutsCloud 逆向笔记 - 无侵入式补丁及支持官方升级的可能性">
+<meta name="twitter:title" content="QutsCloud 逆向笔记 - 无侵入式补丁及支持官方升级的可能性">
+<meta property="og:url" content="https://jxcn.org/2022/03/qnap-official-upgrade/">
+<meta property="twitter:url" content="https://jxcn.org/2022/03/qnap-official-upgrade/">
+<meta property="og:site_name" content="Something useless">
+<meta property="og:description" content="通常在完成补丁后，这个补丁就可以插入到initrd，并且重新签名，这样就可以通过签名校验。但是升级之后，initrd会被覆盖，所以，升级后如果不重新生成initrd的话，补丁就会失效。
+本篇的目的是尝试加载多个initrd来实现支持官方升级，就像老骥伏枥的牛年大礼包一样。">
+<meta name="twitter:description" content="通常在完成补丁后，这个补丁就可以插入到initrd，并且重新签名，这样就可以通过签名校验。但是升级之后，initrd会被覆盖，所以，升级后如果不重新生成initrd的话，补丁就会失效。
+本篇的目的是尝试加载多个initrd来实现支持官方升级，就像老骥伏枥的牛年大礼包一样。">
+<meta property="og:locale" content="en">
+
+  
+    <meta property="article:published_time" content="2022-03-27T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2022-03-27T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="qutscloud">
+    
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/touxiang.jpg">
+  <meta property="twitter:image" content="https://jxcn.org/img/touxiang.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/qnap-official-upgrade-cover.png">
+  <meta property="twitter:image" content="https://jxcn.org/img/qnap-official-upgrade-cover.png">
+
+
+    <title>QutsCloud 逆向笔记 - 无侵入式补丁及支持官方升级的可能性</title>
+    <meta name="google-site-verification" content="Htp5AJbiILKJBCrxIA9Sc0DXJtOVf7MBAiKJEFOIB-g" />
+ <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?232f26bd65acad12b4ab831deaf4c205";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script>
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(["setCookieDomain", "*.jxcn.org"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//matomo.jxcn.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-64JLV4NLY4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-64JLV4NLY4');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1323696214681325"
+     crossorigin="anonymous"></script>
+
+    <link rel="icon" href="https://jxcn.org/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jxcn.org/2022/03/qnap-official-upgrade/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jxcn.org/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jxcn.org/" aria-label="">Something useless</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jxcn.org/#about" aria-label="">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jxcn.org/#about" aria-label="">
+          <img class="sidebar-profile-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+        </a>
+        <h4 class="sidebar-profile-name">chk_jxcn</h4>
+        
+          <h5 class="sidebar-profile-bio">观方知彼去 去者不至方</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://sinablog.jxcn.org" target="_blank" rel="noopener" title="Sina blog archives">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-weibo" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Sina blog archives</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      QutsCloud 逆向笔记 - 无侵入式补丁及支持官方升级的可能性
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-03-27T00:00:00Z">
+        
+  
+  
+  
+  
+    03/27,2022
+  
+
+      </time>
+    
+    
+  
+  
+    <span></span>
+    
+      <a class="category-link" href="https://jxcn.org/categories/qutscloud">qutscloud</a>
+    
+  
+
+  </div>
+
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+
+
+<div style="margin: 1rem 0; padding: 0.5rem 1rem 0.5rem 0.75rem; border-inline-start: 0.25rem solid #e9ecef;; border-color: #f66; background-color: rgba(255,102,102,.1);">
+	  <strong>未经作者许可禁止转载</strong>
+	  <br>
+	  <span style="white-space:nowrap;">本文地址：</span><a href="https://jxcn.org/2022/03/qnap-official-upgrade/" style="white-space:nowrap;">https://jxcn.org/2022/03/qnap-official-upgrade/</a>
+  </div>
+              <p>通常在完成补丁后，这个补丁就可以插入到initrd，并且重新签名，这样就可以通过签名校验。但是升级之后，initrd会被覆盖，所以，升级后如果不重新生成initrd的话，补丁就会失效。</p>
+<p>本篇的目的是尝试加载多个initrd来实现支持官方升级，就像老骥伏枥的牛年大礼包一样。</p>
+<p>tg交流群：https://t.me/qutscloud</p>
+<p>个人更推荐使用SYSLINUX，比较简单不容易出错，可以优先试试</p>
+<h1 id="table-of-contents"></h1>
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-使用grub204">1. 使用GRUB2.04</a>
+      <ul>
+        <li><a href="#简易操作">简易操作</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-使用syslinux替换grub">2. 使用SYSLINUX替换GRUB</a></li>
+    <li><a href="#3-efi">3. EFI</a></li>
+  </ul>
+</nav>
+
+
+<h1 id="1-使用grub204">1. 使用GRUB2.04</h1>
+<p>只想简单安装的同学请点击<a href="#简易操作">这里</a></p>
+<p>从官方地址下载下来的镜像，boot loader是GRUB 1.99，位于/dev/sda1，分区大小大概为2M。这个版本的grub不支持加载多个initrd<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>，所以需要升级到GRUB 2.04或以上的版本。</p>
+<pre tabindex="0"><code>/dev/mapper/dom1          2020      1328       584  69% /boot
+</code></pre><p>从ubuntu的官网下载个GRUB 2.06的安装包看看，结果还没安装，这一堆文件大小就已经超过2M了，安装的时候还要生成core.img，不过可能也就几十K。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#333">[</span>~/i386-pc<span style="color:#333">]</span> <span style="color:#888"># du -s</span>
+</span></span><span style="display:flex;"><span><span style="color:#60e;font-weight:bold">2636</span>    .
+</span></span></code></pre></div><p>也不知道QNAP加载device mapping的设置是存在配置里还是从分区表里读出来的，不过暂时先不动分区表，试试看给GRUB瘦瘦身，要是还是不行的话就算了，搞搞syslinux，syslinux才大概1M左右。（PS: Qutscloud是根据parted输出的结果来创建dm table，上层应用基本都是用domX来访问硬盘分区，所以移动分区位置正常情况不会影响使用，不过考虑到patch的简便性，这里不考虑增大boot分区的大小）</p>
+<p>删除了一堆用不到的文件后看看大小</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#333">[</span>~/i386-pc<span style="color:#333">]</span> <span style="color:#888"># rm regexp.mod net.mod zstd.mod zfs* grub-ntldr-img  functional_test.mod  bsd.mod xnu.mod gdb.mod  gcry_* btrfs.mod syslinuxcfg.mod legacycfg.mod</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">[</span>~/i386-pc<span style="color:#333">]</span> <span style="color:#888"># du -s</span>
+</span></span><span style="display:flex;"><span><span style="color:#60e;font-weight:bold">1880</span>    .
+</span></span></code></pre></div><p>还有100多KB，再生成个core.img最多50KB，脚本最多10KB，感觉勉强可以塞下了</p>
+<p>找个ubuntu的机器安装一下，然后copy出来启动看看</p>
+<hr>
+<p>ubuntu 20.04的grub默认是2.02，升级要下载500多M的更新，于是安装了个ubuntu21.10，默认grub是2.04，那就用这个好了，将qnap的镜像附加为第二块硬盘后启动</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#579">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 准备需要copy的东西</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020">cd</span>
+</span></span><span style="display:flex;"><span>mkdir i386-pc
+</span></span><span style="display:flex;"><span>mkdir boot
+</span></span><span style="display:flex;"><span>cp /boot/grub/i386-pc/* i386-pc
+</span></span><span style="display:flex;"><span><span style="color:#333">(</span> <span style="color:#007020">cd</span> i386-pc <span style="color:#333">&amp;&amp;</span> rm regexp.mod zstd.mod zfs* grub-ntldr-img  functional_test.mod  bsd.mod xnu.mod gdb.mod  gcry_* btrfs.mod syslinuxcfg.mod legacycfg.mod xnu* mpi.mod efiemu.mod xzio.mod ehci.mod ahci.mod legacy_password_test.mod *.img<span style="color:#333">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 为sdb安装grub</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 为sdb1重新调整大小, 预留511个block写core.img，不调整会报下面的错误，因为分区1和mbr之间的空隙塞不进core.img</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># Installing for i386-pc platform.</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># grub-install: warning: your embedding area is unusually small.  core.img won&#39;t fit in it..</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># grub-install: error: embedding is not possible, but this is required for cross-disk install.</span>
+</span></span><span style="display:flex;"><span>cat <span style="background-color:#fff0f0">&lt;&lt;eof | sfdisk /dev/sdb
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">label: dos
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">label-id: 0xb66e61e9
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">device: /dev/sdb
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">unit: sectors
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">sector-size: 512
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">/dev/sdb1 : start=         512, size=        3840, type=83
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">/dev/sdb2 : start=        4352, size=      484608, type=83, bootable
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">/dev/sdb3 : start=      488960, size=      484608, type=83
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">/dev/sdb4 : start=      973568, size=       34048, type=5
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">/dev/sdb5 : start=      973600, size=       16608, type=83
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">/dev/sdb6 : start=      990240, size=       17376, type=83
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">eof</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 生成core.img</span>
+</span></span><span style="display:flex;"><span>cat <span style="background-color:#fff0f0">&lt;&lt;eof &gt; /boot/grub/i386-pc/load.cfg
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">set root=(hd0,msdos1)
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">set prefix=($root)&#39;/&#39; #this line seems useless
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">eof</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>grub-mkimage -v --directory <span style="background-color:#fff0f0">&#39;/usr/lib/grub/i386-pc&#39;</span> --prefix <span style="background-color:#fff0f0">&#39;/&#39;</span> --output <span style="background-color:#fff0f0">&#39;/boot/grub/i386-pc/core.img&#39;</span>  --format <span style="background-color:#fff0f0">&#39;i386-pc&#39;</span>  --compression <span style="background-color:#fff0f0">&#39;auto&#39;</span>  --config <span style="background-color:#fff0f0">&#39;/boot/grub/i386-pc/load.cfg&#39;</span> <span style="background-color:#fff0f0">&#39;ext2&#39;</span> <span style="background-color:#fff0f0">&#39;part_msdos&#39;</span> <span style="background-color:#fff0f0">&#39;biosdisk&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 写入mbr及core.img</span>
+</span></span><span style="display:flex;"><span>grub-bios-setup --verbose --directory<span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;/boot/grub/i386-pc&#39;</span> <span style="background-color:#fff0f0">&#39;/dev/sdb&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 创建文件系统，复制grub的模块</span>
+</span></span><span style="display:flex;"><span>mke2fs -t ext2 /dev/sdb1
+</span></span><span style="display:flex;"><span>mount /dev/sdb1 boot
+</span></span><span style="display:flex;"><span>mkdir boot/i386-pc
+</span></span><span style="display:flex;"><span>cp i386-pc/* boot/i386-pc/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 写入启动项</span>
+</span></span><span style="display:flex;"><span>cat <span style="background-color:#fff0f0">&lt;&lt;eof &gt; boot/grub.cfg
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">play 480 440 1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">### END /etc/grub.d/00_header ###
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">### BEGIN /etc/grub.d/05_debian_theme ###
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">set menu_color_normal=white/black
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">set menu_color_highlight=black/light-gray
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">### END /etc/grub.d/05_debian_theme ###
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">### BEGIN /etc/grub.d/10_linux ###
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">menuentry &#39;DOM kernel X86&#39; --class ubuntu --class gnu-linux --class gnu --class os {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        insmod ext2
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        set root=&#39;(hd0,2)&#39;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        linux   /boot/bzImage root=/dev/ram0 rw
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        initrd  /boot/initrd.boot /boot/patch.boot
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">}
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">menuentry &#39;DOM kernel X86 backup&#39; --class ubuntu --class gnu-linux --class gnu --class os {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        insmod ext2
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        set root=&#39;(hd0,3)&#39;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        linux   /boot/bzImage root=/dev/ram0 rw
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        initrd  /boot/initrd.boot
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">}
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">menuentry &#39;Recovery Mode&#39; --class ubuntu --class gnu-linux --class gnu --class os {
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        insmod ext2
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        set root=&#39;(hd0,2)&#39;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        linux   /boot/bzImage root=/dev/ram0 rw qnap_recovery_mode=1
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        initrd  /boot/initrd.boot
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">}
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">set timeout=10
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">eof</span>
+</span></span><span style="display:flex;"><span>umount boot
+</span></span></code></pre></div><p>将镜像的硬盘从另外一台虚拟机启动试试看，好像已经可以了</p>
+<p><img src="https://jxcn.org/img/qnap-official-upgrade-1.png" alt=""></p>
+<p><img src="https://jxcn.org/img/qnap-official-upgrade-2.png" alt=""></p>
+<p>可以看到，grub已经换成我们安装的2.04版本的grub，而且initrd参数也默认会加载两个initrd</p>
+<p>启动qutscloud后，创建一个patch.boot来试试看</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#579">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 创建/etc/init.d/QDevelop.sh</span>
+</span></span><span style="display:flex;"><span>cat <span style="background-color:#fff0f0">&lt;&lt;eof &gt; /etc/init.d/QDevelop.sh
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">echo &#34;patched!!!&#34;
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">eof</span>
+</span></span><span style="display:flex;"><span>chmod a+x /etc/init.d/QDevelop.sh
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># 保存到patch.boot</span>
+</span></span><span style="display:flex;"><span>mkdir /boot
+</span></span><span style="display:flex;"><span>mount /dev/mapper/dom2 /boot/
+</span></span><span style="display:flex;"><span><span style="color:#007020">echo</span> /etc/init.d/QDevelop.sh | cpio -o -H newc  &gt; /boot/boot/patch.boot
+</span></span><span style="display:flex;"><span>umount /boot
+</span></span></code></pre></div><p>再次重启qutscloud，发现这个文件完好无损的躺在rootfs里，执行位也没变，可以用来作为patch的方式。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#333">[</span>~<span style="color:#333">]</span> <span style="color:#888"># reboot</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">[</span>~<span style="color:#333">]</span> <span style="color:#888">#</span>
+</span></span><span style="display:flex;"><span>login as: admin
+</span></span><span style="display:flex;"><span>admin@192.168.2.120<span style="color:#f00;background-color:#faa">&#39;</span>s password:
+</span></span><span style="display:flex;"><span><span style="color:#333">[</span>~<span style="color:#333">]</span> <span style="color:#888"># ls /etc/init.d/QDevelop.sh</span>
+</span></span><span style="display:flex;"><span>/etc/init.d/QDevelop.sh*
+</span></span><span style="display:flex;"><span><span style="color:#333">[</span>~<span style="color:#333">]</span> <span style="color:#888"># sh /etc/init.d/QDevelop.sh</span>
+</span></span><span style="display:flex;"><span>patched!!!
+</span></span></code></pre></div><p>不过有一个小问题，fdisk会报告磁柱未对齐，WTF？这个鬼玩意也不知道是从那里读的，不过应该没啥问题，这也不知道啥古董年代的fdisk。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#333">[</span>/boot<span style="color:#333">]</span> <span style="color:#888"># fdisk -l /dev/sda</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Disk /dev/sda: <span style="color:#60e;font-weight:bold">515</span> MB, <span style="color:#60e;font-weight:bold">515899392</span> bytes
+</span></span><span style="display:flex;"><span><span style="color:#60e;font-weight:bold">64</span> heads, <span style="color:#60e;font-weight:bold">32</span> sectors/track, <span style="color:#60e;font-weight:bold">492</span> cylinders
+</span></span><span style="display:flex;"><span><span style="color:#963">Units</span> <span style="color:#333">=</span> cylinders of <span style="color:#60e;font-weight:bold">2048</span> * <span style="color:#963">512</span> <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">1048576</span> bytes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Device Boot      Start         End      Blocks   Id  System
+</span></span><span style="display:flex;"><span>/dev/sda1               <span style="color:#60e;font-weight:bold">1</span>           <span style="color:#60e;font-weight:bold">3</span>        <span style="color:#60e;font-weight:bold">1920</span>   <span style="color:#60e;font-weight:bold">83</span>  Linux
+</span></span><span style="display:flex;"><span>Partition <span style="color:#60e;font-weight:bold">1</span> does not end on cylinder boundary.
+</span></span><span style="display:flex;"><span>/dev/sda2   *           <span style="color:#60e;font-weight:bold">3</span>         <span style="color:#60e;font-weight:bold">239</span>      <span style="color:#60e;font-weight:bold">242304</span>   <span style="color:#60e;font-weight:bold">83</span>  Linux
+</span></span><span style="display:flex;"><span>Partition <span style="color:#60e;font-weight:bold">2</span> does not end on cylinder boundary.
+</span></span><span style="display:flex;"><span>/dev/sda3             <span style="color:#60e;font-weight:bold">239</span>         <span style="color:#60e;font-weight:bold">476</span>      <span style="color:#60e;font-weight:bold">242304</span>   <span style="color:#60e;font-weight:bold">83</span>  Linux
+</span></span><span style="display:flex;"><span>Partition <span style="color:#60e;font-weight:bold">3</span> does not end on cylinder boundary.
+</span></span><span style="display:flex;"><span>/dev/sda4             <span style="color:#60e;font-weight:bold">476</span>         <span style="color:#60e;font-weight:bold">492</span>       <span style="color:#60e;font-weight:bold">17024</span>    <span style="color:#60e;font-weight:bold">5</span>  Extended
+</span></span><span style="display:flex;"><span>/dev/sda5             <span style="color:#60e;font-weight:bold">476</span>         <span style="color:#60e;font-weight:bold">484</span>        <span style="color:#60e;font-weight:bold">8304</span>   <span style="color:#60e;font-weight:bold">83</span>  Linux
+</span></span><span style="display:flex;"><span>/dev/sda6             <span style="color:#60e;font-weight:bold">484</span>         <span style="color:#60e;font-weight:bold">492</span>        <span style="color:#60e;font-weight:bold">8688</span>   <span style="color:#60e;font-weight:bold">83</span>  Linux
+</span></span></code></pre></div><h2 id="简易操作">简易操作</h2>
+<p>另外，不想自己手动安装grub的同学，我也准备了镜像 <a href="https://jxcn.org/file/grub.img">grub.img</a></p>
+<p>这部分镜像包含MBR到第一个分区的结束，直接dd到sda或者镜像后重启即可</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#888"># dd到本机硬盘</span>
+</span></span><span style="display:flex;"><span>dd <span style="color:#080;font-weight:bold">if</span><span style="color:#333">=</span>grub.img <span style="color:#963">of</span><span style="color:#333">=</span>/dev/sda <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">512</span>
+</span></span><span style="display:flex;"><span><span style="color:#888"># dd到镜像文件，避免截断镜像文件</span>
+</span></span><span style="display:flex;"><span>dd <span style="color:#080;font-weight:bold">if</span><span style="color:#333">=</span>grub.img <span style="color:#963">of</span><span style="color:#333">=</span>qutscloud.img <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">512</span> <span style="color:#963">conv</span><span style="color:#333">=</span>notrunc
+</span></span></code></pre></div><p>PS: 上面的镜像未经测试，请谨慎操作</p>
+<h1 id="2-使用syslinux替换grub">2. 使用SYSLINUX替换GRUB</h1>
+<p>因为syslinux不支持从其他硬盘读取文件，所以如果要从sda2启动的话，syslinux也必须安装在sda2，qutscloud的镜像默认启动分区是sda2，因此安装syslinux的默认mbr就好，使用下面的脚本安装syslinux到sda2，由于安装在sda2，大小也就没有了sda1的2M的限制了</p>
+<p>Note: 直接在QutsCloud启动后登录进的ssh内执行即可，不需要准备其他机器</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#579">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span>mkdir /boot; mount /dev/mapper/dom2 /boot
+</span></span><span style="display:flex;"><span><span style="color:#888"># wget https://ftp5.gwdg.de/pub/linux/archlinux/core/os/x86_64/syslinux-6.04.pre2.r11.gbf6db5b4-3-x86_64.pkg.tar.xz</span>
+</span></span><span style="display:flex;"><span>wget --no-check-certificate https://jxcn.org/file/syslinux-6.04.pre2.r11.gbf6db5b4-3-x86_64.pkg.tar.xz
+</span></span><span style="display:flex;"><span>tar xf syslinux-6.04.pre2.r11.gbf6db5b4-3-x86_64.pkg.tar.xz -C /
+</span></span><span style="display:flex;"><span>cp /usr/lib/syslinux/bios/*.c32 /boot/syslinux/
+</span></span><span style="display:flex;"><span>extlinux --install /boot/syslinux
+</span></span><span style="display:flex;"><span>dd <span style="color:#963">bs</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">440</span> <span style="color:#963">count</span><span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span> <span style="color:#963">conv</span><span style="color:#333">=</span>notrunc <span style="color:#080;font-weight:bold">if</span><span style="color:#333">=</span>/usr/lib/syslinux/bios/mbr.bin <span style="color:#963">of</span><span style="color:#333">=</span>/dev/sda
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cat <span style="background-color:#fff0f0">&lt;&lt;eof &gt;/boot/syslinux/syslinux.cfg
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">DEFAULT qutscloud
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">PROMPT 0        # Set to 1 if you always want to display the boot: prompt
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">TIMEOUT 50
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">UI menu.c32
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0"># Refer to http://syslinux.zytor.com/wiki/index.php/Doc/menu
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">MENU TITLE Select Menu
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">#MENU BACKGROUND splash.png
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">MENU COLOR border       30;44   #40ffffff #a0000000 std
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">MENU COLOR title        1;36;44 #9033ccff #a0000000 std
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">MENU COLOR sel          7;37;40 #e0ffffff #20ffffff all
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">MENU COLOR unsel        37;44   #50ffffff #a0000000 std
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">MENU COLOR help         37;40   #c0ffffff #a0000000 std
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">MENU COLOR timeout_msg  37;40   #80ffffff #00000000 std
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">MENU COLOR timeout      1;37;40 #c0ffffff #00000000 std
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">MENU COLOR msg07        37;40   #90ffffff #a0000000 std
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">MENU COLOR tabmsg       31;40   #30ffffff #00000000 std
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">LABEL qutscloud
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    MENU LABEL QutsCloud with patch (see https://jxcn.org)
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    LINUX ../boot/bzImage
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    APPEND root=/dev/ram0 rw
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    INITRD ../boot/initrd.boot,../boot/patch.boot
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">LABEL qutscloudnopatch
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    MENU LABEL QutsCloud
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    LINUX ../boot/bzImage
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    APPEND root=/dev/ram0 rw
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">    INITRD ../boot/initrd.boot
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">LABEL reboot
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        MENU LABEL Reboot
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        COM32 reboot.c32
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">LABEL poweroff
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        MENU LABEL Poweroff
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">        COM32 poweroff.c32
+</span></span></span><span style="display:flex;"><span><span style="background-color:#fff0f0">eof</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>umount /boot
+</span></span></code></pre></div><p>重启一下看看，感觉正常</p>
+<p><img src="https://jxcn.org/img/qnap-official-upgrade-3.png" alt=""></p>
+<p><strong>注意：如果找不到patch.boot，syslinux会无法启动，可以选择下面的no patch的启动项启动</strong></p>
+<p>像上一段一样生成一个patch.boot再启动，发现patch都生效了</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#333">[</span>/<span style="color:#333">]</span> <span style="color:#888"># umount /boot</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">[</span>/<span style="color:#333">]</span> <span style="color:#888">#</span>
+</span></span><span style="display:flex;"><span>login as: admin
+</span></span><span style="display:flex;"><span>admin@192.168.2.124<span style="color:#f00;background-color:#faa">&#39;</span>s password:
+</span></span><span style="display:flex;"><span><span style="color:#333">[</span>~<span style="color:#333">]</span> <span style="color:#888">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">[</span>~<span style="color:#333">]</span> <span style="color:#888">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#333">[</span>~<span style="color:#333">]</span> <span style="color:#888"># ls /etc/init.d/QDevelop.sh</span>
+</span></span><span style="display:flex;"><span>/etc/init.d/QDevelop.sh*
+</span></span><span style="display:flex;"><span><span style="color:#333">[</span>~<span style="color:#333">]</span> <span style="color:#888">#</span>
+</span></span></code></pre></div><p>相比GRUB，个人更推荐syslinux，不用修改分区表，而且在qutscloud的ssh内就可以完成安装，非常简便。</p>
+<p>虽然在boot目录下面加了个文件夹，不过没有什么影响。</p>
+<p>这么说起来，既然syslinux都可以装到其他盘，那grub安装到其他盘也不过分吧，不过sda1还是需要重建，没有syslinux简单。</p>
+<h1 id="3-efi">3. EFI</h1>
+<p>目前qutscloud的镜像有下面几个问题无法直接使用EFI启动</p>
+<ul>
+<li>硬盘头部的主GPT分区表的位置与第一个分区的部分扇区重复
+<ul>
+<li>主GPT分区表位置在1到33扇区，而qutscloud的第一分区从32扇区开始，有两个扇区重复了</li>
+</ul>
+</li>
+<li>硬盘末尾的备份GPT分区表与最后一个分区重叠
+<ul>
+<li>备份GPT分区表从-33到-1扇区，而这些扇区已经全部分配给最后一个分区了</li>
+</ul>
+</li>
+<li>第一分区过小，几乎无法作为ESP分区使用（2M不到）</li>
+</ul>
+<p>第一个和第二个问题很好解决，主GPT分区表可以通过调整sda1的起始扇区留出空间，备份GPT则只要给镜像分配大一点的空间就可以（qutscloud强制要求启动硬盘要预留用户数据空间）</p>
+<p>第三个的话就有点麻烦，除非把sda1后面的分区往后挪，否则怎么倒腾也最多只有2M</p>
+<p>由于EFI启动不是很紧要的事情，暂时就先不整了吧</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://www.phoronix.com/scan.php?page=news_item&amp;px=GRUB-Multiple-Early-Initrd">https://www.phoronix.com/scan.php?page=news_item&amp;px=GRUB-Multiple-Early-Initrd</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-hardware/" data-tooltip="QutsCloud 逆向笔记 - 能否在硬件平台安装qutscloud" aria-label=": QutsCloud 逆向笔记 - 能否在硬件平台安装qutscloud">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-fake-activation/" data-tooltip="QutsCloud 逆向笔记 - 激活思路及路线选择" aria-label=": QutsCloud 逆向笔记 - 激活思路及路线选择">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/03/qnap-official-upgrade/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/03/qnap-official-upgrade/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/03/qnap-official-upgrade/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jxcn.org\/2022\/03\/qnap-official-upgrade\/';
+        
+          this.page.identifier = '\/2022\/03\/qnap-official-upgrade\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'something-useless';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 author: chk-jxcn <br> Powered by HUGO & hugo-tranquilpeak-theme | <script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1281008874&web_id=1281008874"></script>. 
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-hardware/" data-tooltip="QutsCloud 逆向笔记 - 能否在硬件平台安装qutscloud" aria-label=": QutsCloud 逆向笔记 - 能否在硬件平台安装qutscloud">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-fake-activation/" data-tooltip="QutsCloud 逆向笔记 - 激活思路及路线选择" aria-label=": QutsCloud 逆向笔记 - 激活思路及路线选择">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/03/qnap-official-upgrade/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/03/qnap-official-upgrade/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/03/qnap-official-upgrade/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-official-upgrade%2F" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-official-upgrade%2F" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-official-upgrade%2F" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+    
+    <h4 id="about-card-name">chk_jxcn</h4>
+    
+      <div id="about-card-bio">观方知彼去 去者不至方</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        无业
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        ***
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jxcn.org/img/sidebar_bg.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jxcn.org/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

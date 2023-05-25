@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>lvgl on Something useless</title>
+    <link>https://jxcn.org/categories/lvgl/</link>
+    <description>Recent content in lvgl on Something useless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cmn</language>
+    <lastBuildDate>Sat, 13 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://jxcn.org/categories/lvgl/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用lvgl&#43;micropython开发一个无线电脑性能监控小面板</title>
+      <link>https://jxcn.org/2023/05/lvgl-pcmonitor/</link>
+      <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2023/05/lvgl-pcmonitor/</guid>
+      <description>&lt;p&gt;在可视化布局工具的帮助下，开发一个界面真的很简单。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

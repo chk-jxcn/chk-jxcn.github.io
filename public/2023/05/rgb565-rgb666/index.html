@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-cmn">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ili9488在8位并口下RGB565及RGB666模式对比",
+  
+  "datePublished": "2023-05-06T00:00:00Z",
+  "dateModified": "2023-05-06T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "chk_jxcn",
+    
+    "image": "https://jxcn.org/img/touxiang.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jxcn.org\/2023\/05\/rgb565-rgb666\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Something useless",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jxcn.org/img/touxiang.jpg"
+    }
+    
+  },
+  "description": "最近买了好几个xu大开源的桌面信息牌，但是固件没有开源。\n我按照样例测试一下这块屏幕在RGB565和RGB666的表现\n",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.106.0 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="chk_jxcn">
+<meta name="keywords" content="">
+<meta name="description" content="最近买了好几个xu大开源的桌面信息牌，但是固件没有开源。
+我按照样例测试一下这块屏幕在RGB565和RGB666的表现">
+
+
+<meta property="og:description" content="最近买了好几个xu大开源的桌面信息牌，但是固件没有开源。
+我按照样例测试一下这块屏幕在RGB565和RGB666的表现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ili9488在8位并口下RGB565及RGB666模式对比">
+<meta name="twitter:title" content="ili9488在8位并口下RGB565及RGB666模式对比">
+<meta property="og:url" content="https://jxcn.org/2023/05/rgb565-rgb666/">
+<meta property="twitter:url" content="https://jxcn.org/2023/05/rgb565-rgb666/">
+<meta property="og:site_name" content="Something useless">
+<meta property="og:description" content="最近买了好几个xu大开源的桌面信息牌，但是固件没有开源。
+我按照样例测试一下这块屏幕在RGB565和RGB666的表现">
+<meta name="twitter:description" content="最近买了好几个xu大开源的桌面信息牌，但是固件没有开源。
+我按照样例测试一下这块屏幕在RGB565和RGB666的表现">
+<meta property="og:locale" content="en">
+
+  
+    <meta property="article:published_time" content="2023-05-06T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2023-05-06T00:00:00">
+  
+  
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/touxiang.jpg">
+  <meta property="twitter:image" content="https://jxcn.org/img/touxiang.jpg">
+
+
+
+
+
+
+    <title>ili9488在8位并口下RGB565及RGB666模式对比</title>
+    <meta name="google-site-verification" content="Htp5AJbiILKJBCrxIA9Sc0DXJtOVf7MBAiKJEFOIB-g" />
+ <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?232f26bd65acad12b4ab831deaf4c205";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script>
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(["setCookieDomain", "*.jxcn.org"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//matomo.jxcn.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-64JLV4NLY4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-64JLV4NLY4');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1323696214681325"
+     crossorigin="anonymous"></script>
+
+    <link rel="icon" href="https://jxcn.org/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jxcn.org/2023/05/rgb565-rgb666/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jxcn.org/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jxcn.org/" aria-label="">Something useless</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jxcn.org/#about" aria-label="">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jxcn.org/#about" aria-label="">
+          <img class="sidebar-profile-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+        </a>
+        <h4 class="sidebar-profile-name">chk_jxcn</h4>
+        
+          <h5 class="sidebar-profile-bio">观方知彼去 去者不至方</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://sinablog.jxcn.org" target="_blank" rel="noopener" title="Sina blog archives">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-weibo" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Sina blog archives</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      ili9488在8位并口下RGB565及RGB666模式对比
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2023-05-06T00:00:00Z">
+        
+  
+  
+  
+  
+    05/06,2023
+  
+
+      </time>
+    
+    
+  </div>
+
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+
+
+<div style="margin: 1rem 0; padding: 0.5rem 1rem 0.5rem 0.75rem; border-inline-start: 0.25rem solid #e9ecef;; border-color: #f66; background-color: rgba(255,102,102,.1);">
+	  <strong>未经作者许可禁止转载</strong>
+	  <br>
+	  <span style="white-space:nowrap;">本文地址：</span><a href="https://jxcn.org/2023/05/rgb565-rgb666/" style="white-space:nowrap;">https://jxcn.org/2023/05/rgb565-rgb666/</a>
+  </div>
+              <p>最近买了好几个xu大开源的桌面信息牌，但是固件没有开源。</p>
+<p>我按照样例测试一下这块屏幕在RGB565和RGB666的表现</p>
+<p>驱动屏幕的部分和下面的差不多</p>
+<h1 id="样例">样例</h1>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#579">#include</span> <span style="color:#579">&lt;lvgl.h&gt;</span><span style="color:#579">
+</span></span></span><span style="display:flex;"><span><span style="color:#579">#include</span> <span style="color:#579">&lt;TFT_eSPI.h&gt;</span><span style="color:#579">
+</span></span></span><span style="display:flex;"><span><span style="color:#579">#define screenWidth 320
+</span></span></span><span style="display:flex;"><span><span style="color:#579">#define screenHeight 480
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span>
+</span></span><span style="display:flex;"><span>TFT_eSPI tft <span style="color:#333">=</span> TFT_eSPI(); <span style="color:#888">/* TFT instance */</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">static</span> lv_disp_draw_buf_t draw_buf; 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#339;font-weight:bold">int</span> ledPin <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">22</span>; <span style="color:#888">/* 背光PWM */</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">const</span> <span style="color:#339;font-weight:bold">int</span> freq <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">5000</span>;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">const</span> <span style="color:#339;font-weight:bold">int</span> ledChannel <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">const</span> <span style="color:#339;font-weight:bold">int</span> resolution <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">10</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#339;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">my_disp_flush</span>( lv_disp_drv_t <span style="color:#333">*</span>disp, <span style="color:#080;font-weight:bold">const</span> lv_area_t <span style="color:#333">*</span>area, lv_color_t <span style="color:#333">*</span>color_p )
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#339;font-weight:bold">uint32_t</span> w <span style="color:#333">=</span> ( area<span style="color:#333">-&gt;</span>x2 <span style="color:#333">-</span> area<span style="color:#333">-&gt;</span>x1 <span style="color:#333">+</span> <span style="color:#00d;font-weight:bold">1</span> );
+</span></span><span style="display:flex;"><span>    <span style="color:#339;font-weight:bold">uint32_t</span> h <span style="color:#333">=</span> ( area<span style="color:#333">-&gt;</span>y2 <span style="color:#333">-</span> area<span style="color:#333">-&gt;</span>y1 <span style="color:#333">+</span> <span style="color:#00d;font-weight:bold">1</span> );
+</span></span><span style="display:flex;"><span>    <span style="color:#339;font-weight:bold">int</span> i <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    tft.startWrite();
+</span></span><span style="display:flex;"><span>    tft.setAddrWindow( area<span style="color:#333">-&gt;</span>x1, area<span style="color:#333">-&gt;</span>y1, w, h );
+</span></span><span style="display:flex;"><span><span style="color:#579">#if LV_COLOR_DEPTH == 32
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span>    <span style="color:#080;font-weight:bold">while</span>(i <span style="color:#333">&lt;</span> w<span style="color:#333">*</span> h) {
+</span></span><span style="display:flex;"><span>      <span style="color:#339;font-weight:bold">int</span> p <span style="color:#333">=</span> <span style="color:#333">*</span>((( <span style="color:#339;font-weight:bold">uint32_t</span> <span style="color:#333">*</span> )<span style="color:#333">&amp;</span>color_p<span style="color:#333">-&gt;</span>full) <span style="color:#333">+</span> i);
+</span></span><span style="display:flex;"><span>      tft_Write_8(p <span style="color:#333">&gt;&gt;</span> <span style="color:#00d;font-weight:bold">16</span> <span style="color:#333">&amp;</span> <span style="color:#058;font-weight:bold">0xff</span>);
+</span></span><span style="display:flex;"><span>      tft_Write_8(p <span style="color:#333">&gt;&gt;</span> <span style="color:#00d;font-weight:bold">8</span> <span style="color:#333">&amp;</span> <span style="color:#058;font-weight:bold">0xff</span>);
+</span></span><span style="display:flex;"><span>      tft_Write_8(p <span style="color:#333">&amp;</span> <span style="color:#058;font-weight:bold">0xff</span>);
+</span></span><span style="display:flex;"><span>      i<span style="color:#333">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#579">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span>    tft.pushColors( ( <span style="color:#339;font-weight:bold">uint16_t</span> <span style="color:#333">*</span> )<span style="color:#333">&amp;</span>color_p<span style="color:#333">-&gt;</span>full, w <span style="color:#333">*</span> h, <span style="color:#007020">true</span> );
+</span></span><span style="display:flex;"><span><span style="color:#579">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#579"></span>    tft.endWrite();
+</span></span><span style="display:flex;"><span>    lv_disp_flush_ready( disp );
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>setup()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>  <span style="color:#888">// 背光
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  ledcSetup(ledChannel, freq, resolution);
+</span></span><span style="display:flex;"><span>  ledcAttachPin(ledPin, ledChannel);
+</span></span><span style="display:flex;"><span>  ledcWrite(ledChannel, <span style="color:#00d;font-weight:bold">1023</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#888">// tft
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  tft.begin();
+</span></span><span style="display:flex;"><span>  tft.writecommand(TFT_INVON);
+</span></span><span style="display:flex;"><span>  tft.setRotation(<span style="color:#00d;font-weight:bold">0</span>);
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#888">//lvgl
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  lv_init();
+</span></span><span style="display:flex;"><span>  <span style="color:#888">/* 放进bss会溢出 */</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#339;font-weight:bold">void</span> <span style="color:#333">*</span>buf1 <span style="color:#333">=</span> malloc(screenWidth <span style="color:#333">*</span> screenHeight<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">10</span> <span style="color:#333">*</span> <span style="color:#080;font-weight:bold">sizeof</span>(lv_color_t));
+</span></span><span style="display:flex;"><span>  lv_disp_draw_buf_init( <span style="color:#333">&amp;</span>draw_buf, buf1, <span style="color:#007020">NULL</span>, screenWidth <span style="color:#333">*</span> screenHeight<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">10</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#888">/*Initialize the display*/</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#080;font-weight:bold">static</span> lv_disp_drv_t disp_drv;
+</span></span><span style="display:flex;"><span>  lv_disp_drv_init( <span style="color:#333">&amp;</span>disp_drv );
+</span></span><span style="display:flex;"><span>  <span style="color:#888">/*Change the following line to your display resolution*/</span>
+</span></span><span style="display:flex;"><span>  disp_drv.hor_res <span style="color:#333">=</span> screenWidth;
+</span></span><span style="display:flex;"><span>  disp_drv.ver_res <span style="color:#333">=</span> screenHeight;
+</span></span><span style="display:flex;"><span>  disp_drv.flush_cb <span style="color:#333">=</span> my_disp_flush;
+</span></span><span style="display:flex;"><span>  disp_drv.draw_buf <span style="color:#333">=</span> <span style="color:#333">&amp;</span>draw_buf;
+</span></span><span style="display:flex;"><span>  lv_disp_drv_register( <span style="color:#333">&amp;</span>disp_drv );
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>loop()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>  ledcWrite(ledChannel, bright); <span style="color:#888">// 调整背光
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  lv_timer_handler(); 
+</span></span><span style="display:flex;"><span>  delay(<span style="color:#00d;font-weight:bold">5</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="帧率">帧率</h1>
+<p>RGB565模式下，一个像素传输2个字节，RGB666，则传输3个字节，但是每个字节只用到6bit。</p>
+<p>datasheet里面写WRX的最小周期是40ns，那传输的速率就是25MB/s</p>
+<p>按照RGB565算，那理论最大的帧率（全屏刷新）就可以达到</p>
+<p>25000000/ (320×480×2) = <strong>81.3fps</strong></p>
+<p>如果使用RGB666，则可以达到</p>
+<p>25000000/ (320×480×3) = <strong>54.2fps</strong></p>
+<p>不和触摸屏一起使用的话，感觉fps低一点也没关系</p>
+<h1 id="颜色对比">颜色对比</h1>
+<p>看起来颜色RGB666比RGB565好很多（偏色和颜色过度都更好一些），然而仅仅只是多了2个bit而已，不过这次测试中图片在squareline studio里就已经被转换成对应的pixel format，可能对结果也是有影响的。</p>
+<p><img src="https://jxcn.org/img/rgb565-rgb666.png" alt="对比"></p>
+<p>这个是原图=&gt;</p>
+<p><img src="https://jxcn.org/img/14b.png" alt="原图"></p>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2023/05/lv-micropython-ili9488/" data-tooltip="为桌面信息牌编译lvgl&#43;micropython固件" aria-label=": 为桌面信息牌编译lvgl&#43;micropython固件">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/11/htdp/" data-tooltip="HtDP1e 部分习题解" aria-label=": HtDP1e 部分习题解">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2023/05/rgb565-rgb666/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2023/05/rgb565-rgb666/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2023/05/rgb565-rgb666/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jxcn.org\/2023\/05\/rgb565-rgb666\/';
+        
+          this.page.identifier = '\/2023\/05\/rgb565-rgb666\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'something-useless';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 author: chk-jxcn <br> Powered by HUGO & hugo-tranquilpeak-theme | <script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1281008874&web_id=1281008874"></script>. 
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2023/05/lv-micropython-ili9488/" data-tooltip="为桌面信息牌编译lvgl&#43;micropython固件" aria-label=": 为桌面信息牌编译lvgl&#43;micropython固件">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/11/htdp/" data-tooltip="HtDP1e 部分习题解" aria-label=": HtDP1e 部分习题解">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2023/05/rgb565-rgb666/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2023/05/rgb565-rgb666/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2023/05/rgb565-rgb666/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjxcn.org%2F2023%2F05%2Frgb565-rgb666%2F" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjxcn.org%2F2023%2F05%2Frgb565-rgb666%2F" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjxcn.org%2F2023%2F05%2Frgb565-rgb666%2F" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+    
+    <h4 id="about-card-name">chk_jxcn</h4>
+    
+      <div id="about-card-bio">观方知彼去 去者不至方</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        无业
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        ***
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jxcn.org/img/sidebar_bg.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jxcn.org/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

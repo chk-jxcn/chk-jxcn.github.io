@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-cmn">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "QutsCloud 逆向笔记 - 启动顺序及切入点",
+  
+  "image": "https://jxcn.org/img/qnap-start-point-cover.png",
+  
+  "datePublished": "2022-03-23T00:00:00Z",
+  "dateModified": "2022-03-23T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "chk_jxcn",
+    
+    "image": "https://jxcn.org/img/touxiang.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jxcn.org\/2022\/03\/qnap-start-point\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Something useless",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jxcn.org/img/touxiang.jpg"
+    }
+    
+  },
+  "description": "本篇简要介绍qutscloud的启动过程，以及找到逆向的第一个线头，虽然很久以前就知道qnap怎么做的，不过第一次逆向的时候我确实也是这样找到线索的。\n",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.106.0 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="chk_jxcn">
+<meta name="keywords" content="">
+<meta name="description" content="本篇简要介绍qutscloud的启动过程，以及找到逆向的第一个线头，虽然很久以前就知道qnap怎么做的，不过第一次逆向的时候我确实也是这样找到线索的。">
+
+
+<meta property="og:description" content="本篇简要介绍qutscloud的启动过程，以及找到逆向的第一个线头，虽然很久以前就知道qnap怎么做的，不过第一次逆向的时候我确实也是这样找到线索的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QutsCloud 逆向笔记 - 启动顺序及切入点">
+<meta name="twitter:title" content="QutsCloud 逆向笔记 - 启动顺序及切入点">
+<meta property="og:url" content="https://jxcn.org/2022/03/qnap-start-point/">
+<meta property="twitter:url" content="https://jxcn.org/2022/03/qnap-start-point/">
+<meta property="og:site_name" content="Something useless">
+<meta property="og:description" content="本篇简要介绍qutscloud的启动过程，以及找到逆向的第一个线头，虽然很久以前就知道qnap怎么做的，不过第一次逆向的时候我确实也是这样找到线索的。">
+<meta name="twitter:description" content="本篇简要介绍qutscloud的启动过程，以及找到逆向的第一个线头，虽然很久以前就知道qnap怎么做的，不过第一次逆向的时候我确实也是这样找到线索的。">
+<meta property="og:locale" content="en">
+
+  
+    <meta property="article:published_time" content="2022-03-23T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2022-03-23T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="qutscloud">
+    
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/touxiang.jpg">
+  <meta property="twitter:image" content="https://jxcn.org/img/touxiang.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/qnap-start-point-cover.png">
+  <meta property="twitter:image" content="https://jxcn.org/img/qnap-start-point-cover.png">
+
+
+    <title>QutsCloud 逆向笔记 - 启动顺序及切入点</title>
+    <meta name="google-site-verification" content="Htp5AJbiILKJBCrxIA9Sc0DXJtOVf7MBAiKJEFOIB-g" />
+ <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?232f26bd65acad12b4ab831deaf4c205";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script>
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(["setCookieDomain", "*.jxcn.org"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//matomo.jxcn.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-64JLV4NLY4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-64JLV4NLY4');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1323696214681325"
+     crossorigin="anonymous"></script>
+
+    <link rel="icon" href="https://jxcn.org/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jxcn.org/2022/03/qnap-start-point/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jxcn.org/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jxcn.org/" aria-label="">Something useless</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jxcn.org/#about" aria-label="">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jxcn.org/#about" aria-label="">
+          <img class="sidebar-profile-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+        </a>
+        <h4 class="sidebar-profile-name">chk_jxcn</h4>
+        
+          <h5 class="sidebar-profile-bio">观方知彼去 去者不至方</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://sinablog.jxcn.org" target="_blank" rel="noopener" title="Sina blog archives">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-weibo" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Sina blog archives</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      QutsCloud 逆向笔记 - 启动顺序及切入点
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-03-23T00:00:00Z">
+        
+  
+  
+  
+  
+    03/23,2022
+  
+
+      </time>
+    
+    
+  
+  
+    <span></span>
+    
+      <a class="category-link" href="https://jxcn.org/categories/qutscloud">qutscloud</a>
+    
+  
+
+  </div>
+
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+
+
+<div style="margin: 1rem 0; padding: 0.5rem 1rem 0.5rem 0.75rem; border-inline-start: 0.25rem solid #e9ecef;; border-color: #f66; background-color: rgba(255,102,102,.1);">
+	  <strong>未经作者许可禁止转载</strong>
+	  <br>
+	  <span style="white-space:nowrap;">本文地址：</span><a href="https://jxcn.org/2022/03/qnap-start-point/" style="white-space:nowrap;">https://jxcn.org/2022/03/qnap-start-point/</a>
+  </div>
+              <p>本篇简要介绍qutscloud的启动过程，以及找到逆向的第一个线头，虽然很久以前就知道qnap怎么做的，不过第一次逆向的时候我确实也是这样找到线索的。</p>
+<h1 id="table-of-contents"></h1>
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-启动脚本及内部工具介绍">1. 启动脚本及内部工具介绍</a>
+      <ul>
+        <li><a href="#init脚本">init脚本</a></li>
+        <li><a href="#后台程序以及命令行工具">后台程序以及命令行工具</a></li>
+        <li><a href="#一些配置文件">一些配置文件</a></li>
+        <li><a href="#配置中可能对调试有帮助的选项">配置中可能对调试有帮助的选项</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-quickcgi">2. quick.cgi</a></li>
+    <li><a href="#3-静态分析quickcgi">3. 静态分析quick.cgi</a></li>
+  </ul>
+</nav>
+
+
+<h1 id="1-启动脚本及内部工具介绍">1. 启动脚本及内部工具介绍</h1>
+<h2 id="init脚本">init脚本</h2>
+<p>在qutscloud安装好后，我们就可以ssh进入系统，可以看到QNAP还是沿用之前的init系统</p>
+<ul>
+<li><code>init</code>启动脚本<code>/etc/init.d/rcS</code></li>
+<li><code>rcS</code>调用<code>/etc/rcS_init.d/S20init_check</code></li>
+<li><code>S20init_check</code>将会调用<code>/etc/rcS.d/</code>中的启动脚本</li>
+</ul>
+<p>如果有兴趣的话，可以看一下其中的一些init开头的脚本</p>
+<ul>
+<li><code>init_disk.sh</code> - 挂载硬盘</li>
+<li><code>init_nas.sh</code> - 创建一些临时文件以及写系统配置</li>
+<li><code>init_qpkg.sh</code> - 安装预设的qpkg</li>
+<li><code>cs_fw_verify.sh</code> - 检查系统固件签名</li>
+</ul>
+<p>这里不作过多分析，因为这部分需要适配很多QNAP的产品，所以零零碎碎的东西非常多，深究下去就有点头疼了，如果你的QNAP升级系统后遇到无法启动，或者硬盘不识别，或者其他卡死的bug，很有可能和这里的处理有关系。</p>
+<h2 id="后台程序以及命令行工具">后台程序以及命令行工具</h2>
+<ul>
+<li>
+<p><code>qpkd</code> - 后台daemon，开机时启动预置包安装，以及在后台异步安装qpkg</p>
+</li>
+<li>
+<p><code>qpkg_cli</code> - 安装qpkg的命令行，web调用此命令进行安装</p>
+</li>
+<li>
+<p><code>cs_daemon</code> - 后台daemon，远程调用中心，类似RPC</p>
+</li>
+<li>
+<p><code>cs_qdaemon</code> - 后台daemon，qcloud服务端，注册到<code>cs_daemon</code>，提供签名验证以及token检查</p>
+</li>
+<li>
+<p><code>ql_daemon</code> - qlicense相关的daemon，它仅定时调用qlicense_tool检查license，除此之外无其他功能</p>
+</li>
+<li>
+<p><code>qlicense_tool</code> - 管理license的命令行</p>
+</li>
+<li>
+<p><code>qsh</code> - 调用在<code>cs_daemon</code>中服务的命令行客户端</p>
+</li>
+<li>
+<p><code>cs_qpkg_verify.sh</code> - 验证qpkg或者qdk的签名，根据里面是否有control.tar.gz判断是qpkg还是qdk，两种格式仅有细微差别</p>
+</li>
+</ul>
+<h2 id="一些配置文件">一些配置文件</h2>
+<ul>
+<li><code>/etc/config/uLinux.conf</code> - 系统的一些基础参数配置</li>
+<li><code>/etc/config/qid.conf</code> - qcloud用到的设置，device token也存在这里</li>
+<li><code>/etc/config/qpkg.conf</code> - 系统安装好的qpkg会在这个文件里更新信息</li>
+<li><code>/etc/config/nas_sign_qpkg.db</code> - sqlite3数据库，存储qpkg的签名，以及包内文件的签名及证书（如果有.qcodesigning目录的话）</li>
+<li><code>/etc/config/nas_sign_fw.db</code> - sqlite3数据库，仅存储系统固件的签名，虽然看起来有用，但似乎没什么用</li>
+<li><code>/etc/config/rssdoc/</code> - 系统下载的一些xml文件，包括app center下载的qpkg列表，固件更新信息，等等</li>
+<li><code>/etc/config/qlicense/</code> - 存储授权文件证书，设备授权申请文件<code>(*.dif)</code>，授权文件<code>(*.lif)</code>，以及需要授权的产品列表文件<code>product_list</code>, 离线反激活文件<code>(*.luf)</code>不在本系列的讨论范围内</li>
+<li><code>/tmp/tmp_app_token</code> - 存储加密的<code>access_token</code>，这个token访问api的时候服务器会验证，需要使用suid以及hash什么来申请，感觉没啥用</li>
+<li><code>/tmp/tmp_suid</code> - 存储系统的suid，对于qutscloud，这个根据mac地址以及uuidgen随机生成出来，并且写入分区/dev/dom6的偏移7864320处，多少有点像之前硬件QNAP的序列号ID，写入之后就不再更改，可以使用命令get_suid查看，对于qutscloud，这是和mac地址唯二标记硬件的信息，qutscloud的hwsn与suid相同 <strong>（所以请不要随意分享安装后的qutscloud镜像文件）</strong></li>
+</ul>
+<h2 id="配置中可能对调试有帮助的选项">配置中可能对调试有帮助的选项</h2>
+<ul>
+<li>
+<p><code>/etc/config/uLinux.conf</code></p>
+<ul>
+<li>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">[System]</span>
+</span></span><span style="display:flex;"><span><span style="color:#00c">proxy toggle</span> <span style="color:#333">=</span> <span style="background-color:#fff0f0">1							# enable system wide proxy</span>
+</span></span><span style="display:flex;"><span><span style="color:#00c">proxy server</span> <span style="color:#333">=</span> <span style="background-color:#fff0f0">http://[proxy server]:8888	# proxy server address</span>
+</span></span></code></pre></div></li>
+</ul>
+</li>
+<li>
+<p><code>/etc/config/qid.conf</code></p>
+<ul>
+<li>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">[QNAP ID Service]</span>
+</span></span><span style="display:flex;"><span><span style="color:#00c">PROTO</span> <span style="color:#333">=</span> <span style="background-color:#fff0f0">http								# select proto of api</span>
+</span></span><span style="display:flex;"><span><span style="color:#00c">DEVICE_TOKEN</span> <span style="color:#333">=</span> <span style="background-color:#fff0f0">XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX</span>
+</span></span><span style="display:flex;"><span><span style="color:#00c">HTTP_FLAG</span> <span style="color:#333">=</span> <span style="background-color:#fff0f0">80682695						# enable curl debug, magic code</span>
+</span></span></code></pre></div></li>
+</ul>
+</li>
+</ul>
+<p>开启系统范围的代理，可以借助Fiddler来分析系统的https请求，当然也包括激活的过程</p>
+<p>开启curl debug，则会在<code>/etc/logs/qid.log</code>下输出qlicense激活以及token更新中详细的http请求和响应</p>
+<p><img src="https://jxcn.org/img/qnap-start-point-1.png" alt="Fidder中的请求"></p>
+<h1 id="2-quickcgi">2. quick.cgi</h1>
+<p><code>quick.cgi</code>是QNAP系统在第一次安装，或者重置系统删除所有配置后用户访问的第一个cgi程序，它在检测license后会做如下动作</p>
+<ul>
+<li><code>init_NAS_disk</code> - 复制<code>/etc/config</code>到<code>/mnt/HDA_root/.config</code>，然后使用链接替换<code>/etc/config</code>，用以持久化配置文件</li>
+<li>安装qpkg.tar，并且解压到update目录，以供系统应用更新持久化，qnap为什么启动这么慢就是因为所有的系统应用在重启后都会重新安装，而非系统应用则只是运行一个启动脚本，参考<code>/etc/config/qpkg.conf</code>中的<code>Alt_Shell</code></li>
+<li>启动安装更新后的服务，使用apache作为前置代理</li>
+<li>至此<code>quick.cgi</code>对用户隐藏不见，无法再调用</li>
+</ul>
+<p>现在就看看这个<code>quick.cgi</code>到底怎么检查license的，启动QutsCloud之后，访问web页面，可以明显看到，这个ui位于<code>cgi-bin/quick</code>，可以在<code>/home/httpd/cgi-bin/quick/</code>中找到它</p>
+<p><img src="https://jxcn.org/img/qnap-start-point-2.png" alt=""></p>
+<p>继续点击页面中的<code>启动智能安装</code>，在F12中可以看到有一个请求<code>http://192.168.2.120:8080/cgi-bin/quick/quick.cgi?todo=have_qutscloud_installed_license&amp;_=1648046171871</code></p>
+<p><img src="https://jxcn.org/img/qnap-start-point-3.png" alt=""></p>
+<p>这是第一个出现license相关的点，可以记下来作为参考，当然，也可以从post license key的调用着手进行逆向。</p>
+<p>在输入框随便输入一串license后，点击<code>提交</code>可以看到post的url是<code>http://192.168.2.120:8080/cgi-bin/quick/quick.cgi?todo=check_qtscloud_license_key&amp;license_key=1231231231231231231231231&amp;region=GLB&amp;_=1648046571322</code></p>
+<p>虽然现在没有有效的license，已经可以使用IDA尝试对quick.cgi进行逆向了</p>
+<h1 id="3-静态分析quickcgi">3. 静态分析quick.cgi</h1>
+<p>在IDA中打开<code>quick.cgi</code>，按<code>shift+F12</code>打开字符串窗口，搜索字符串<code>have_qutscloud_installed_license</code>，查找对该字符串的引用，很幸运，只有一个函数引用了这个字符串</p>
+<p><img src="https://jxcn.org/img/qnap-start-point-5.png" alt=""></p>
+<p>进入这个函数，按<code>F5</code>生成C伪码，发现只是字符串比较，如果命中则调用<code>sub_40A5F4</code></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>v353 <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;have_qutscloud_installed_license&#34;</span>;
+</span></span><span style="display:flex;"><span>v354 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">33LL</span>;
+</span></span><span style="display:flex;"><span>v355 <span style="color:#333">=</span> v5;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">do</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">if</span> ( <span style="color:#333">!</span>v354 )
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">break</span>;
+</span></span><span style="display:flex;"><span>    v351 <span style="color:#333">=</span> <span style="color:#333">*</span>v355 <span style="color:#333">&lt;</span> (<span style="color:#080;font-weight:bold">const</span> <span style="color:#339;font-weight:bold">unsigned</span> <span style="color:#080;font-weight:bold">__int8</span>)<span style="color:#333">*</span>v353;
+</span></span><span style="display:flex;"><span>    v352 <span style="color:#333">=</span> <span style="color:#333">*</span>v355<span style="color:#333">++</span> <span style="color:#333">==</span> <span style="color:#333">*</span>v353<span style="color:#333">++</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#333">--</span>v354;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">while</span> ( v352 );
+</span></span><span style="display:flex;"><span>v356 <span style="color:#333">=</span> <span style="color:#333">!</span>v351 <span style="color:#333">&amp;&amp;</span> <span style="color:#333">!</span>v352;
+</span></span><span style="display:flex;"><span>v357 <span style="color:#333">=</span> v351;
+</span></span><span style="display:flex;"><span>v358 <span style="color:#333">=</span> v356 <span style="color:#333">&lt;</span> (<span style="color:#339;font-weight:bold">unsigned</span> <span style="color:#080;font-weight:bold">__int8</span>)v351;
+</span></span><span style="display:flex;"><span>v359 <span style="color:#333">=</span> v356 <span style="color:#333">==</span> v357;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> ( v356 <span style="color:#333">==</span> v357 )
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    sub_40A5F4(v6, v355);
+</span></span><span style="display:flex;"><span>    v36 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>    v119 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>继续进入函数<code>sub_40A5F4</code>看看，这个函数只调用了两个内部函数，第一个显然是获取<code>model_type</code>，第二函数则以<code>vqtscloud</code>作为参数调用，很明显，就是这个函数进行了license的检查</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">__int64</span> <span style="color:#06b;font-weight:bold">sub_40A5F4</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#339;font-weight:bold">signed</span> <span style="color:#339;font-weight:bold">int</span> v0; <span style="color:#888">// ebx@3
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  <span style="color:#080;font-weight:bold">__int64</span> v2; <span style="color:#888">// [sp+0h] [bp-1038h]@1
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  <span style="color:#080;font-weight:bold">__int64</span> v3; <span style="color:#888">// [sp+8h] [bp-1030h]@1
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  <span style="color:#080;font-weight:bold">__int64</span> v4; <span style="color:#888">// [sp+10h] [bp-1028h]@1
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  <span style="color:#080;font-weight:bold">__int64</span> v5; <span style="color:#888">// [sp+18h] [bp-1020h]@1
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  <span style="color:#339;font-weight:bold">int</span> v6; <span style="color:#888">// [sp+20h] [bp-1018h]@3
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  <span style="color:#339;font-weight:bold">char</span> v7; <span style="color:#888">// [sp+24h] [bp-1014h]@3
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  <span style="color:#339;font-weight:bold">char</span> v8; <span style="color:#888">// [sp+424h] [bp-C14h]@3
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  <span style="color:#339;font-weight:bold">char</span> v9; <span style="color:#888">// [sp+824h] [bp-814h]@3
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>  <span style="color:#339;font-weight:bold">char</span> v10; <span style="color:#888">// [sp+C24h] [bp-414h]@3
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>
+</span></span><span style="display:flex;"><span>  v2 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0LL</span>;
+</span></span><span style="display:flex;"><span>  v3 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0LL</span>;
+</span></span><span style="display:flex;"><span>  v4 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0LL</span>;
+</span></span><span style="display:flex;"><span>  v5 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0LL</span>;
+</span></span><span style="display:flex;"><span>  sub_40A4CA((<span style="color:#339;font-weight:bold">char</span> <span style="color:#333">*</span>)<span style="color:#333">&amp;</span>v2);
+</span></span><span style="display:flex;"><span>  <span style="color:#080;font-weight:bold">if</span> ( strstr((<span style="color:#080;font-weight:bold">const</span> <span style="color:#339;font-weight:bold">char</span> <span style="color:#333">*</span>)<span style="color:#333">&amp;</span>v2, <span style="background-color:#fff0f0">&#34;QCS&#34;</span>) <span style="color:#333">||</span> strstr((<span style="color:#080;font-weight:bold">const</span> <span style="color:#339;font-weight:bold">char</span> <span style="color:#333">*</span>)<span style="color:#333">&amp;</span>v2, <span style="background-color:#fff0f0">&#34;QVS&#34;</span>) )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    v6 <span style="color:#333">=</span> <span style="color:#333">-</span><span style="color:#00d;font-weight:bold">1</span>;
+</span></span><span style="display:flex;"><span>    v7 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>    v8 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>    v10 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>    v9 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>    v0 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">1</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#080;font-weight:bold">else</span>
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    sub_40A170(<span style="background-color:#fff0f0">&#34;vqtscloud&#34;</span>);
+</span></span><span style="display:flex;"><span>    v0 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  printf(<span style="background-color:#fff0f0">&#34;&lt;platform&gt;%s&lt;/platform&gt;</span><span style="color:#666;background-color:#fff0f0;font-weight:bold">\n</span><span style="background-color:#fff0f0">&#34;</span>, <span style="color:#333">&amp;</span>v2);
+</span></span><span style="display:flex;"><span>  printf(<span style="background-color:#fff0f0">&#34;&lt;skip_license&gt;%d&lt;/skip_license&gt;</span><span style="color:#666;background-color:#fff0f0;font-weight:bold">\n</span><span style="background-color:#fff0f0">&#34;</span>, (<span style="color:#339;font-weight:bold">unsigned</span> <span style="color:#339;font-weight:bold">int</span>)v0);
+</span></span><span style="display:flex;"><span>  printf(<span style="background-color:#fff0f0">&#34;&lt;have_license&gt;%d&lt;/have_license&gt;</span><span style="color:#666;background-color:#fff0f0;font-weight:bold">\n</span><span style="background-color:#fff0f0">&#34;</span>, v6 <span style="color:#333">==</span> <span style="color:#00d;font-weight:bold">0</span>);
+</span></span><span style="display:flex;"><span>  printf(<span style="background-color:#fff0f0">&#34;&lt;app_name&gt;%s&lt;/app_name&gt;</span><span style="color:#666;background-color:#fff0f0;font-weight:bold">\n</span><span style="background-color:#fff0f0">&#34;</span>, <span style="color:#333">&amp;</span>v7);
+</span></span><span style="display:flex;"><span>  printf(<span style="background-color:#fff0f0">&#34;&lt;license_id&gt;%s&lt;/license_id&gt;</span><span style="color:#666;background-color:#fff0f0;font-weight:bold">\n</span><span style="background-color:#fff0f0">&#34;</span>, <span style="color:#333">&amp;</span>v8);
+</span></span><span style="display:flex;"><span>  printf(<span style="background-color:#fff0f0">&#34;&lt;license_name&gt;%s&lt;/license_name&gt;</span><span style="color:#666;background-color:#fff0f0;font-weight:bold">\n</span><span style="background-color:#fff0f0">&#34;</span>, <span style="color:#333">&amp;</span>v10);
+</span></span><span style="display:flex;"><span>  printf(<span style="background-color:#fff0f0">&#34;&lt;applied_date&gt;%s&lt;/applied_date&gt;</span><span style="color:#666;background-color:#fff0f0;font-weight:bold">\n</span><span style="background-color:#fff0f0">&#34;</span>, <span style="color:#333">&amp;</span>v9);
+</span></span><span style="display:flex;"><span>  puts(<span style="background-color:#fff0f0">&#34;&lt;Result&gt;success&lt;/Result&gt;&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">0LL</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>实际上，这个函数又是QNAP的传统艺能体现，调用一个cmd来看看license有没有，命令应该是<code> /usr/local/bin/qlicense_tool installed_list -a 'vqtscloud'</code></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#080;font-weight:bold">if</span> ( <span style="color:#333">!</span>src )
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> <span style="color:#058;font-weight:bold">0xFFFFFFFFLL</span>;
+</span></span><span style="display:flex;"><span>  v3 <span style="color:#333">=</span> a2;
+</span></span><span style="display:flex;"><span>  strncpy((<span style="color:#339;font-weight:bold">char</span> <span style="color:#333">*</span>)(a2 <span style="color:#333">+</span> <span style="color:#00d;font-weight:bold">4</span>), src, <span style="color:#058;font-weight:bold">0x3FFuLL</span>);
+</span></span><span style="display:flex;"><span>  snprintf(
+</span></span><span style="display:flex;"><span>    <span style="color:#333">&amp;</span>s,
+</span></span><span style="display:flex;"><span>    <span style="color:#058;font-weight:bold">0x202uLL</span>,
+</span></span><span style="display:flex;"><span>    <span style="background-color:#fff0f0">&#34;%s installed_list -a &#39;%s&#39; 2&gt;/dev/null | %s -r &#39;(.code),(.result[0].license_id),(.result[0].apply_date)&#39; 2&gt;/dev/null&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="background-color:#fff0f0">&#34;/usr/local/bin/qlicense_tool&#34;</span>,
+</span></span><span style="display:flex;"><span>    src,
+</span></span><span style="display:flex;"><span>    <span style="background-color:#fff0f0">&#34;/usr/local/sbin/jq&#34;</span>);
+</span></span><span style="display:flex;"><span>  v4 <span style="color:#333">=</span> popen(<span style="color:#333">&amp;</span>s, <span style="background-color:#fff0f0">&#34;r&#34;</span>);
+</span></span><span style="display:flex;"><span>  v5 <span style="color:#333">=</span> v4;
+</span></span><span style="display:flex;"><span>  <span style="color:#080;font-weight:bold">if</span> ( <span style="color:#333">!</span>v4 )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    snprintf(
+</span></span><span style="display:flex;"><span>      <span style="color:#333">&amp;</span>s,
+</span></span><span style="display:flex;"><span>      <span style="color:#058;font-weight:bold">0x202uLL</span>,
+</span></span><span style="display:flex;"><span>      <span style="background-color:#fff0f0">&#34;%s installed_list -a &#39;%s&#39; 2&gt;/dev/null | %s -r &#39;(.result[0].license_info_json_str)&#39; 2&gt;/dev/null | %s -r &#39;(.license_&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="background-color:#fff0f0">&#34;name)&#39; 2&gt;/dev/null&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="background-color:#fff0f0">&#34;/usr/local/bin/qlicense_tool&#34;</span>,
+</span></span><span style="display:flex;"><span>      src,
+</span></span><span style="display:flex;"><span>      <span style="background-color:#fff0f0">&#34;/usr/local/sbin/jq&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="background-color:#fff0f0">&#34;/usr/local/sbin/jq&#34;</span>);
+</span></span><span style="display:flex;"><span>    v25 <span style="color:#333">=</span> popen(<span style="color:#333">&amp;</span>s, <span style="background-color:#fff0f0">&#34;r&#34;</span>);
+</span></span><span style="display:flex;"><span>    v15 <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">if</span> ( <span style="color:#333">!</span>v25 )
+</span></span><span style="display:flex;"><span>      <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">0LL</span>;
+</span></span><span style="display:flex;"><span><span style="color:#970;font-weight:bold">LABEL_17</span>:
+</span></span><span style="display:flex;"><span>    v16 <span style="color:#333">=</span> fgets(v27, <span style="color:#00d;font-weight:bold">2570</span>, v25);
+</span></span></code></pre></div><p>那么这个命令到底应该输出什么？如果没有一个license在手里是很难知道的，除非对qlicense完整逆向。</p>
+<p>不过很幸运，QNAP现在在打折，qutscloud一个月才4.9美金，感天动地。</p>
+<p>实际上它输出的应该是lif解密后的内容</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#f00;background-color:#faa">qlicense_tool</span> <span style="color:#f00;background-color:#faa">installed_list</span> <span style="color:#f00;background-color:#faa">-a</span> <span style="color:#f00;background-color:#faa">&#39;vqtscloud&#39;</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>   <span style="color:#070">&#34;code&#34;</span>: <span style="color:#00d;font-weight:bold">0</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#070">&#34;message&#34;</span>: <span style="background-color:#fff0f0">&#34;success&#34;</span>,
+</span></span><span style="display:flex;"><span>   <span style="color:#070">&#34;result&#34;</span>: [
+</span></span><span style="display:flex;"><span>     {
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;id&#34;</span>: <span style="background-color:#fff0f0">&#34;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;dif_id&#34;</span>: <span style="background-color:#fff0f0">&#34;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;dif_signature&#34;</span>: <span style="background-color:#fff0f0">&#34;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;license_id&#34;</span>: <span style="background-color:#fff0f0">&#34;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;mac&#34;</span>: <span style="background-color:#fff0f0">&#34;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;hwsn&#34;</span>: <span style="background-color:#fff0f0">&#34;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;suid&#34;</span>: <span style="background-color:#fff0f0">&#34;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;model&#34;</span>: <span style="background-color:#fff0f0">&#34;QuTScloud&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;fw_build_version&#34;</span>: <span style="background-color:#fff0f0">&#34;c5.0.0.1919&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;license_info_json_str&#34;</span>: <span style="background-color:#fff0f0">&#34;{ \&#34;sku\&#34;: \&#34;LS-QUTSCLOUD-1CR-1M-EI\&#34;, \&#34;valid_until\&#34;: \&#34;2021-02-03 04:05:06.000000\&#34;, \&#34;app_internal_name\&#34;: \&#34;vqtscloud\&#34;, \&#34;valid_from\&#34;: \&#34;2021-02-03 04:05:06.000000\&#34;, \&#34;product_type\&#34;: \&#34;vQTS_Cloud\&#34;, \&#34;name\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;license_name\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;feature\&#34;: null, \&#34;applied_at\&#34;: \&#34;2021-02-03 04:05:06.000000\&#34;, \&#34;categories\&#34;: [ \&#34;vQTS_Cloud\&#34; ], \&#34;owner\&#34;: [ \&#34;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX\&#34; ], \&#34;attributes\&#34;: { \&#34;is_floating\&#34;: true, \&#34;ext_check_type\&#34;: \&#34;product.product_type\&#34;, \&#34;aw_sarp2_is_used_advanced_pricing\&#34;: \&#34;Use config\&#34;, \&#34;cpu_limit\&#34;: \&#34;1\&#34;, \&#34;small_image_label\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;is_subscription\&#34;: true, \&#34;thumbnail_label\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;device_type\&#34;: \&#34;vqts_cld\&#34;, \&#34;purchase_before_installed\&#34;: \&#34;false\&#34;, \&#34;external_service\&#34;: false, \&#34;is_self_check\&#34;: true, \&#34;product_image_size\&#34;: \&#34;Default\&#34;, \&#34;type\&#34;: \&#34;device\&#34;, \&#34;msrp_display_actual_price_type\&#34;: \&#34;Use config\&#34;, \&#34;grace_period_days\&#34;: \&#34;21\&#34;, \&#34;gift_message_available\&#34;: \&#34;No\&#34;, \&#34;app_internal_name\&#34;: \&#34;vqtscloud\&#34;, \&#34;plan_title\&#34;: \&#34;1 Core\&#34;, \&#34;quota_device\&#34;: \&#34;1\&#34;, \&#34;expiry_warning_day\&#34;: \&#34;-1\&#34;, \&#34;upgradeable\&#34;: true, \&#34;immediate_activate\&#34;: true, \&#34;product_class\&#34;: \&#34;vQTS_Cloud\&#34;, \&#34;amrolepermissions_owner\&#34;: \&#34;0\&#34;, \&#34;duration_month\&#34;: \&#34;1\&#34;, \&#34;app_min_version\&#34;: \&#34;c4.4.2\&#34;, \&#34;license_activation_info\&#34;: \&#34;&lt;div class=\\\&#34;qSW-pd-desc\\\&#34;  id=\\\&#34;qSW-pd-detail-license\\\&#34;&gt;\\n    \\n    &lt;iframe class=\\\&#34;resize_height iframe_license_activation\\\&#34; id=\\\&#34;iframe_license_activation\\\&#34; src=\\\&#34;https:\\/\\/docs.qnap.com\\/operating-system\\/qts\\/4.5.x\\/en-us\\/GUID-C6DE86F5-38A3-496E-A872-F833E1E5280D.html\\\&#34; frameborder=\\\&#34;0\\\&#34; allowfullscreen=\\\&#34;\\\&#34; width=\\\&#34;100%\\\&#34; height=\\\&#34;100%\\\&#34; scrolling=\\\&#34;no\\\&#34;&gt;&lt;\\/iframe&gt;\\n\\n&lt;\\/div&gt;\&#34;, \&#34;variant_display_name\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34;, \&#34;extendable\&#34;: true, \&#34;app_display_name\&#34;: \&#34;QuTScloud\&#34;, \&#34;is_perpetual\&#34;: \&#34;false\&#34;, \&#34;is_bundle\&#34;: false, \&#34;transferable\&#34;: true, \&#34;support_org\&#34;: false, \&#34;image_label\&#34;: \&#34;QuTScloud 1 Core - 1 Month\&#34; }, \&#34;app_display_name\&#34;: \&#34;QuTScloud\&#34;, \&#34;channel\&#34;: null, \&#34;product_id\&#34;: \&#34;2302\&#34; }&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;status&#34;</span>: <span style="background-color:#fff0f0">&#34;valid&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;subscription_status&#34;</span>: <span style="background-color:#fff0f0">&#34;valid&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;legacy&#34;</span>: <span style="color:#00d;font-weight:bold">0</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;apply_date&#34;</span>: <span style="background-color:#fff0f0">&#34;2021-02-03T04:05:06SST&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;created_at&#34;</span>: <span style="background-color:#fff0f0">&#34;2021-02-03T04:05:06+00:00&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;remaining_days&#34;</span>: <span style="color:#00d;font-weight:bold">24</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;api_check_date&#34;</span>: <span style="background-color:#fff0f0">&#34;2021-02-03T04:05:06Z&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;floating_uuid&#34;</span>: <span style="background-color:#fff0f0">&#34;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;floating_token&#34;</span>: <span style="background-color:#fff0f0">&#34;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;license_check_period&#34;</span>: <span style="color:#00d;font-weight:bold">43200</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;is_partial_deactivated&#34;</span>: <span style="color:#00d;font-weight:bold">0</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;used_seats&#34;</span>: <span style="color:#00d;font-weight:bold">1</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;unsubscribed_used_seats&#34;</span>: <span style="color:#00d;font-weight:bold">0</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;unsubscribed_valid_until&#34;</span>: <span style="background-color:#fff0f0">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#070">&#34;api_check_status&#34;</span>: <span style="background-color:#fff0f0">&#34;success&#34;</span>
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span>   ]
+</span></span><span style="display:flex;"><span> }
+</span></span></code></pre></div><p>怎么样，有没有想到什么，我们完全可以替换这个qlicense_tool，让它吐出合适的json不就可以了吗？</p>
+<p>那事实确实如此吗？</p>
+<p>我觉得应该是可以的，不过这个可以后面再说，关键是，如果这样就弄完了，这个系列怎么去水出那么多篇？</p>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-sign-check/" data-tooltip="QutsCloud 逆向笔记 - 安装包文件签名校验" aria-label=": QutsCloud 逆向笔记 - 安装包文件签名校验">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-install/" data-tooltip="QutsCloud 逆向笔记 - 安装" aria-label=": QutsCloud 逆向笔记 - 安装">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/03/qnap-start-point/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/03/qnap-start-point/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/03/qnap-start-point/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jxcn.org\/2022\/03\/qnap-start-point\/';
+        
+          this.page.identifier = '\/2022\/03\/qnap-start-point\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'something-useless';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 author: chk-jxcn <br> Powered by HUGO & hugo-tranquilpeak-theme | <script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1281008874&web_id=1281008874"></script>. 
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-sign-check/" data-tooltip="QutsCloud 逆向笔记 - 安装包文件签名校验" aria-label=": QutsCloud 逆向笔记 - 安装包文件签名校验">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-install/" data-tooltip="QutsCloud 逆向笔记 - 安装" aria-label=": QutsCloud 逆向笔记 - 安装">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/03/qnap-start-point/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/03/qnap-start-point/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/03/qnap-start-point/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-start-point%2F" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-start-point%2F" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-start-point%2F" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+    
+    <h4 id="about-card-name">chk_jxcn</h4>
+    
+      <div id="about-card-bio">观方知彼去 去者不至方</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        无业
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        ***
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jxcn.org/img/sidebar_bg.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jxcn.org/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

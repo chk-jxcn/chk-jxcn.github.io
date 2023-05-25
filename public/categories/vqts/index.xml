@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>vQTS on Something useless</title>
+    <link>https://jxcn.org/categories/vqts/</link>
+    <description>Recent content in vQTS on Something useless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cmn</language>
+    <lastBuildDate>Wed, 13 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://jxcn.org/categories/vqts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【补发】黑QNAP之vqts破解，支持从官方升级</title>
+      <link>https://jxcn.org/2022/04/vqts/</link>
+      <pubDate>Wed, 13 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/04/vqts/</guid>
+      <description>&lt;p&gt;这篇之前被新浪加密了，导出的工具不能登录博客导出不了，所以在这里补上&lt;/p&gt;
+&lt;p&gt;原作时间：2020-02-16&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VDSM on Something useless</title>
+    <link>https://jxcn.org/categories/vdsm/</link>
+    <description>Recent content in VDSM on Something useless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cmn</language>
+    <lastBuildDate>Mon, 25 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://jxcn.org/categories/vdsm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【完结】Virtual DSM 逆向笔记 (基于libvirt的安装及升级)</title>
+      <link>https://jxcn.org/2022/04/vdsm-first-try/</link>
+      <pubDate>Mon, 25 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/04/vdsm-first-try/</guid>
+      <description>&lt;p&gt;花了一点时间写了一个模拟串口通信的程序，看起来和在DSM上面运行的一样，升级也没有问题，不过没有登录群晖账号，程序预留了设置所有通信参数的设定参数，若是有想试试洗白的朋友可以自己试试&lt;/p&gt;
+&lt;div class=&#34;alert danger no-icon &#34;&gt;
+  &lt;p&gt;&lt;p&gt;！！！本页内发布的任何工具及脚本仅供个人学习及研究之用！！！&lt;/p&gt;
+&lt;p&gt;！！！请在下载后24小时内删除！！！&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>Virtual DSM 逆向笔记 (重打包rd.gz)</title>
+      <link>https://jxcn.org/2022/04/vdsm-rd/</link>
+      <pubDate>Mon, 18 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/04/vdsm-rd/</guid>
+      <description>&lt;p&gt;重新打包rd.gz后，可能会发现内核无法解压rd.gz，这是因为格式有点不一样&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Virtual DSM 逆向笔记 (在kvm中运行VDSM)</title>
+      <link>https://jxcn.org/2022/04/vdsm-kvm/</link>
+      <pubDate>Sat, 16 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/04/vdsm-kvm/</guid>
+      <description>&lt;p&gt;DSM中使用qemu来运行VDSM，那么不考虑串口通信，能直接在kvm中启动VDSM吗？&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Virtual DSM 逆向笔记</title>
+      <link>https://jxcn.org/2022/04/vdsm-intro/</link>
+      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2022/04/vdsm-intro/</guid>
+      <description>&lt;p&gt;弄完了QutsCloud，继续研究一下virtual DSM，这个其实两年前也看了一下，vdsm主要靠串口与主机通讯来验证license，发送network信息，硬盘扩容插拔事件等等。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-cmn">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "为桌面信息牌编译lvgl+micropython固件",
+  
+  "datePublished": "2023-05-07T00:00:00Z",
+  "dateModified": "2023-05-07T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "chk_jxcn",
+    
+    "image": "https://jxcn.org/img/touxiang.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jxcn.org\/2023\/05\/lv-micropython-ili9488\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Something useless",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jxcn.org/img/touxiang.jpg"
+    }
+    
+  },
+  "description": "为xu大@xutoubee开源的桌面信息牌编译micropython固件，这样就可以自己随便愉快玩耍了。\n大概有100K的heap可用，可能代码稍微多一点就要用mpy-cross了\n",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.106.0 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="chk_jxcn">
+<meta name="keywords" content="">
+<meta name="description" content="为xu大@xutoubee开源的桌面信息牌编译micropython固件，这样就可以自己随便愉快玩耍了。
+大概有100K的heap可用，可能代码稍微多一点就要用mpy-cross了">
+
+
+<meta property="og:description" content="为xu大@xutoubee开源的桌面信息牌编译micropython固件，这样就可以自己随便愉快玩耍了。
+大概有100K的heap可用，可能代码稍微多一点就要用mpy-cross了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为桌面信息牌编译lvgl&#43;micropython固件">
+<meta name="twitter:title" content="为桌面信息牌编译lvgl&#43;micropython固件">
+<meta property="og:url" content="https://jxcn.org/2023/05/lv-micropython-ili9488/">
+<meta property="twitter:url" content="https://jxcn.org/2023/05/lv-micropython-ili9488/">
+<meta property="og:site_name" content="Something useless">
+<meta property="og:description" content="为xu大@xutoubee开源的桌面信息牌编译micropython固件，这样就可以自己随便愉快玩耍了。
+大概有100K的heap可用，可能代码稍微多一点就要用mpy-cross了">
+<meta name="twitter:description" content="为xu大@xutoubee开源的桌面信息牌编译micropython固件，这样就可以自己随便愉快玩耍了。
+大概有100K的heap可用，可能代码稍微多一点就要用mpy-cross了">
+<meta property="og:locale" content="en">
+
+  
+    <meta property="article:published_time" content="2023-05-07T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2023-05-07T00:00:00">
+  
+  
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/touxiang.jpg">
+  <meta property="twitter:image" content="https://jxcn.org/img/touxiang.jpg">
+
+
+
+
+
+
+    <title>为桌面信息牌编译lvgl&#43;micropython固件</title>
+    <meta name="google-site-verification" content="Htp5AJbiILKJBCrxIA9Sc0DXJtOVf7MBAiKJEFOIB-g" />
+ <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?232f26bd65acad12b4ab831deaf4c205";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script>
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(["setCookieDomain", "*.jxcn.org"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//matomo.jxcn.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-64JLV4NLY4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-64JLV4NLY4');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1323696214681325"
+     crossorigin="anonymous"></script>
+
+    <link rel="icon" href="https://jxcn.org/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jxcn.org/2023/05/lv-micropython-ili9488/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jxcn.org/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jxcn.org/" aria-label="">Something useless</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jxcn.org/#about" aria-label="">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jxcn.org/#about" aria-label="">
+          <img class="sidebar-profile-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+        </a>
+        <h4 class="sidebar-profile-name">chk_jxcn</h4>
+        
+          <h5 class="sidebar-profile-bio">观方知彼去 去者不至方</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://sinablog.jxcn.org" target="_blank" rel="noopener" title="Sina blog archives">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-weibo" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Sina blog archives</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      为桌面信息牌编译lvgl&#43;micropython固件
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2023-05-07T00:00:00Z">
+        
+  
+  
+  
+  
+    05/07,2023
+  
+
+      </time>
+    
+    
+  </div>
+
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+
+
+<div style="margin: 1rem 0; padding: 0.5rem 1rem 0.5rem 0.75rem; border-inline-start: 0.25rem solid #e9ecef;; border-color: #f66; background-color: rgba(255,102,102,.1);">
+	  <strong>未经作者许可禁止转载</strong>
+	  <br>
+	  <span style="white-space:nowrap;">本文地址：</span><a href="https://jxcn.org/2023/05/lv-micropython-ili9488/" style="white-space:nowrap;">https://jxcn.org/2023/05/lv-micropython-ili9488/</a>
+  </div>
+              <p>为xu大@xutoubee开源的桌面信息牌编译micropython固件，这样就可以自己随便愉快玩耍了。</p>
+<p>大概有100K的heap可用，可能代码稍微多一点就要用mpy-cross了</p>
+<h1 id="编译步骤">编译步骤</h1>
+<ol>
+<li>参照https://github.com/lvgl/lv_micropython/blob/master/ports/esp32/README.md#setting-up-the-toolchain-and-esp-idf中的指导，安装esp-idf，我选择的是esp-idf v4.4，注意python应该安装3.8或以上，因为后面编译lv_micropython会有版本要求</li>
+<li>编译lv_micropython，如果按照首页的步骤，记得要<code>make submodules</code></li>
+<li>添加ili9488并口的显示驱动，解压 <a href="https://jxcn.org/file/ili9488.zip">ili9488.zip</a> 到ports/esp32，并且在main.c里合适的位置添加<code>ili9488_init()</code>，放在pyexe boot.py前面就可以</li>
+<li>重新编译<code>make LV_CFLAGS=&quot;-DLV_COLOR_DEPTH=16&quot; BOARD=GENERIC</code></li>
+</ol>
+<p>如果修改了lvgl的配置，则要重新编译整个项目(我也不知道为什么，感觉是因为binding要重新编译)</p>
+<pre tabindex="0"><code>rm build-GENERIC/config/sdkconfig.h
+make LV_CFLAGS=&#34;-DLV_COLOR_DEPTH=16&#34; BOARD=GENERIC
+</code></pre><p>这个驱动是基于tft_espi修改的，现在只能给桌面信息牌用，I80的8位串口也就是MCU 8bit，支持RGB565和RGB666。</p>
+<p>为了偷懒，把正反色塞进machine模块里了，固件里有，但是这个zip里没有，想要也可以选择自己在modmachine里参考现有的函数加上</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">import</span> <span style="color:#0e84b5;font-weight:bold">machine</span>
+</span></span><span style="display:flex;"><span>machine<span style="color:#333">.</span>invon() <span style="color:#888"># 打开反显，ips屏幕需要打开反显</span>
+</span></span><span style="display:flex;"><span>machine<span style="color:#333">.</span>invoff() <span style="color:#888"># 关闭反显</span>
+</span></span></code></pre></div><p>基本上显示的驱动就是把tft_espi里面的init和并口通信部分copy出来，包装arduino的几个函数，理论上整个tft_espi也可以同样包一层，不过也用不上那么多。</p>
+<h1 id="固件下载">固件下载</h1>
+<p>不知道micropython会不会有像nodemcu的cloud build那样的东西，也许大概是没有了，毕竟那么大的flash，全编译进去也占不了多大。(原来是有的=&gt;https://github.com/pikasTech/PikaPython ，但是还在开发中，个人感觉可能还是ulisp这种形式更好，直接用arduino的库，移植到其他平台也很简单)</p>
+<p>固件点这里下载=&gt; <a href="https://jxcn.org/file/micropython.zip">micropython.zip</a></p>
+<p>里面包含好几个固件：</p>
+<ul>
+<li>micropython-RGB565-NOPERF-48L.bin： RGB565模式，关闭Performance monitor，缓冲区48线</li>
+<li>micropython-RGB565-PERF-48L.bin：RGB565模式，打开Performance monitor，缓冲区48线</li>
+<li>micropython-RGB666-NOPERF-20L.bin：RGB666模式，关闭Performance monitor，缓冲区20线</li>
+<li>micropython-RGB666-PERF-20L.bin：RGB666模式，打开Performance monitor，缓冲区20线</li>
+</ul>
+<p>*RGB666模式因为一个像素要32位，分配48线会失败，所以这里用20线的缓冲区，如果有psram的话感觉可以分配一块全屏缓冲区。</p>
+<p>**第一次刷固件前需要earse，以重新建立vfs，往vfs传输文件可以用ampy：<code>pip install adafruit-ampy</code></p>
+<p>(注意，此固件无法连接wifi，因为内存不够，连接wifi显示错误0x101，调整micropython的heap大小后就正常了，不过还没上传)</p>
+<p>刷写固件可以用esptool.py或者flash_download_tool，配置如下：</p>
+<p>esptool.py:</p>
+<pre tabindex="0"><code>esptool.py -p (PORT) -b 460800 --before default_reset --after hard_reset \
+--chip esp32  write_flash --flash_mode dio --flash_size detect   \
+--flash_freq 40m 0x1000 build-GENERIC/bootloader/bootloader.bin  \
+0x8000 build-GENERIC/partition_table/partition-table.bin 0x10000 \
+build-GENERIC/micropython.bin
+</code></pre><p>flash_download_tool</p>
+<pre tabindex="0"><code>[DOWNLOAD PATH]
+file_sel0 = 1
+file_path0 = bin\bootloader.bin
+file_offset0 = 0x00001000
+file_sel1 = 1
+file_path1 = bin\partition-table.bin
+file_offset1 = 0x00008000
+file_sel2 = 1
+file_path2 = bin\micropython.bin
+file_offset2 = 0x10000
+</code></pre><p><img src="https://jxcn.org/img/%E5%9B%BA%E4%BB%B6%E4%B8%8B%E8%BD%BD%E6%95%99%E7%A8%8B.png" alt="固件下载教程"></p>
+<h1 id="测试">测试</h1>
+<p>用下面的代码测试</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">import</span> <span style="color:#0e84b5;font-weight:bold">lvgl</span> <span style="color:#080;font-weight:bold">as</span> <span style="color:#0e84b5;font-weight:bold">lv</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">import</span> <span style="color:#0e84b5;font-weight:bold">time</span>
+</span></span><span style="display:flex;"><span>lv<span style="color:#333">.</span>init()
+</span></span><span style="display:flex;"><span>scr <span style="color:#333">=</span> lv<span style="color:#333">.</span>obj()
+</span></span><span style="display:flex;"><span>lv<span style="color:#333">.</span>scr_load(scr)
+</span></span><span style="display:flex;"><span>time<span style="color:#333">.</span>sleep(<span style="color:#00d;font-weight:bold">1</span>) <span style="color:#888"># sleep 是必须的，不然会crash</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">from</span> <span style="color:#0e84b5;font-weight:bold">lv_utils</span> <span style="color:#080;font-weight:bold">import</span> event_loop
+</span></span><span style="display:flex;"><span>event_loop <span style="color:#333">=</span> event_loop(freq<span style="color:#333">=</span><span style="color:#00d;font-weight:bold">50</span>) <span style="color:#888"># 不能在C中调用task handler，因为分配内存引入了GC</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cols <span style="color:#333">=</span> [<span style="color:#058;font-weight:bold">0xFF0000</span>, <span style="color:#058;font-weight:bold">0x00FF00</span>, <span style="color:#058;font-weight:bold">0x0000FF</span>, <span style="color:#058;font-weight:bold">0xFFFF00</span>, <span style="color:#058;font-weight:bold">0xFF00FF</span>, <span style="color:#058;font-weight:bold">0x00FFFF</span>]
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">for</span> x <span style="color:#000;font-weight:bold">in</span> <span style="color:#007020">range</span>(<span style="color:#00d;font-weight:bold">6</span>):
+</span></span><span style="display:flex;"><span>    ui_Panel2 <span style="color:#333">=</span> lv<span style="color:#333">.</span>obj(scr)
+</span></span><span style="display:flex;"><span>    ui_Panel2<span style="color:#333">.</span>set_width(<span style="color:#007020">int</span>(<span style="color:#00d;font-weight:bold">320</span><span style="color:#333">/</span><span style="color:#00d;font-weight:bold">12</span>)<span style="color:#333">+</span><span style="color:#00d;font-weight:bold">1</span>)
+</span></span><span style="display:flex;"><span>    ui_Panel2<span style="color:#333">.</span>set_x(<span style="color:#007020">int</span>(<span style="color:#00d;font-weight:bold">320</span><span style="color:#333">/</span><span style="color:#00d;font-weight:bold">12</span><span style="color:#333">*</span>x))
+</span></span><span style="display:flex;"><span>    ui_Panel2<span style="color:#333">.</span>set_height(<span style="color:#00d;font-weight:bold">480</span>)
+</span></span><span style="display:flex;"><span>    ui_Panel2<span style="color:#333">.</span>set_style_radius( <span style="color:#00d;font-weight:bold">0</span>, lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN <span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span><span style="display:flex;"><span>    ui_Panel2<span style="color:#333">.</span>set_style_bg_color( lv<span style="color:#333">.</span>color_hex( cols[x]), lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN <span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span><span style="display:flex;"><span>    ui_Panel2<span style="color:#333">.</span>set_style_bg_opa( <span style="color:#00d;font-weight:bold">255</span>, lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN<span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span><span style="display:flex;"><span>    ui_Panel2<span style="color:#333">.</span>set_style_bg_grad_dir( lv<span style="color:#333">.</span>GRAD_DIR<span style="color:#333">.</span>VER, lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN <span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span><span style="display:flex;"><span>    ui_Panel2<span style="color:#333">.</span>set_style_border_width( <span style="color:#00d;font-weight:bold">0</span>, lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN <span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span><span style="display:flex;"><span>    ui_Panel1 <span style="color:#333">=</span> lv<span style="color:#333">.</span>obj(scr)
+</span></span><span style="display:flex;"><span>    ui_Panel1<span style="color:#333">.</span>set_width(<span style="color:#007020">int</span>(<span style="color:#00d;font-weight:bold">320</span><span style="color:#333">/</span><span style="color:#00d;font-weight:bold">12</span>)<span style="color:#333">+</span><span style="color:#00d;font-weight:bold">1</span>)
+</span></span><span style="display:flex;"><span>    ui_Panel1<span style="color:#333">.</span>set_x(<span style="color:#007020">int</span>(<span style="color:#00d;font-weight:bold">320</span><span style="color:#333">/</span><span style="color:#00d;font-weight:bold">12</span><span style="color:#333">*</span>(x<span style="color:#333">+</span><span style="color:#00d;font-weight:bold">6</span>)))
+</span></span><span style="display:flex;"><span>    ui_Panel1<span style="color:#333">.</span>set_height(<span style="color:#00d;font-weight:bold">480</span>)
+</span></span><span style="display:flex;"><span>    ui_Panel1<span style="color:#333">.</span>set_style_radius( <span style="color:#00d;font-weight:bold">0</span>, lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN <span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span><span style="display:flex;"><span>    ui_Panel1<span style="color:#333">.</span>set_style_bg_color( lv<span style="color:#333">.</span>color_hex( <span style="color:#058;font-weight:bold">0xFFFFFF</span> ), lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN <span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span><span style="display:flex;"><span>    ui_Panel1<span style="color:#333">.</span>set_style_bg_opa( <span style="color:#00d;font-weight:bold">255</span>, lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN<span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span><span style="display:flex;"><span>    ui_Panel1<span style="color:#333">.</span>set_style_bg_grad_color( lv<span style="color:#333">.</span>color_hex( cols[x]), lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN <span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span><span style="display:flex;"><span>    ui_Panel1<span style="color:#333">.</span>set_style_bg_grad_dir( lv<span style="color:#333">.</span>GRAD_DIR<span style="color:#333">.</span>VER, lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN <span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span><span style="display:flex;"><span>    ui_Panel1<span style="color:#333">.</span>set_style_border_width( <span style="color:#00d;font-weight:bold">0</span>, lv<span style="color:#333">.</span>PART<span style="color:#333">.</span>MAIN <span style="color:#333">|</span> lv<span style="color:#333">.</span>STATE<span style="color:#333">.</span>DEFAULT )
+</span></span></code></pre></div><p>在不同固件下的表现：</p>
+<h3 id="rgb666">RGB666</h3>
+<p><img src="https://jxcn.org/img/RGB666-2.png" alt="RGB666-2"></p>
+<h3 id="rgb565">RGB565</h3>
+<p>虽然只差一个bit，但是可以肉眼看出绿色显然和红蓝的颜色深度台阶并不一致，只不过色差没有上一篇里面显示图片那么大的差异</p>
+<p><img src="https://jxcn.org/img/RGB565-2.png" alt="RGB565-2"></p>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2023/05/lvgl-cjk/" data-tooltip="在lvgl中显示中文" aria-label=": 在lvgl中显示中文">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2023/05/rgb565-rgb666/" data-tooltip="ili9488在8位并口下RGB565及RGB666模式对比" aria-label=": ili9488在8位并口下RGB565及RGB666模式对比">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2023/05/lv-micropython-ili9488/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2023/05/lv-micropython-ili9488/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2023/05/lv-micropython-ili9488/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jxcn.org\/2023\/05\/lv-micropython-ili9488\/';
+        
+          this.page.identifier = '\/2023\/05\/lv-micropython-ili9488\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'something-useless';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 author: chk-jxcn <br> Powered by HUGO & hugo-tranquilpeak-theme | <script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1281008874&web_id=1281008874"></script>. 
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2023/05/lvgl-cjk/" data-tooltip="在lvgl中显示中文" aria-label=": 在lvgl中显示中文">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2023/05/rgb565-rgb666/" data-tooltip="ili9488在8位并口下RGB565及RGB666模式对比" aria-label=": ili9488在8位并口下RGB565及RGB666模式对比">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2023/05/lv-micropython-ili9488/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2023/05/lv-micropython-ili9488/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2023/05/lv-micropython-ili9488/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjxcn.org%2F2023%2F05%2Flv-micropython-ili9488%2F" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjxcn.org%2F2023%2F05%2Flv-micropython-ili9488%2F" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjxcn.org%2F2023%2F05%2Flv-micropython-ili9488%2F" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+    
+    <h4 id="about-card-name">chk_jxcn</h4>
+    
+      <div id="about-card-bio">观方知彼去 去者不至方</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        无业
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        ***
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jxcn.org/img/sidebar_bg.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jxcn.org/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

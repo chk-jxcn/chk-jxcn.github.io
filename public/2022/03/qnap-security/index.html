@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-cmn">
+  <head>
+    
+    <script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "QutsCloud 逆向笔记 - qutscloud的安全性解读",
+  
+  "datePublished": "2022-03-29T00:00:00Z",
+  "dateModified": "2022-03-29T00:00:00Z",
+  "author": {
+    "@type": "Person",
+    "name": "chk_jxcn",
+    
+    "image": "https://jxcn.org/img/touxiang.jpg"
+    
+  },
+  "mainEntityOfPage": { 
+    "@type": "WebPage",
+    "@id": "https:\/\/jxcn.org\/2022\/03\/qnap-security\/" 
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Something useless",
+    
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jxcn.org/img/touxiang.jpg"
+    }
+    
+  },
+  "description": "最后更新日期：2022年4月2日 18点33分\n作为本系列的最后一篇文章，其实也是想随意讲讲QutsCloud这个产品，说说我心里对它的真实评价，无论褒贬，不仅限于安全性。\n",
+  "keywords": []
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.106.0 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="chk_jxcn">
+<meta name="keywords" content="">
+<meta name="description" content="最后更新日期：2022年4月2日 18点33分
+作为本系列的最后一篇文章，其实也是想随意讲讲QutsCloud这个产品，说说我心里对它的真实评价，无论褒贬，不仅限于安全性。">
+
+
+<meta property="og:description" content="最后更新日期：2022年4月2日 18点33分
+作为本系列的最后一篇文章，其实也是想随意讲讲QutsCloud这个产品，说说我心里对它的真实评价，无论褒贬，不仅限于安全性。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QutsCloud 逆向笔记 - qutscloud的安全性解读">
+<meta name="twitter:title" content="QutsCloud 逆向笔记 - qutscloud的安全性解读">
+<meta property="og:url" content="https://jxcn.org/2022/03/qnap-security/">
+<meta property="twitter:url" content="https://jxcn.org/2022/03/qnap-security/">
+<meta property="og:site_name" content="Something useless">
+<meta property="og:description" content="最后更新日期：2022年4月2日 18点33分
+作为本系列的最后一篇文章，其实也是想随意讲讲QutsCloud这个产品，说说我心里对它的真实评价，无论褒贬，不仅限于安全性。">
+<meta name="twitter:description" content="最后更新日期：2022年4月2日 18点33分
+作为本系列的最后一篇文章，其实也是想随意讲讲QutsCloud这个产品，说说我心里对它的真实评价，无论褒贬，不仅限于安全性。">
+<meta property="og:locale" content="en">
+
+  
+    <meta property="article:published_time" content="2022-03-29T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2022-03-29T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="qutscloud">
+    
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://jxcn.org/img/touxiang.jpg">
+  <meta property="twitter:image" content="https://jxcn.org/img/touxiang.jpg">
+
+
+
+
+
+
+    <title>QutsCloud 逆向笔记 - qutscloud的安全性解读</title>
+    <meta name="google-site-verification" content="Htp5AJbiILKJBCrxIA9Sc0DXJtOVf7MBAiKJEFOIB-g" />
+ <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?232f26bd65acad12b4ab831deaf4c205";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script>
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(["setCookieDomain", "*.jxcn.org"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//matomo.jxcn.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-64JLV4NLY4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-64JLV4NLY4');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1323696214681325"
+     crossorigin="anonymous"></script>
+
+    <link rel="icon" href="https://jxcn.org/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://jxcn.org/2022/03/qnap-security/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://jxcn.org/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://jxcn.org/" aria-label="">Something useless</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://jxcn.org/#about" aria-label="">
+    
+    
+    
+      
+        <img class="header-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://jxcn.org/#about" aria-label="">
+          <img class="sidebar-profile-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+        </a>
+        <h4 class="sidebar-profile-name">chk_jxcn</h4>
+        
+          <h5 class="sidebar-profile-bio">观方知彼去 去者不至方</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://sinablog.jxcn.org" target="_blank" rel="noopener" title="Sina blog archives">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-weibo" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Sina blog archives</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://jxcn.org/index.xml" title="RSS">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-rss" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      QutsCloud 逆向笔记 - qutscloud的安全性解读
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-03-29T00:00:00Z">
+        
+  
+  
+  
+  
+    03/29,2022
+  
+
+      </time>
+    
+    
+  
+  
+    <span></span>
+    
+      <a class="category-link" href="https://jxcn.org/categories/qutscloud">qutscloud</a>
+    
+  
+
+  </div>
+
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+
+
+<div style="margin: 1rem 0; padding: 0.5rem 1rem 0.5rem 0.75rem; border-inline-start: 0.25rem solid #e9ecef;; border-color: #f66; background-color: rgba(255,102,102,.1);">
+	  <strong>未经作者许可禁止转载</strong>
+	  <br>
+	  <span style="white-space:nowrap;">本文地址：</span><a href="https://jxcn.org/2022/03/qnap-security/" style="white-space:nowrap;">https://jxcn.org/2022/03/qnap-security/</a>
+  </div>
+              <p>最后更新日期：2022年4月2日 18点33分</p>
+<p>作为本系列的最后一篇文章，其实也是想随意讲讲QutsCloud这个产品，说说我心里对它的真实评价，无论褒贬，不仅限于安全性。</p>
+<h1 id="table-of-contents"></h1>
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-回顾">1. 回顾</a></li>
+    <li><a href="#2-评价">2. 评价</a></li>
+    <li><a href="#3-安全">3. 安全</a></li>
+    <li><a href="#4-建议">4. 建议</a></li>
+    <li><a href="#5-最后">5. 最后</a></li>
+    <li><a href="#6-数据安全">6. 数据安全</a></li>
+  </ul>
+</nav>
+
+
+<h1 id="1-回顾">1. 回顾</h1>
+<p>首先回顾一下这半个月的经历吧</p>
+<ul>
+<li>2022年3月13日，在qnap官网下载了vmdk镜像，在esxi上进行安装</li>
+<li>2022年3月16日，购买了一个月的授权，正式开始逆向之旅</li>
+<li>2022年3月21日，基本已完成了qlicense 以及签名校验实现的逆向</li>
+<li>2022年3月22日，搭建了基于hugo的blog准备写下这一系列的文章</li>
+<li>2022年3月24日，写下第一篇文章</li>
+<li>2022年3月28日，完成此系列大部分内容（<del>除自建qlicense服务器及syslinux安装</del>）</li>
+</ul>
+<p>这半个月基本上我也没有过多使用qutscloud网页上的功能，主要在读脚本，逆向库文件，看strace跟踪，以及用gdb调试，使用比较频繁的工具有</p>
+<ul>
+<li>FIddler4 <a href="https://www.telerik.com/fiddler">https://www.telerik.com/fiddler</a></li>
+<li>strace <a href="https://github.com/yunchih/static-binaries">https://github.com/yunchih/static-binaries</a></li>
+<li>gdb  <a href="https://github.com/hugsy/gdb-static">https://github.com/hugsy/gdb-static</a></li>
+<li>IDA</li>
+</ul>
+<p>也用到python写一些脚本来分析库文件</p>
+<h1 id="2-评价">2. 评价</h1>
+<p>Qutscloud是基于云的NAS主机系统，官方的介绍中，大部分场景还是配合基于硬件的QTS来同步或者传输文件，但是功能与QTS并没有差异太多，存储池，卷，快照，硬件QTS支持的它都支持。QTS支持的客户端软件它也一个不落。</p>
+<p>按照现在的价格4.99美金一个月，可以说贵，但是也并没有贵太多。如果只有两个或者4个盘，这个价格确实比不上硬件的QTS，可QutsCloud是支持24块硬盘（不含启动盘），而且是不需要许可买的，许可只限制cpu的数量。想想八盘位的NAS价格，只要硬盘数量一多，价格优势一下子就出来了，更别说像群晖已经在限制硬件NAS可用的硬盘品牌了，只接受它认证过的硬盘，这不是赤裸裸的收割吗。</p>
+<p>对于NAS的主职，存储文件，以及保证数据安全，QNAP是有一套自己的原则的，4盘位及以下的机器，使用QTS，八盘位以上的既可以使用QTS也可以使用QutsHero，而QTS可以作为虚拟机运行在QutsHero之上，由此可见，QNAP是想把QTS做成主职应用，兼职存储的系统，而基于zfs的QutsHero则专职存储，QutsCloud则是云上的应用，这样各有侧重，能够满足市场不同的需求。</p>
+<p>在vQTS推出前我其实就想有没有一个功能像现在NAS一样，可以同步照片，可以分享文件的系统放在云端运行，在vQTS推出后我也做了在虚拟机上安装的尝试，不过要上云还是有点困难，至少要多加一块硬盘。</p>
+<p>现在的欠缺是官方的应用太少了，给用户自己打包的工具看起来也不是很好用，大部分时候想用软件的时候只能用docker。</p>
+<h1 id="3-安全">3. 安全</h1>
+<ul>
+<li>作为一个云上的系统，居然没有防火墙？？(有防火墙APP，但是显然这个应该内置吧)</li>
+<li>安装app后，有很多app还是通过其他的端口访问，本地访问没关系，通过域名访问的话证书怎么做，正常应该提供一个基于域名或者路径的反代吧？（现在支持virtual web host，但是端口转发依然很麻烦）</li>
+<li>几乎没有审计功能，没有任何一个界面能找到哪个用户，哪个ip访问了哪个url，或者访问了什么功能，所以为什么QTS每次都后知后觉，等被入侵了不知道多少台才匆匆升级系统打补丁。（这个比较重要）</li>
+<li>用户分级粒度太大了，看起来只是做了基于url的分级访问，反正新建的用户我不敢给陌生人用 （设计缺陷，尤其是没有给app一个良好设计的权限系统）</li>
+<li>对系统文件签名感觉没什么用，启动之后固件就躺在那里，验证签名有啥用，NAS启动了没什么问题都不会关机的，如果有恶意程序修改了系统内的文件，光检查固件也是检查不出来的，不如对系统的可执行文件做个哈希的列表，隔一段时间检查是不是多了文件或者是少了文件，或者文件发生了变化，对固件签名不如对文件的哈希列表签名。（完整性检查对系统来说是必须的）</li>
+<li>对应用包的签名也是一样，QPKG的签名没有包含文件长度，QDK验证签名甚至可能直接执行恶意代码（QNAP应用的签名就是在瞎搞）</li>
+</ul>
+<h1 id="4-建议">4. 建议</h1>
+<p>QutsCloud是上云的系统，不应该设计的和QTS一样，一旦被入侵，数据几乎没有挽回的机会了。功能最小化，权限隔离这样最基础的要应该做，不说像QutsHero把数据存储和应用用虚拟化分隔开，起码访问审计要做好吧。</p>
+<p>下面是我的两个比较容易实现的小建议：</p>
+<ol>
+<li>
+<p>为不同的应用提供一个共同的鉴权入口，不同的应用有不同的端口，如果有鉴权的话有可能也有另外一套自己的用户系统。这样就提供了一个最小权限。</p>
+<p>可以这样，为session添加一个cookie作为token，所有的app页面都要求cookie鉴权才能访问，并且是在web server中检查。检查通过才运行访问，这样只要反代所有的应用端口就实现了单一入口的鉴权，做OAuth当然也可以，但是在鉴权之前访问任何其他页面都不安全，甚至可以说，除了登录页面，其他任何页面都是不安全的。</p>
+</li>
+<li>
+<p>匿名访问的url要在单独的容器中运行，同时限制用户可以提交以及访问的内容。比如有一个url，既可以是登录用户访问，也可以是匿名用户访问，如果是匿名访问，则将匿名用户的访问代理到容器中，对系统的更改则作为一个更小的集合由系统提供。</p>
+</li>
+</ol>
+<h1 id="5-最后">5. 最后</h1>
+<p>虽然写了这一些列文章，但是我应该还是会买个正版再继续用一段时间，一年50美金，个人感觉不算过分。</p>
+<p>另外，部分TBD的文章也许会更新，也许不会，至少本周之内不会更新。</p>
+<h1 id="6-数据安全">6. 数据安全</h1>
+<p><strong>总结：请尽量使用静态卷</strong></p>
+<p>老实说我也没想到，什么都还没存呢，就raid损毁，用的是默认的厚卷，看了一下也不知道怎么修复，直接删了重建算了，这玩意就很不靠谱，license一旦失效就要改成只读，但是内核驱动似乎有点问题，会卡死，用license server感觉还不如给cmd打补丁了，起码不会受license回调的影响，特么的每次license变化都会去调用storage_util一次来修改文件系统挂载状态为只读，这能不出事么。</p>
+<p>假如客户要换一台机器激活然后转移数据，原来的机器app停了也就罢了，留个filestation啥的传输数据不就得了么，偏要折腾文件系统重新挂载。</p>
+<p>你QNAP瞎鸡儿改文件系统把别人数据全毁了，在云服务器上怎么恢复数据？下载整个镜像回来重新挂载吗？</p>
+<p>不是我说，就算留个filestation能读写，能比得上filebrowser吗，搞这事把客户数据丢了激怒客户人家能恨你这牌子一辈子。</p>
+<p><img src="https://jxcn.org/img/qnap-securitu-1.png" alt="重启后raid损毁"></p>
+
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-simple-install/" data-tooltip="【番外】史上最简单安装QutsCloud的办法" aria-label=": 【番外】史上最简单安装QutsCloud的办法">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-hardware/" data-tooltip="QutsCloud 逆向笔记 - 能否在硬件平台安装qutscloud" aria-label=": QutsCloud 逆向笔记 - 能否在硬件平台安装qutscloud">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/03/qnap-security/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/03/qnap-security/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/03/qnap-security/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/jxcn.org\/2022\/03\/qnap-security\/';
+        
+          this.page.identifier = '\/2022\/03\/qnap-security\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'something-useless';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 author: chk-jxcn <br> Powered by HUGO & hugo-tranquilpeak-theme | <script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1281008874&web_id=1281008874"></script>. 
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-simple-install/" data-tooltip="【番外】史上最简单安装QutsCloud的办法" aria-label=": 【番外】史上最简单安装QutsCloud的办法">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml"></span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://jxcn.org/2022/03/qnap-hardware/" data-tooltip="QutsCloud 逆向笔记 - 能否在硬件平台安装qutscloud" aria-label=": QutsCloud 逆向笔记 - 能否在硬件平台安装qutscloud">
+          
+              <span class="hide-xs hide-sm text-small icon-mr"></span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://jxcn.org/2022/03/qnap-security/" title="" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://jxcn.org/2022/03/qnap-security/" title="" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https://jxcn.org/2022/03/qnap-security/" title="" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+      </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+<div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-times"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-security%2F" aria-label="">
+          <i class="fab fa-facebook-square" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-security%2F" aria-label="">
+          <i class="fab fa-twitter" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjxcn.org%2F2022%2F03%2Fqnap-security%2F" aria-label="">
+          <i class="fab fa-linkedin" aria-hidden="true"></i><span></span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://jxcn.org/img/touxiang.jpg" alt="" />
+    
+    <h4 id="about-card-name">chk_jxcn</h4>
+    
+      <div id="about-card-bio">观方知彼去 去者不至方</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        无业
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        ***
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://jxcn.org/img/sidebar_bg.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.loli.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://jxcn.org/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+
+
+
+    
+  </body>
+</html>
+
