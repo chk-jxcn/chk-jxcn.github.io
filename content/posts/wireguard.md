@@ -1,6 +1,6 @@
 ---
 title: "利用ipfw对wireguard进行网关分配以及大陆地址分流"
-date: 2023-08-8
+date: 2023-08-08
 categories:
 - vpn
 typora-root-url: ..\..\static

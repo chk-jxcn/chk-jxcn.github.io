@@ -6,7 +6,16 @@
     <description>Recent content in Categories on Something useless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cmn</language>
-    <lastBuildDate>Sat, 13 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://jxcn.org/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 08 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://jxcn.org/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>vpn</title>
+      <link>https://jxcn.org/categories/vpn/</link>
+      <pubDate>Tue, 08 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/categories/vpn/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>lvgl</title>
       <link>https://jxcn.org/categories/lvgl/</link>
@@ -85,15 +94,6 @@
       <pubDate>Wed, 13 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://jxcn.org/categories/vqts/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>vpn</title>
-      <link>https://jxcn.org/categories/vpn/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://jxcn.org/categories/vpn/</guid>
       <description></description>
     </item>
     

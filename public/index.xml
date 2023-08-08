@@ -6,7 +6,16 @@
     <description>Recent content on Something useless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cmn</language>
-    <lastBuildDate>Sat, 13 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://jxcn.org/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 08 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://jxcn.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>利用ipfw对wireguard进行网关分配以及大陆地址分流</title>
+      <link>https://jxcn.org/2023/08/wireguard/</link>
+      <pubDate>Tue, 08 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jxcn.org/2023/08/wireguard/</guid>
+      <description>&lt;p&gt;用ipfw来路由wireguard不同peer的报文，算是比较折腾的做法了&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>使用lvgl&#43;micropython开发一个无线电脑性能监控小面板</title>
       <link>https://jxcn.org/2023/05/lvgl-pcmonitor/</link>
@@ -240,15 +249,6 @@
       
       <guid>https://jxcn.org/2022/03/laojifuli-yuanli/</guid>
       <description>&lt;p&gt;之前我实现QTS支持官方的升级的时候老骥伏枥还没有推出支持官方升级的补丁包，后来老骥伏枥推出了牛年大礼包支持系统升级，我很好奇他是怎么实现的，但是nasyun论坛上的文章要10阅读权限才能看，可我连账号都没有，直到最近偶然看到别人分享的系统镜像，这才解除困惑。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>利用ipfw对wireguard进行网关分配以及大陆地址分流</title>
-      <link>https://jxcn.org/1/01/wireguard/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://jxcn.org/1/01/wireguard/</guid>
-      <description>&lt;p&gt;用ipfw来路由wireguard不同peer的报文，算是比较折腾的做法了&lt;/p&gt;</description>
     </item>
     
   </channel>
