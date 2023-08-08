@@ -113,5 +113,9 @@
     <loc>https://jxcn.org/archives/</loc>
   </url><url>
     <loc>https://jxcn.org/tags/</loc>
+  </url><url>
+    <loc>https://jxcn.org/categories/vpn/</loc>
+  </url><url>
+    <loc>https://jxcn.org/1/01/wireguard/</loc>
   </url>
 </urlset>
